@@ -25,9 +25,9 @@ private:
 			return;
 		}
 		// Rotation of A and B where p is A and p->_left is B
-		typename BST<T>::Node* bLeft = p->_left->_left;
-		typename BST<T>::Node* bRight = p->_left->_right;
-		typename BST<T>::Node* aRight = p->_right;
+		Node* bLeft = p->_left->_left;
+		Node* bRight = p->_left->_right;
+		Node* aRight = p->_right;
 
 		// now we can cut off the nodes
 		p->_right = p->_left;
@@ -51,9 +51,9 @@ private:
 			return;
 		}
 		// Rotation of A and B where p is A and p->_left is B
-		typename BST<T>::Node* bRight = p->_right->_right;
-		typename BST<T>::Node* bLeft = p->_right->_left;
-		typename BST<T>::Node* aLeft = p->_left;
+		Node* bRight = p->_right->_right;
+		Node* bLeft = p->_right->_left;
+		Node* aLeft = p->_left;
 
 		// now we can cut off the nodes
 		p->_left = p->_right;
