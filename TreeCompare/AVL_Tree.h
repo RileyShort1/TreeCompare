@@ -8,16 +8,14 @@ private:
 	struct Node {
 		T _data;
 		Node* _left, * _right;
-		size_t _balance;
-		size_t _height;
-
-		Node(const T& d, size_t b, size_t h Node* l = nullptr, Node* r = nullptr) : _data(d), _left(l), _right(r), _balance(b), _height(h) {}
+		Node(const T& d, Node* l = nullptr, Node* r = nullptr) : _data(d), _left(l), _right(r) {}
+		// We need to add the new node variables in order to make it an AVL tree
 	};
 	Node* _root;
 	size_t _size;
 
 
-	// rotation helpers
+	// rotation helpers (same ones from the splay tree)
 	void _rotate_with_left_child(Node*& p)
 	{
 		if (p == nullptr || p->_left == nullptr)

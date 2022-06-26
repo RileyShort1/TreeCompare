@@ -1,9 +1,7 @@
 #ifndef SplayTree_h
 #define SplayTree_h
-#include <iostream>
-#include <queue>
-#include <iomanip>
-using namespace std;
+
+#include <string>
 
 template<typename T>
 class BST {
@@ -36,10 +34,10 @@ private:
 			return;
 		}
 
-		typename Node* mid = new typename Node(0, nullptr, nullptr);
+		Node* mid = new Node(0, nullptr, nullptr);
 
-		typename Node* rightTreeMin = mid;
-		typename Node* leftTreeMax = mid;
+		Node* rightTreeMin = mid;
+		Node* leftTreeMax = mid;
 
 		while (p != nullptr)
 		{
@@ -121,9 +119,9 @@ private:
 			return;
 		}
 		// Rotation of A and B where p is A and p->_left is B
-		typename BST<T>::Node* bLeft = p->_left->_left;
-		typename BST<T>::Node* bRight = p->_left->_right;
-		typename BST<T>::Node* aRight = p->_right;
+		Node* bLeft = p->_left->_left;
+		Node* bRight = p->_left->_right;
+		Node* aRight = p->_right;
 
 		// now we can cut off the nodes
 		p->_right = p->_left;
@@ -147,9 +145,9 @@ private:
 			return;
 		}
 		// Rotation of A and B where p is A and p->_left is B
-		typename BST<T>::Node* bRight = p->_right->_right;
-		typename BST<T>::Node* bLeft = p->_right->_left;
-		typename BST<T>::Node* aLeft = p->_left;
+		Node* bRight = p->_right->_right;
+		Node* bLeft = p->_right->_left;
+		Node* aLeft = p->_left;
 
 		// now we can cut off the nodes
 		p->_left = p->_right;
@@ -166,13 +164,11 @@ private:
 		return;
 	}
 
-
-
 	bool splay_insert(const T& x)
 	{
 		if (_root == nullptr)
 		{
-			_root = new typename Node(x, nullptr, nullptr);
+			_root = new Node(x, nullptr, nullptr);
 			_size++;
 			return true;
 		}
@@ -287,79 +283,55 @@ private:
 		return true;
 	}
 
-	string _to_string(const Node* p) const
+	const T& splay_find(const T& x) // Loud Find method
 	{
-		/*
-		string strToReturn = "";
-
-		if (p->_left == nullptr && p->_right == nullptr)
+		if (_root == nullptr)
 		{
-			return "";
-		}
-		else
-		{
-			strToReturn += std::to_string(p->_data);
-			if (p->_right == nullptr)
-			{
-				strToReturn += " : " + "[NULL]" + " " + std::to_string(p->_left->_data);
-			}
-			else
-			{
-				strToReturn += " : " + std::to_string(p->_right->_data) + " " + "[NULL]";
-			}
+			throw Not_found_exception();
 		}
 
-		return strToReturn;
-		*/
-		return "";
+		_splay(_root, x);
+
+		if (_root->_data != x) // throw an exception
+		{
+			throw Not_found_exception();
+		}
+
+		return _root->_data;
+	}
+
+	bool splay_contains(const T& x) // Quiet Find method
+	{
+		try {
+			splay_find(x);
+		}
+		catch (Not_found_exception x) {
+			return false;
+		}
+
+		return true;
 	}
 
 public:
 	BST() : _root(nullptr), _size(0) {}
-	virtual ~BST() { _recursive_delete(_root); }
+	~BST() { _recursive_delete(_root); }
 
-	virtual size_t get_size() const { return _size; }
+	size_t get_size() const { return _size; }
 
-	virtual bool insert(const T& elem) { return _insert(_root, elem); }
-	virtual bool remove(const T& elem) { return _remove(_root, elem); }
-	virtual bool clear()
+	bool find(const T& elem) { return splay_contains(elem); }
+	
+	bool insert(const T& elem) { return splay_insert(elem); }
+	bool remove(const T& elem) { return splay_remove(elem); }
+	bool clear()
 	{
 		return _recursive_delete(_root);
 	}
 
-	virtual bool contains(const T& elem) const { return _find(_root, elem) != nullptr; }
-	virtual const T& find(const T& elem) const
-	{
-		const Node* result = _find(_root, elem);
 
-		if (result == nullptr)
-		{
-			throw Not_found_exception();
-		}
-	
-		return result->_data;
-	}
-	virtual string to_string() const
-	{
-
-		string strToReturn = "";
-		/*
-		strToReturn += "# Tree rooted at " + std::to_string(_root->_data) + "\n";
-		strToReturn += "# size = " + std::to_string(_size) + "\n";
-		strToReturn += _to_string(_root->_data);
-		strToReturn += "# End of tree";
-		*/
-		return strToReturn;
-	}
-
-	class Not_found_exception : public exception {
+	class Not_found_exception : public std::exception {
 	public:
-		string to_string() { return "Not found exception"; }
+		std::string to_string() { return "Not found exception"; }
 	};
-
-	friend class Tx;
-	friend class Tests;
-
 };
 
 
