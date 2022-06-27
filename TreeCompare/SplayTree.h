@@ -15,7 +15,7 @@ private:
 	size_t _size;
 
 	// Helpers 
-	static Node* _deep_copy(const Node* p)
+	static Node* _deep_copy(const Node* p) // We might not need this function 
 	{
 		if (p == nullptr)
 		{
@@ -313,8 +313,8 @@ private:
 	}
 
 public:
-	BST() : _root(nullptr), _size(0) {}
-	~BST() { _recursive_delete(_root); }
+	SplayTree() : _root(nullptr), _size(0) {}
+	//~SplayTree() { _recursive_delete(_root); }
 
 	size_t get_size() const { return _size; }
 
