@@ -8,12 +8,12 @@ private:
 	struct Node {
 		T _data;
 		Node* _left, * _right;
+		int height;
 		Node(const T& d, Node* l = nullptr, Node* r = nullptr) : _data(d), _left(l), _right(r) {}
 		// We need to add the new node variables in order to make it an AVL tree
 	};
 	Node* _root;
 	size_t _size;
-
 
 	// rotation helpers (same ones from the splay tree)
 	void _rotate_with_left_child(Node*& p)
@@ -67,6 +67,46 @@ private:
 
 		return;
 	}
+
+	const Node* avl_get(Node* p, const T& elem) const
+	{
+		const Node* temp = p;
+
+		while (temp != nullptr)
+		{
+			if (temp->_data == elem)
+			{
+				return temp;
+			}
+
+			if (elem > temp->_data) // move right
+			{
+				temp = temp->_right;
+			}
+			else if (elem < temp->_data) // move left
+			{
+				temp = temp->_left;
+			}
+		}
+
+		return nullptr;
+	}
+
+	bool avl_find(const T& data)
+	{
+		if (avl_get(_root, data) == nullptr)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	bool avl_insert(const T& data);
+
+	bool avl_remove(const T& data);
+
+
 
 
 };
