@@ -185,12 +185,12 @@ private:
 		{
 			if (x > _root->_data) // x belongs to the the right
 			{
-				if (_root->_right != nullptr && _root->_right->_data > x) // we need to attatch on the right of new node
+				if (_root->_right != nullptr && _root->_right->_data > x) // we need to attach on the right of new node
 				{
 					Node* newNode = new Node(x, nullptr, _root->_right);
 					_root->_right = newNode;
 				}
-				else // we attatch on the left of new node
+				else // we attach on the left of new node
 				{
 					Node* newNode = new Node(x, _root->_right, nullptr);
 					_root->_right = newNode;
@@ -202,12 +202,12 @@ private:
 
 			if (x < _root->_data) // x belongs to the left
 			{
-				if (_root->_left != nullptr && _root->_left->_data > x) // we need to attatch on the right of new node
+				if (_root->_left != nullptr && _root->_left->_data > x) // we need to attach on the right of new node
 				{
 					Node* newNode = new Node(x, nullptr, _root->_left);
 					_root->_left = newNode;
 				}
-				else // we attatch on the left of new node
+				else // we attach on the left of new node
 				{
 					Node* newNode = new Node(x, _root->_left, nullptr);
 					_root->_left = newNode;
