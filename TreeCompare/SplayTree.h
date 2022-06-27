@@ -4,7 +4,7 @@
 #include <string>
 
 template<typename T>
-class BST {
+class SplayTree {
 private:
 	struct Node {
 		T _data;
