@@ -332,6 +332,8 @@ public:
 	public:
 		std::string to_string() { return "Not found exception"; }
 	};
+
+	friend class SplayTests;
 };
 
 

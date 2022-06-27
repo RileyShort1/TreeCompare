@@ -107,7 +107,7 @@ private:
 	bool avl_remove(const T& data);
 
 
-
+	friend class AVLTests;
 
 };
 
