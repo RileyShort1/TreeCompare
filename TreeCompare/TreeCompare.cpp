@@ -17,36 +17,41 @@ class AVLTests {
 class SplayTests {
 public:
     // NOTES: 
-    // right now it seems my splay tree does not match the refrence site that I linked to above,
-    // but I think that it just splays it in a slightly different way - I will double check it
+    // splay tree matches refrence site for most insertions, but is different for some
+    // our splay tree still maintains the correct properties, so I think the our tree just 
+    // splays in a different way compared to the test site.
 
     void generalTests() // contains the general tests to make sure the tree works
     {
-        //bool insert(const T & elem) { return splay_insert(elem); }
-       // bool remove(const T & elem) { return splay_remove(elem); }
-
         SplayTree<int> myTree;
+ 
+        myTree.insert(5); // matches example site
+        myTree.insert(21); // matches example site
+        myTree.insert(35); // matches example site
+        myTree.insert(100); // matches example site
+        myTree.insert(6); // matches example site
+        myTree.insert(1); // matches example site
+        myTree.insert(4); // matches example site
+        myTree.insert(10); // Does NOT match refrence site (right sub-tree matches, but left sub-tree does not) 
+        myTree.insert(13); // Does NOT match refrence site (right sub-tree matches, but left sub-tree does not) 
 
-        myTree.insert(5);
-        myTree.insert(7);
-        myTree.insert(3);
-        myTree.insert(8);
-        myTree.insert(16);
-        myTree.insert(1);
-        myTree.insert(4);
-        myTree.insert(10);
-        myTree.insert(13);
+        //printTree(myTree._root);
+        //std::cout << "Size of tree: " << myTree._size << std::endl;
+        //std::cout << "Root is: " << myTree._root->_data << std::endl;
+
+        myTree.remove(5); // matches refrence site 
+        myTree.remove(10); // matches refrence site 
+        myTree.remove(1); // matches refrence site
+        myTree.remove(21); // Does NOT match refrence site (right sub-tree matches, but left sub-tree does not) 
+        myTree.remove(35); // Does NOT match refrence site (right sub-tree matches, but left sub-tree does not) 
+        myTree.remove(6); // matches refrence site
+        myTree.remove(100); // matches refrence site
 
         printTree(myTree._root);
-
-        //std::cout << myTree._root->_data << std::endl;
-        //std::cout << myTree._root->_left->_data << std::endl;
-        //std::cout << myTree._root->_right->_data << std::endl;
-        //std::cout << myTree._root->_left->_left->_data << std::endl;
-
+        std::cout << "Size of tree: " << myTree._size << std::endl;
+        std::cout << "Root is: " << myTree._root->_data << std::endl;
 
         return;
-
     }
 
     void printTree(SplayTree<int>::Node* p)
@@ -79,11 +84,8 @@ public:
             std::cout << "Left and Right are null" << std::endl;
         }
 
-        printTree(p->_right);
-
-       
+        printTree(p->_right); 
     }
-
 };
 
 int main()
