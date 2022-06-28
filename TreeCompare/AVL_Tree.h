@@ -9,8 +9,7 @@ private:
 		T _data;
 		Node* _left, * _right;
 		int height;
-		Node(const T& d, Node* l = nullptr, Node* r = nullptr) : _data(d), _left(l), _right(r) {}
-		// We need to add the new node variables in order to make it an AVL tree
+		Node(const T& d, int h, Node* l = nullptr, Node* r = nullptr) : _data(d), height(h), _left(l), _right(r) {}
 	};
 	Node* _root;
 	size_t _size;
@@ -100,6 +99,21 @@ private:
 		}
 
 		return true;
+	}
+
+	// NOTES 
+	// Balance factor (height ot right subtree - height of left subtree)
+
+	// balance factor shuld always be -1, 0, or 1;
+
+	int _get_balance_factor(const Node* n)
+	{
+		if (n == nullptr || n->_left == nullptr || n->_right == nullptr)
+		{
+			return 0;
+		}
+
+		return n->_right->height - n->_left->height;
 	}
 
 	bool avl_insert(const T& data);
