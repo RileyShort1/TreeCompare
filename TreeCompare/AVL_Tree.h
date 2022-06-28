@@ -103,8 +103,12 @@ private:
 
 	// NOTES 
 	// Balance factor (height ot right subtree - height of left subtree)
-
 	// balance factor shuld always be -1, 0, or 1;
+
+	// height of a node can be calculated as the number of edges/connections between 
+	// the node and the deepest node on it's subtree
+
+	// this means single nodes with no children have a height 0 
 
 	int _get_balance_factor(const Node* n)
 	{
@@ -116,9 +120,33 @@ private:
 		return n->_right->height - n->_left->height;
 	}
 
-	bool avl_insert(const T& data);
+	bool avl_insert(const T& data)
+	{
+		if (_root == nullptr) // if no nodes, build root
+		{
+			_root = new Node(data, 0); // single node height 0
+			_size++;
+			return true;
+		}
 
-	bool avl_remove(const T& data);
+		if (avl_find(data) == true) // already in tree
+		{
+			return true;
+		}
+
+
+	}
+
+	bool avl_remove(const T& data)
+	{
+		if (avl_find(data) == false)
+		{
+			return false; // data not in tree (we could return either true or false - but I think false makes sense)
+		}
+	}
+
+	public:
+		AVL_Tree() : _root(nullptr), _size(0) {}
 
 
 	friend class AVLTests;
