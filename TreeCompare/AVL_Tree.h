@@ -1,6 +1,8 @@
 #ifndef AVL_Tree_h
 #define AVL_Tree_h
 
+#include <iostream>
+
 template<typename T> 
 class AVL_Tree {
 private:
@@ -120,6 +122,28 @@ private:
 		return n->_right->height - n->_left->height;
 	}
 
+	void _balance(Node* node); // this may be usefull
+
+	int max(int val, int altval) // helpers
+	{
+		if (val > altval)
+		{
+			return val;
+		}
+
+		return altval;
+	}
+
+	int get_height(Node* node) // helpers
+	{
+		if (node == nullptr)
+		{
+			return 0;
+		}
+
+		return node->height;
+	}
+
 	bool avl_insert(const T& data)
 	{
 		if (_root == nullptr) // if no nodes, build root
@@ -134,7 +158,43 @@ private:
 			return true;
 		}
 
+		// should be able to insert as we would a regular BST
+		// then rebalance as necessary
+		Node* temp = _root;
 
+		while (temp != nullptr)
+		{
+			if (data > temp->_data) // move right
+			{
+				if (temp->_right == nullptr) // we insert
+				{
+					temp->_right = new Node(data, 0); // added Node, Done
+					_size++;
+					break;
+				}
+			
+				temp = temp->_right;
+			}
+
+			else if (data < temp->_data) // move left
+			{
+				if (temp->_left == nullptr) // we insert
+				{
+					temp->_left = new Node(data, 0);
+					_size++;
+					break;
+				}
+				
+				temp = temp->_left;
+			}
+		}
+
+		temp->height = 1 + max(get_height(temp->_left), get_height(temp->_right));
+		_root->height = 1 + max(get_height(_root->_left), get_height(_root->_right));
+
+		// Must rebalance next
+
+		return true;
 	}
 
 	bool avl_remove(const T& data)
@@ -147,6 +207,9 @@ private:
 
 	public:
 		AVL_Tree() : _root(nullptr), _size(0) {}
+
+		bool insert(const T& elem) { return avl_insert(elem); }
+		bool remove(const T& elem) { return avl_remove(elem); }
 
 
 	friend class AVLTests;

@@ -11,6 +11,54 @@
 
 
 class AVLTests {
+public:
+
+    void generalTests()
+    {
+        AVL_Tree<int> myTree;
+
+        myTree.insert(5); 
+        myTree.insert(21); 
+        myTree.insert(35); 
+        myTree.insert(100); 
+        myTree.insert(6);
+
+        printTree(myTree._root);
+
+    }
+
+    void printTree(AVL_Tree<int>::Node* p)
+    {
+        if (p == nullptr)
+        {
+            return;
+        }
+
+        printTree(p->_left);
+
+        std::cout << p->_data << " -- Height = " << p->height << " -- Children: ";
+        if (p->_left == nullptr && p->_right != nullptr)
+        {
+            std::cout << "left is null -";
+            std::cout << " right is " << p->_right->_data << std::endl;
+        }
+        else if (p->_right == nullptr && p->_left != nullptr)
+        {
+            std::cout << " right is null -";
+            std::cout << " left is " << p->_left->_data << std::endl;
+        }
+        else if (p->_right != nullptr && p->_left != nullptr)
+        {
+            std::cout << " right is " << p->_right->_data;
+            std::cout << " - left is " << p->_left->_data << std::endl;
+        }
+        else
+        {
+            std::cout << "Left and Right are null" << std::endl;
+        }
+
+        printTree(p->_right);
+    }
 
 };
 
@@ -90,8 +138,11 @@ public:
 
 int main()
 {
-    SplayTests rs;
-    rs.generalTests();
+    //SplayTests rs;
+    //rs.generalTests();
+
+    AVLTests av;
+    av.generalTests();
 }
 
 
