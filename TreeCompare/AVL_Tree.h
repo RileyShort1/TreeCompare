@@ -122,7 +122,7 @@ private:
 		return n->_right->height - n->_left->height;
 	}
 
-	void _balance(Node* node); // this may be usefull
+	void _balance(Node* node); // this may be useful
 
 	int max(int val, int altval) // helpers
 	{
