@@ -206,8 +206,7 @@ private:
 			}
 		}
 			
-		node->height = 1 + max(get_height(node->_left),
-			get_height(node->_right));
+		update(node);
 
 		// Must rebalance next
 
