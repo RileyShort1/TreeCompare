@@ -28,6 +28,42 @@ public:
         std::cout << std::endl;
         std::cout << "_root is " << myTree._root->_data << std::endl;
 
+        /*
+        myTree.insert(15);
+        myTree.insert(25);
+        myTree.insert(10);
+        myTree.insert(12);
+        myTree.insert(5);
+        myTree.insert(6);
+        myTree.insert(2);
+        std::cout << "_root is " << myTree._root->_data << std::endl;
+        printTree(myTree._root);
+
+        myTree._rotate_right(myTree._root);
+        */
+
+        /*
+        myTree.insert(25);
+        myTree.insert(10);
+        myTree.insert(35);
+        myTree.insert(28);
+        myTree.insert(45);
+        myTree.insert(37);
+        myTree.insert(50);
+        std::cout << "_root is " << myTree._root->_data << std::endl;
+        printTree(myTree._root);
+
+        myTree._rotate_left(myTree._root);
+
+
+
+        std::cout << std::endl;
+        std::cout << std::endl;
+        std::cout << "_root is " << myTree._root->_data << std::endl;
+        printTree(myTree._root);
+
+        */
+
     }
 
     void printTree(AVL_Tree<int>::Node* p)

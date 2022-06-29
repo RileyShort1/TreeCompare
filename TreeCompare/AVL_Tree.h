@@ -17,7 +17,7 @@ private:
 	size_t _size;
 
 	// rotation helpers (same ones from the splay tree)
-	void _rotate_with_left_child(Node*& p)
+	void _rotate_right(Node*& p)
 	{
 		if (p == nullptr || p->_left == nullptr)
 		{
@@ -40,17 +40,17 @@ private:
 		p->_left = bLeft;
 		p->_right->_left = bRight;
 		p->_right->_right = aRight;
-
+		
 		return;
 	}
 
-	void _rotate_with_right_child(Node*& p)
+	void _rotate_left(Node*& p)
 	{
 		if (p == nullptr || p->_right == nullptr)
 		{
 			return;
 		}
-
+		
 		// Rotation of A and B where p is A and p->_left is B
 		Node* bRight = p->_right->_right;
 		Node* bLeft = p->_right->_left;
@@ -70,6 +70,7 @@ private:
 
 		return;
 	}
+
 
 	const Node* avl_get(Node* p, const T& elem) const
 	{
@@ -130,7 +131,6 @@ private:
 		{
 			return 0;
 		}
-		//std::cout << "here: " << node->_data << std::endl;
 
 		return node->height;
 	}
@@ -146,30 +146,30 @@ private:
 		if (bf < -1 && isRightChild == true)
 		{
 			std::cout << "1" << std::endl;
-			_rotate_with_left_child(node);
+			_rotate_left(node);
 		}
 
 		// Left Left (is left child)
 		else if (bf > 1 && isRightChild == false)
 		{
 			std::cout << "2" << std::endl;
-			_rotate_with_right_child(node);
+			_rotate_right(node);
 		}
 
 		// Right Left (is right child)
 		else if (bf < -1 && isRightChild == true)
 		{
 			std::cout << "3" << std::endl;
-			_rotate_with_right_child(node);
-			_rotate_with_left_child(node);
+			_rotate_right(node);
+			_rotate_left(node);
 		}
 
 		// Left Right (is left child)
 		else if (bf > 1 && isRightChild == false)
 		{
 			std::cout << "4" << std::endl;
-			_rotate_with_left_child(node);
-			_rotate_with_right_child(node);
+			_rotate_left(node);
+			_rotate_right(node);
 		}
 
 		return;
@@ -184,6 +184,8 @@ private:
 
 	bool avl_insert(Node* node, const T& data) // does not yet rebalance
 	{
+		bool isRightChild = false;
+
 		if (data < node->_data) // go left
 		{
 			if (node->_left == nullptr)
@@ -199,6 +201,7 @@ private:
 		{
 			if (node->_right == nullptr)
 			{
+				isRightChild = true;
 				node->_right = new Node(data, 0);
 			}
 			else {
@@ -209,6 +212,8 @@ private:
 		update(node);
 
 		// Must rebalance next
+
+		_balance(node, isRightChild);
 
 
 		return true;
