@@ -17,12 +17,14 @@ private:
 	size_t _size;
 
 	// rotation helpers (same ones from the splay tree)
-	void _rotate_right(Node*& p)
+	Node* _rotate_right(Node*& node)
 	{
-		if (p == nullptr || p->_left == nullptr)
+		
+		if (node == nullptr || node->_left == nullptr)
 		{
-			return;
+			return nullptr;
 		}
+		/*
 
 		// Rotation of A and B where p is A and p->_left is B
 		Node* bLeft = p->_left->_left;
@@ -42,14 +44,24 @@ private:
 		p->_right->_right = aRight;
 		
 		return;
+		*/
+		Node* newParent = node->_left;
+		node->_left = newParent->_right;
+		newParent->_right = node;
+		update(node);
+		update(newParent);
+
+		return newParent;
 	}
 
-	void _rotate_left(Node*& p)
+	Node* _rotate_left(Node*& node)
 	{
-		if (p == nullptr || p->_right == nullptr)
+		
+		if (node == nullptr || node->_right == nullptr)
 		{
-			return;
+			return nullptr;
 		}
+		/*
 		
 		// Rotation of A and B where p is A and p->_left is B
 		Node* bRight = p->_right->_right;
@@ -69,6 +81,14 @@ private:
 		p->_left->_left = aLeft;
 
 		return;
+		*/
+		Node* newParent = node->_right;
+		node->_right = newParent->_left;
+		newParent->_left = node;
+		update(node);
+		update(newParent);
+
+		return newParent;
 	}
 
 
@@ -129,14 +149,42 @@ private:
 	{
 		if (node == nullptr)
 		{
-			return -1;
+			return 0;
 		}
 
 		return node->height;
 	}
-
-	void _balance(Node* node, bool isRightChild) // Does not work / untested
+	int balance(Node* node)
 	{
+		if (node == nullptr)
+		{
+			return 0;
+		}
+
+		return (get_height(node->_left) - get_height(node->_right));
+	}
+
+	Node* leftLeftCase(Node* node) {
+		return _rotate_right(node);
+	}
+
+	Node* leftRightCase(Node* node) {
+		node->_left = _rotate_left(node->_left);
+		return leftLeftCase(node);
+	}
+
+	Node* rightRightCase(Node* node) {
+		return _rotate_left(node);
+	}
+
+	Node* rightLeftCase(Node* node) {
+		node->_right = _rotate_right(node->_right);
+		return rightRightCase(node);
+	}
+
+	Node* _balance(Node* node) // Does not work / untested
+	{
+		/*
 		int bf = (get_height(node->_right) - get_height(node->_left)); // balance factor
 		std::cout << "balance factor: " << bf << std::endl;
 
@@ -174,6 +222,36 @@ private:
 		}
 
 		return;
+		*/
+		// Left heavy subtree.
+		if (balance(node) == -2) {
+
+			// Left-Left case.
+			if (balance(node->_left) <= 0) {
+				return leftLeftCase(node);
+
+				// Left-Right case.
+			}
+			else {
+				return leftRightCase(node);
+			}
+
+			// Right heavy subtree needs balancing.
+		}
+		else if (balance(node) == +2) {
+
+			// Right-Right case.
+			if (balance(node->_right) >= 0) {
+				return rightRightCase(node);
+
+				// Right-Left case.
+			}
+			else {
+				return rightLeftCase(node);
+			}
+		}
+
+		return node;
 
 	}
 
@@ -183,41 +261,43 @@ private:
 		return;
 	}
 
-	bool avl_insert(Node* node, const T& data) // does not yet rebalance
+	Node* avl_insert(Node* node, const T& data) // does not yet rebalance
 	{
-		bool isRightChild = false;
-
-		if (data < node->_data) // go left
-		{
-			if (node->_left == nullptr)
-			{
-				node->_left = new Node(data, 0);
-			}
-			else {
-				avl_insert(node->_left, data);
-			}
+		if (node == nullptr) {
+			Node* temp = new Node(data, 1);
+			return temp;
 		}
-		
-		else if (data > node->_data)
-		{
-			if (node->_right == nullptr)
-			{
-				isRightChild = true;
-				node->_right = new Node(data, 0);
-			}
-			else {
-				avl_insert(node->_right, data);
-			}
-		}
+		if (data < node->_data) node->_left = avl_insert(node->_left, data);
+		else if (data > node->_data) node->_right = avl_insert(node->_right, data);
+		//head->height = 1 + max(height(head->left), height(head->right));
 			
 		update(node);
 
 		// Must rebalance next
+		int bal = balance(node);
 
-		_balance(node, isRightChild);
+		//_balance(node);
+		if (bal > 1) {
+			if (data < node->_left->_data) {
+				return _rotate_right(node);
+			}
+			else {
+				node->_left = _rotate_left(node->_left);
+				return _rotate_right(node);
+			}
+		}
+		else if (bal < -1) {
+			if (data > node->_right->_data) {
+				return _rotate_left(node);
+			}
+			else {
+				node->_right = _rotate_right(node->_right);
+				return _rotate_left(node);
+			}
+		}
 
 
-		return true;
+		return node;
 	
 	}
 
@@ -232,6 +312,7 @@ private:
 	public:
 		AVL_Tree() : _root(nullptr), _size(0) {}
 
+		/*
 		bool insert(const T& elem) {
 
 			if (_root == nullptr) // if no nodes, build root
@@ -248,6 +329,10 @@ private:
 
 			return avl_insert(_root, elem); 
 			
+		}
+		*/
+		void insert(T x) {
+			_root = avl_insert(_root, x);
 		}
 		bool remove(const T& elem) { return avl_remove(elem); }
 

@@ -20,9 +20,9 @@ public:
         myTree.insert(5); 
         myTree.insert(10); 
         myTree.insert(15); 
-       // myTree.insert(100); 
-        //myTree.insert(6);
-        //myTree.insert(200);
+        myTree.insert(100); 
+        myTree.insert(6);
+        myTree.insert(200);
 
         printTree(myTree._root);
         std::cout << std::endl;
