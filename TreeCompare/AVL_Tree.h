@@ -130,6 +130,7 @@ private:
 		{
 			return 0;
 		}
+		//std::cout << "here: " << node->_data << std::endl;
 
 		return node->height;
 	}
@@ -181,62 +182,38 @@ private:
 		return;
 	}
 
-	bool avl_insert(const T& data) // does not work (it can insert like a BST, but can't keep track of height)
+	bool avl_insert(Node* node, const T& data) // does not work (it can insert like a BST, but can't keep track of height)
 	{
-		if (_root == nullptr) // if no nodes, build root
+		if (data < node->_data) // go left
 		{
-			_root = new Node(data, 0); // single node height 0
-			_size++;
-			return true;
-		}
-
-		if (avl_find(data) == true) // already in tree
-		{
-			return true;
-		}
-
-		// should be able to insert as we would a regular BST
-		// then rebalance as necessary
-		Node* temp = _root;
-
-		// regular BST insertion
-		while (temp != nullptr)
-		{
-			nodes.push(temp);
-			if (data > temp->_data) // move right
+			if (node->_left == nullptr)
 			{
-				if (temp->_right == nullptr) // we insert
-				{
-					temp->_right = new Node(data, 0); // added Node, Done
-					_size++;
-					break;
-				}
-			
-				temp = temp->_right;			
+				node->_left = new Node(data, 0);
 			}
-
-			else if (data < temp->_data) // move left
-			{
-				if (temp->_left == nullptr) // we insert
-				{
-					temp->_left = new Node(data, 0);
-					_size++;
-					break;
-				}
-				
-				temp = temp->_left;
+			else {
+				avl_insert(node->_left, data);
 			}
 		}
 		
+		else if (data > node->_data)
+		{
+			if (node->_right == nullptr)
+			{
+				node->_right = new Node(data, 0);
+			}
+			else {
+				avl_insert(node->_right, data);
+			}
+		}
+			
+		node->height = 1 + max(get_height(node->_left),
+			get_height(node->_right));
 
 		// Must rebalance next
 
-		// NOTES:
-		// I have been trying to get the method to keep track of height, but it keeps failing (typically off by one)
-		// I will come back to it and try to get it to work.
-
 
 		return true;
+	
 	}
 
 	bool avl_remove(const T& data) // incomplete
@@ -250,7 +227,23 @@ private:
 	public:
 		AVL_Tree() : _root(nullptr), _size(0) {}
 
-		bool insert(const T& elem) { return avl_insert(elem); }
+		bool insert(const T& elem) {
+
+			if (_root == nullptr) // if no nodes, build root
+			{
+				_root = new Node(elem, 0); // single node height 0
+				_size++;
+				return true;
+			}
+
+			if (avl_find(elem) == true) // already in tree
+			{
+				return true;
+			}
+
+			return avl_insert(_root, elem); 
+			
+		}
 		bool remove(const T& elem) { return avl_remove(elem); }
 
 
