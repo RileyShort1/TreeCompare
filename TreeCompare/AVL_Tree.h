@@ -129,7 +129,7 @@ private:
 	{
 		if (node == nullptr)
 		{
-			return 0;
+			return -1;
 		}
 
 		return node->height;
@@ -142,21 +142,22 @@ private:
 
 		// four cases
 
-		// Right Right (is right child)
-		if (bf < -1 && isRightChild == true)
+		// Right Right (is right child) // WORKS
+		if (bf < -1 && isRightChild == false)
 		{
 			std::cout << "1" << std::endl;
-			_rotate_left(node);
-		}
-
-		// Left Left (is left child)
-		else if (bf > 1 && isRightChild == false)
-		{
-			std::cout << "2" << std::endl;
 			_rotate_right(node);
 		}
 
-		// Right Left (is right child)
+		// Left Left (is left child) // WORKS
+		else if (bf > 1 && isRightChild == false)
+		{
+			std::cout << "2" << std::endl;
+			//std::cout << "Rotating right on node " << node->_data << std::endl;
+			_rotate_left(node);
+		}
+
+		// Right Left (is right child) // NEEDS FIXING
 		else if (bf < -1 && isRightChild == true)
 		{
 			std::cout << "3" << std::endl;
@@ -165,7 +166,7 @@ private:
 		}
 
 		// Left Right (is left child)
-		else if (bf > 1 && isRightChild == false)
+		else if (bf > 1 && isRightChild == false) // NEEDS FIXING
 		{
 			std::cout << "4" << std::endl;
 			_rotate_left(node);
