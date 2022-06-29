@@ -182,7 +182,7 @@ private:
 		return;
 	}
 
-	bool avl_insert(Node* node, const T& data) // does not work (it can insert like a BST, but can't keep track of height)
+	bool avl_insert(Node* node, const T& data) // does not yet rebalance
 	{
 		if (data < node->_data) // go left
 		{
