@@ -22,8 +22,11 @@ public:
         myTree.insert(35); 
         myTree.insert(100); 
         myTree.insert(6);
+        myTree.insert(200);
 
         printTree(myTree._root);
+        std::cout << std::endl;
+        std::cout << "_root is " << myTree._root->_data << std::endl;
 
     }
 

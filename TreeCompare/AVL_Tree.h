@@ -23,6 +23,7 @@ private:
 		{
 			return;
 		}
+
 		// Rotation of A and B where p is A and p->_left is B
 		Node* bLeft = p->_left->_left;
 		Node* bRight = p->_left->_right;
@@ -49,6 +50,7 @@ private:
 		{
 			return;
 		}
+
 		// Rotation of A and B where p is A and p->_left is B
 		Node* bRight = p->_right->_right;
 		Node* bLeft = p->_right->_left;
@@ -112,18 +114,6 @@ private:
 
 	// this means single nodes with no children have a height 0 
 
-	int _get_balance_factor(const Node* n)
-	{
-		if (n == nullptr || n->_left == nullptr || n->_right == nullptr)
-		{
-			return 0;
-		}
-
-		return n->_right->height - n->_left->height;
-	}
-
-	void _balance(Node* node); // this may be useful
-
 	int max(int val, int altval) // helpers
 	{
 		if (val > altval)
@@ -144,7 +134,54 @@ private:
 		return node->height;
 	}
 
-	bool avl_insert(const T& data)
+	void _balance(Node* node, bool isRightChild) // Does not work / untested
+	{
+		int bf = (get_height(node->_right) - get_height(node->_left)); // balance factor
+		std::cout << "balance factor: " << bf << std::endl;
+
+		// four cases
+
+		// Right Right (is right child)
+		if (bf < -1 && isRightChild == true)
+		{
+			std::cout << "1" << std::endl;
+			_rotate_with_left_child(node);
+		}
+
+		// Left Left (is left child)
+		else if (bf > 1 && isRightChild == false)
+		{
+			std::cout << "2" << std::endl;
+			_rotate_with_right_child(node);
+		}
+
+		// Right Left (is right child)
+		else if (bf < -1 && isRightChild == true)
+		{
+			std::cout << "3" << std::endl;
+			_rotate_with_right_child(node);
+			_rotate_with_left_child(node);
+		}
+
+		// Left Right (is left child)
+		else if (bf > 1 && isRightChild == false)
+		{
+			std::cout << "4" << std::endl;
+			_rotate_with_left_child(node);
+			_rotate_with_right_child(node);
+		}
+
+		return;
+
+	}
+
+	void update(Node* node)
+	{
+		node->height = (1 + (max(get_height(node->_left), get_height(node->_right))));
+		return;
+	}
+
+	bool avl_insert(const T& data) // does not work (it can insert like a BST, but can't keep track of height)
 	{
 		if (_root == nullptr) // if no nodes, build root
 		{
@@ -162,8 +199,10 @@ private:
 		// then rebalance as necessary
 		Node* temp = _root;
 
+		// regular BST insertion
 		while (temp != nullptr)
 		{
+			nodes.push(temp);
 			if (data > temp->_data) // move right
 			{
 				if (temp->_right == nullptr) // we insert
@@ -173,7 +212,7 @@ private:
 					break;
 				}
 			
-				temp = temp->_right;
+				temp = temp->_right;			
 			}
 
 			else if (data < temp->_data) // move left
@@ -188,16 +227,19 @@ private:
 				temp = temp->_left;
 			}
 		}
-
-		temp->height = 1 + max(get_height(temp->_left), get_height(temp->_right));
-		_root->height = 1 + max(get_height(_root->_left), get_height(_root->_right));
+		
 
 		// Must rebalance next
+
+		// NOTES:
+		// I have been trying to get the method to keep track of height, but it keeps failing (typically off by one)
+		// I will come back to it and try to get it to work.
+
 
 		return true;
 	}
 
-	bool avl_remove(const T& data)
+	bool avl_remove(const T& data) // incomplete
 	{
 		if (avl_find(data) == false)
 		{
