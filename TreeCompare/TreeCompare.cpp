@@ -17,16 +17,23 @@ public:
     {
         AVL_Tree<int> myTree;
 
-        myTree.insert(5); 
-        myTree.insert(10); 
-        myTree.insert(15); 
-        myTree.insert(100); 
+        myTree.insert(1); 
+        myTree.insert(2); 
+        myTree.insert(3); 
+        myTree.insert(4); 
+        myTree.insert(5);
         myTree.insert(6);
-        myTree.insert(200);
+        myTree.insert(7);
+        myTree.insert(8);
+        myTree.insert(9);
+        myTree.insert(10);
+        myTree.insert(11);
+        myTree.insert(12);
 
         printTree(myTree._root);
         std::cout << std::endl;
         std::cout << "_root is " << myTree._root->_data << std::endl;
+        std::cout << "Tree size = " << myTree._size << std::endl;
 
         /*
         myTree.insert(15);
@@ -75,7 +82,7 @@ public:
 
         printTree(p->_left);
 
-        std::cout << p->_data << " -- Height = " << p->height << " -- Children: ";
+        std::cout << p->_data << " -- Height = " << p->_height << " -- Children: ";
         if (p->_left == nullptr && p->_right != nullptr)
         {
             std::cout << "left is null -";
