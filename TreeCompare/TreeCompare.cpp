@@ -9,6 +9,13 @@
 // Link to a data structure visualization tool (https://www.cs.usfca.edu/~galles/visualization/Algorithms.html)
 //
 
+/*
+ 
+ Walter:
+ 
+ testing the github source control
+ 
+ */
 
 class AVLTests {
 public:
