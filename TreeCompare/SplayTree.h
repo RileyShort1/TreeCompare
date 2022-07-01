@@ -1,8 +1,6 @@
 #ifndef SplayTree_h
 #define SplayTree_h
 
-#include <string>
-
 template<typename T>
 class SplayTree {
 private:
@@ -283,29 +281,27 @@ private:
 		return true;
 	}
 
-	const T& splay_find(const T& x) // Loud Find method
+	const Node* splay_get(const T& x)
 	{
 		if (_root == nullptr)
 		{
-			throw Not_found_exception();
+			return nullptr;
 		}
 
 		_splay(_root, x);
 
-		if (_root->_data != x) // throw an exception
+		if (_root->_data != x) 
 		{
-			throw Not_found_exception();
+			return nullptr;
 		}
 
-		return _root->_data;
+		return _root;
 	}
 
-	bool splay_contains(const T& x) // Quiet Find method
+	bool splay_contains(const T& x) 
 	{
-		try {
-			splay_find(x);
-		}
-		catch (Not_found_exception x) {
+		if (splay_get(x) == nullptr)
+		{
 			return false;
 		}
 
@@ -314,29 +310,16 @@ private:
 
 public:
 	SplayTree() : _root(nullptr), _size(0) {}
-	//~SplayTree() { _recursive_delete(_root); }
 
 	size_t get_size() const { return _size; }
 
-	bool find(const T& elem) { return splay_contains(elem); }
+	bool contains(const T& elem) { return splay_contains(elem); }
+	const Node* get(const T& elem) { return splay_get(elem); }
 	
 	bool insert(const T& elem) { return splay_insert(elem); }
 	bool remove(const T& elem) { return splay_remove(elem); }
-	bool clear()
-	{
-		return _recursive_delete(_root);
-	}
-
-
-	class Not_found_exception : public std::exception {
-	public:
-		std::string to_string() { return "Not found exception"; }
-	};
 
 	friend class SplayTests;
 };
-
-
-
 
 #endif /* SplayTree_h */
