@@ -239,6 +239,10 @@ private:
         }
         
         //is it necessary to check for null here? if there are bugs try it.
+        
+        if(root == nullptr){ //basic null condition
+            return nullptr;
+        }
          
         
         // get new height
