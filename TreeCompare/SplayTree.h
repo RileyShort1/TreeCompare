@@ -1,5 +1,7 @@
 #ifndef SplayTree_h
 #define SplayTree_h
+#include <string>
+
 
 template<typename T>
 class SplayTree {
