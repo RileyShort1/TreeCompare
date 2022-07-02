@@ -50,7 +50,7 @@ private:
 
 				if (x < p->_left->_data) // We zig zig left
 				{
-					_rotate_with_left_child(p);
+					p = _rotate_right(p);
 
 					if (p->_left == nullptr) // item is not in tree
 					{
@@ -76,7 +76,7 @@ private:
 
 				if (x > p->_right->_data) // zig zig right
 				{
-					_rotate_with_right_child(p);
+					p = _rotate_left(p);
 
 					if (p->_right == nullptr) // item is not in tree
 					{
@@ -106,62 +106,41 @@ private:
 			rightTreeMin->_left = p->_right;
 		}
 
-		p->_left = mid->_right;
-		p->_right = mid->_left;
+		if (p != nullptr)
+		{
+			p->_left = mid->_right;
+			p->_right = mid->_left;
+		}
 
 		return;
 	}
 
-	void _rotate_with_left_child(Node*& p)
+	Node* _rotate_right(Node*& node)
 	{
-		if (p == nullptr || p->_left == nullptr)
+		if (node == nullptr || node->_left == nullptr)
 		{
-			return;
+			return nullptr;
 		}
-		// Rotation of A and B where p is A and p->_left is B
-		Node* bLeft = p->_left->_left;
-		Node* bRight = p->_left->_right;
-		Node* aRight = p->_right;
 
-		// now we can cut off the nodes
-		p->_right = p->_left;
-		p->_left = nullptr;
-		T data = p->_data;
-		p->_data = p->_right->_data;
-		p->_right->_data = data;
+		Node* newParent = node->_left;
+		node->_left = newParent->_right;
+		newParent->_right = node;
 
-		// correct new roots node ptr's
-		p->_left = bLeft;
-		p->_right->_left = bRight;
-		p->_right->_right = aRight;
-
-		return;
+		return newParent;
 	}
 
-	void _rotate_with_right_child(Node*& p)
+	Node* _rotate_left(Node*& node)
 	{
-		if (p == nullptr || p->_right == nullptr)
+		if (node == nullptr || node->_right == nullptr)
 		{
-			return;
+			return nullptr;
 		}
-		// Rotation of A and B where p is A and p->_left is B
-		Node* bRight = p->_right->_right;
-		Node* bLeft = p->_right->_left;
-		Node* aLeft = p->_left;
 
-		// now we can cut off the nodes
-		p->_left = p->_right;
-		p->_right = nullptr;
-		T data = p->_data;
-		p->_data = p->_left->_data;
-		p->_left->_data = data;
+		Node* newParent = node->_right;
+		node->_right = newParent->_left;
+		newParent->_left = node;
 
-		// correct new roots node ptr's
-		p->_right = bRight;
-		p->_left->_right = bLeft;
-		p->_left->_left = aLeft;
-
-		return;
+		return newParent;
 	}
 
 	bool splay_insert(const T& x)
