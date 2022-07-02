@@ -37,6 +37,19 @@ public:
         myTree.insert(11);
         myTree.insert(12);
 
+        myTree.insert(21);
+        myTree.insert(22);
+        myTree.insert(23);
+        myTree.insert(24);
+        myTree.insert(25);
+        myTree.insert(26);
+        myTree.insert(27);
+        myTree.insert(28);
+        myTree.insert(29);
+        myTree.insert(210);
+        myTree.insert(211);
+        myTree.insert(212);
+
         printTree(myTree._root);
         std::cout << std::endl;
         std::cout << "_root is " << myTree._root->_data << std::endl;
@@ -44,7 +57,29 @@ public:
         std::cout << std::endl;
         std::cout << std::endl;
 
+
+      
         myTree.remove(10);
+        myTree.remove(11);
+        myTree.remove(12);
+
+        myTree.remove(21);
+        myTree.remove(22);
+        myTree.remove(23);
+        myTree.remove(24); // root changes to 4 here
+        myTree.remove(25);
+
+        myTree.remove(1);
+        myTree.remove(2);
+        myTree.remove(3);
+
+       // myTree.remove(300); // causes _size bug
+       
+
+
+
+
+
 
         printTree(myTree._root);
         std::cout << std::endl;

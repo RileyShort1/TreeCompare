@@ -174,16 +174,18 @@ private:
 	}
     
     //remove helper
-    
-    Node* minNode(Node* node)
-    {
-        Node* minimum = node;
-     
-        while (minimum->_left != nullptr) // changing NULL to nullptr for consistency (I dont think it matters)
-            minimum = minimum->_left;
-     
-        return minimum;
-    }
+
+	Node* maxNode(Node* node)
+	{
+		Node* max = node;
+
+		while (max->_right != nullptr)
+		{
+			max = max->_right;
+		}
+
+		return max;
+	}
     
     
 
@@ -229,11 +231,11 @@ private:
             }
             else{
                 
-                Node* temp = minNode(root->_right);
+				Node* temp = maxNode(root->_left);
                 
                 root->_data = temp->_data;
                 
-                root->_right = avl_remove(root->_right, temp->_data);
+                root->_left = avl_remove(root->_left, temp->_data);
             }
 
         }
@@ -247,7 +249,7 @@ private:
         
         // get new height
         
-        root->_height = 1 + max(get_height(root->_left), get_height(root->_right)); 
+		update(root);
      
         //balance of root
         int bal = get_balance(root);
@@ -307,7 +309,7 @@ private:
 //				return true;
 //			}
 
-			Node* temp = avl_remove(_root, elem); // changed Node to Node* ++ "avl_remove does not take 1 argument" added _root
+			Node* temp = avl_remove(_root, elem); 
             
             if (temp != nullptr) {
                 _root = temp;
