@@ -172,10 +172,113 @@ private:
 
 		return node;
 	}
+    
+    //remove helper
+    
+    Node* minNode(Node* node)
+    {
+        Node* minimum = node;
+     
+        while (minimum->left != NULL)
+            minimum = minimum->left;
+     
+        return minimum;
+    }
+    
+    
 
-	bool avl_remove(const T& data) // needs to be built 
+	Node* avl_remove(Node* root, const T& data) // currently building
 	{
-		
+        if(root == nullptr){ //basic null condition
+            return nullptr;
+        }
+        
+        if(data < root->_data){     //search left tree
+            
+            root->_left = avl_remove(root->_left, data);
+        }
+        
+        if(data > root->_data){     //search right tree
+            
+            root->_right = avl_remove(root->_right, data);
+        }
+        
+        else{
+            
+            if ((root->_left == nullptr) || (root->_right == nullptr)) { // one or fewer child nodes
+                
+                Node *temp = nullptr;
+                
+                if (root->_left != nullptr) { //if left is only child
+                    temp = root->_left;
+                }
+                else if (root->_right != nullptr){ //if right is only child
+                    temp = root->_right;
+                }
+                
+                if(temp == nullptr){        // no child
+                    
+                    temp = root;
+                    root = nullptr;
+                }
+                else{                       //one child
+                    *root = *temp;
+                    
+                }
+                
+            }
+            else{
+                
+                Node* temp = minNode(root->right);
+                
+                root->_data = temp->_data;
+                
+                root->_right = avl_remove(root->_right, temp->_data);
+            }
+
+        }
+        
+        //is it necessary to check for null here? if there are bugs try it.
+         
+        
+        // get new height
+        
+        root->height = 1 + max(height(root->left), height(root->right));
+     
+        //balance of root
+        int bal = getBalance(root);
+     
+        
+     
+        // double left
+        if (bal > 1 && getBalance(root->_left) >= 0){
+            
+            return _rotate_right(root);
+        }
+     
+        // left right
+        if (bal > 1 && getBalance(root->_left) < 0){
+            
+            root->_left = _rotate_left(root->_left);
+            return _rotate_right(root);
+        }
+     
+        // double right
+        if (bal < -1 && getBalance(root->_right) <= 0){
+            
+            return _rotate_left(root);
+        }
+     
+        // right left
+        if (bal < -1 && getBalance(root->_right) > 0){
+            
+            root->_right = _rotate_right(root->_right);
+            return _rotate_left(root);
+        }
+     
+        return root;
+        
+        
 	}
 
 	public:
@@ -195,13 +298,19 @@ private:
 
 		bool remove(const T& elem) 
 		{ 
-			if (avl_find(elem) == false) // Not in tree
-			{
-				return true;
-			}
+//			if (avl_find(elem) == false) // Not in tree
+//			{
+//				return true;
+//			}
 
-			_size--;
-			return avl_remove(elem); 
+			Node temp = avl_remove(elem);
+            
+            if (temp != nullptr) {
+                _size--;
+                return true;
+            }
+            
+            return false;
 		}
 
 	friend class AVLTests;
