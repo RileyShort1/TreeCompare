@@ -41,6 +41,15 @@ public:
         std::cout << std::endl;
         std::cout << "_root is " << myTree._root->_data << std::endl;
         std::cout << "Tree size = " << myTree._size << std::endl;
+        std::cout << std::endl;
+        std::cout << std::endl;
+
+        myTree.remove(10);
+
+        printTree(myTree._root);
+        std::cout << std::endl;
+        std::cout << "_root is " << myTree._root->_data << std::endl;
+        std::cout << "Tree size = " << myTree._size << std::endl;
 
         /*
         myTree.insert(15);

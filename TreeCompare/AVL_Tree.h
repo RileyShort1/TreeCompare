@@ -179,8 +179,8 @@ private:
     {
         Node* minimum = node;
      
-        while (minimum->left != NULL)
-            minimum = minimum->left;
+        while (minimum->_left != nullptr) // changing NULL to nullptr for consistency (I dont think it matters)
+            minimum = minimum->_left;
      
         return minimum;
     }
@@ -229,7 +229,7 @@ private:
             }
             else{
                 
-                Node* temp = minNode(root->right);
+                Node* temp = minNode(root->_right);
                 
                 root->_data = temp->_data;
                 
@@ -243,34 +243,34 @@ private:
         
         // get new height
         
-        root->height = 1 + max(height(root->left), height(root->right));
+        root->_height = 1 + max(get_height(root->_left), get_height(root->_right)); 
      
         //balance of root
-        int bal = getBalance(root);
+        int bal = get_balance(root);
      
         
      
         // double left
-        if (bal > 1 && getBalance(root->_left) >= 0){
+        if (bal > 1 && get_balance(root->_left) >= 0){
             
             return _rotate_right(root);
         }
      
         // left right
-        if (bal > 1 && getBalance(root->_left) < 0){
+        if (bal > 1 && get_balance(root->_left) < 0){
             
             root->_left = _rotate_left(root->_left);
             return _rotate_right(root);
         }
      
         // double right
-        if (bal < -1 && getBalance(root->_right) <= 0){
+        if (bal < -1 && get_balance(root->_right) <= 0){
             
             return _rotate_left(root);
         }
      
         // right left
-        if (bal < -1 && getBalance(root->_right) > 0){
+        if (bal < -1 && get_balance(root->_right) > 0){
             
             root->_right = _rotate_right(root->_right);
             return _rotate_left(root);
@@ -303,7 +303,7 @@ private:
 //				return true;
 //			}
 
-			Node temp = avl_remove(elem);
+			Node* temp = avl_remove(_root, elem); // changed Node to Node* ++ "avl_remove does not take 1 argument" added _root
             
             if (temp != nullptr) {
                 _size--;
