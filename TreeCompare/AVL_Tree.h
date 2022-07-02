@@ -198,7 +198,7 @@ private:
             root->_left = avl_remove(root->_left, data);
         }
         
-        if(data > root->_data){     //search right tree
+        else if(data > root->_data){     //search right tree
             
             root->_right = avl_remove(root->_right, data);
         }
@@ -310,6 +310,7 @@ private:
 			Node* temp = avl_remove(_root, elem); // changed Node to Node* ++ "avl_remove does not take 1 argument" added _root
             
             if (temp != nullptr) {
+                _root = temp;
                 _size--;
                 return true;
             }
