@@ -231,7 +231,7 @@ private:
             }
             else{
                 
-				Node* temp = maxNode(root->_left);
+                Node* temp = maxNode(root->_left);
                 
                 root->_data = temp->_data;
                 
