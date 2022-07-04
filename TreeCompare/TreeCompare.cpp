@@ -50,15 +50,61 @@ public:
         myTree.insert(211);
         myTree.insert(212);
 
+       
+
+       
+
+        myTree.remove(2);
+        myTree.remove(3);
+        myTree.remove(4);
+        myTree.remove(5);
+        myTree.remove(6);
+        myTree.remove(7);
+        myTree.remove(8);
+        myTree.remove(9);
+        myTree.remove(10);
+        myTree.remove(11);
+        myTree.remove(12);
+
+        myTree.remove(21);
+        myTree.remove(22);
+        myTree.remove(23);
+        myTree.remove(24);
+        myTree.remove(25);
+        myTree.remove(26);
+        myTree.remove(27);
+        myTree.remove(28);
+        myTree.remove(29);
+        myTree.remove(210);
+        myTree.remove(211);
+        myTree.remove(212);
+        myTree.remove(1);
+
+       
+        
+
+        
+        
+
+
         printTree(myTree._root);
         std::cout << std::endl;
-        std::cout << "_root is " << myTree._root->_data << std::endl;
+        if (myTree._root != nullptr)
+        {
+            std::cout << "_root is " << myTree._root->_data << std::endl;
+        }
+        else
+        {
+            std::cout << "_root is NULL" << std::endl;
+        }
+       
         std::cout << "Tree size = " << myTree._size << std::endl;
         std::cout << std::endl;
         std::cout << std::endl;
 
-
+       
       
+        /*
         myTree.remove(10);
         myTree.remove(11);
         myTree.remove(12);
@@ -73,7 +119,13 @@ public:
         myTree.remove(2);
         myTree.remove(3);
 
-       // myTree.remove(300); // causes _size bug
+        myTree.remove(300); // causes _size bug
+        myTree.remove(300); // causes _size bug
+        myTree.remove(300); // causes _size bug
+        myTree.remove(300); // causes _size bug
+        myTree.remove(300); // causes _size bug
+        */
+
        
 
 
@@ -81,10 +133,10 @@ public:
 
 
 
-        printTree(myTree._root);
-        std::cout << std::endl;
-        std::cout << "_root is " << myTree._root->_data << std::endl;
-        std::cout << "Tree size = " << myTree._size << std::endl;
+       // printTree(myTree._root);
+       // std::cout << std::endl;
+       // std::cout << "_root is " << myTree._root->_data << std::endl;
+       // std::cout << "Tree size = " << myTree._size << std::endl;
 
         /*
         myTree.insert(15);

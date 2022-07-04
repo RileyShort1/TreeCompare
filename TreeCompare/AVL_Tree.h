@@ -294,7 +294,7 @@ private:
 		{
 			if (avl_find(elem) == true) // already in tree
 			{
-				return true;
+				return true; // we could return false
 			}
 			
 			_root = avl_insert(_root, elem);
@@ -304,20 +304,14 @@ private:
 
 		bool remove(const T& elem) 
 		{ 
-//			if (avl_find(elem) == false) // Not in tree
-//			{
-//				return true;
-//			}
+			if (avl_find(elem) == false) // Not in tree
+			{
+				return true; // we could return false
+   		    }
 
-			Node* temp = avl_remove(_root, elem); 
-            
-            if (temp != nullptr) {
-                _root = temp;
-                _size--;
-                return true;
-            }
-            
-            return false;
+			_root = avl_remove(_root, elem);
+			_size--;
+			return true;
 		}
 
 	friend class AVLTests;
