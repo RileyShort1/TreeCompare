@@ -14,19 +14,6 @@ private:
 	Node* _root;
 	size_t _size;
 
-	// Helpers 
-	static Node* _deep_copy(const Node* p) // We might not need this function 
-	{
-		if (p == nullptr)
-		{
-			return nullptr;
-		}
-
-		Node* return_val = new Node(p->_data, _deep_copy(p->_left), _deep_copy(p->_right));
-
-		return return_val;
-	}
-
 	void _splay(Node*& p, const T& x)
 	{
 		if (p == nullptr)
@@ -175,7 +162,7 @@ private:
 					_root->_right = newNode;
 				}
 				_size++;
-				_splay(_root, x); // NEW
+				_splay(_root, x);
 				return true;
 			}
 
@@ -193,7 +180,7 @@ private:
 				}
 
 				_size++;
-				_splay(_root, x); // NEW
+				_splay(_root, x);
 				return true;
 			}
 		}
@@ -248,7 +235,7 @@ private:
 
 			if (_root->_left != nullptr)
 			{
-				_root->_left->_right = xRight; // problem 
+				_root->_left->_right = xRight;
 			}
 
 			Node* temp = _root;
