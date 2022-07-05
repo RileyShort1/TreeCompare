@@ -99,6 +99,8 @@ private:
 			p->_right = mid->_left;
 		}
 
+		delete mid;
+
 		return;
 	}
 
