@@ -2,7 +2,6 @@
 #define SplayTree_h
 #include <string>
 
-
 template<typename T>
 class SplayTree {
 private:
@@ -100,7 +99,7 @@ private:
 		}
 
 		delete mid;
-
+		
 		return;
 	}
 
