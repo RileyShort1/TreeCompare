@@ -4,6 +4,7 @@
 #include "AVL_Tree.h"
 #include <iostream>
 #include <string>
+#include <ctime>
 
 //
 // Link to a data structure visualization tool (https://www.cs.usfca.edu/~galles/visualization/Algorithms.html)
@@ -50,10 +51,6 @@ public:
         myTree.insert(211);
         myTree.insert(212);
 
-       
-
-       
-
         myTree.remove(2);
         myTree.remove(3);
         myTree.remove(4);
@@ -80,13 +77,6 @@ public:
         myTree.remove(212);
         myTree.remove(1);
 
-       
-        
-
-        
-        
-
-
         printTree(myTree._root);
         std::cout << std::endl;
         if (myTree._root != nullptr)
@@ -102,8 +92,6 @@ public:
         std::cout << std::endl;
         std::cout << std::endl;
 
-       
-      
         /*
         myTree.remove(10);
         myTree.remove(11);
@@ -125,13 +113,6 @@ public:
         myTree.remove(300); // causes _size bug
         myTree.remove(300); // causes _size bug
         */
-
-       
-
-
-
-
-
 
        // printTree(myTree._root);
        // std::cout << std::endl;
@@ -165,15 +146,12 @@ public:
 
         myTree._rotate_left(myTree._root);
 
-
-
         std::cout << std::endl;
         std::cout << std::endl;
         std::cout << "_root is " << myTree._root->_data << std::endl;
         printTree(myTree._root);
 
         */
-
     }
 
     void printTree(AVL_Tree<int>::Node* p)
@@ -284,14 +262,95 @@ public:
         printTree(p->_right); 
     }
 };
+/*
+In your main you should
+srand(XYZ)
+create AVL Tree
+generate 1M rands and stuff into the tree, noting clock value after every 1000
+srand back to xyz
+create Splay Tree
+same as step 3
+Generate 1M rands and look up in AVL, noting clock value after every 1000 - 
+- in this case you're only interested in the final number since the tree sizes are fixed, but sample every 1000 anyway.
+in a loop from 1 to 100,000 remove each number sequentially from the AVL Tree, noting clock per 1000 as before.
+Same for splay trees
+Both trees should be empty after all the removals
+Pull the data into a google spreadsheetand we can generate any necessary plots.
+*/
+
+// class for our final benchmarking
+class Benchmark {
+
+    // { 1,2,3,4,5,10 } with N = 1 yeilding uniform data, and N > 1 yeilding rands from aprox gaussian
+    int rand_uniform(size_t n) // gets uniform data
+    {
+        int final_rand = 0;
+
+        for (size_t i = 0; i < n; i++)
+        {
+            final_rand = rand() % 100000;
+        }
+
+        return final_rand;
+    }
+
+    int rand_gaussian(size_t n) // gets normal data
+    {
+        int final_rand = 0;
+
+        for (size_t i = 0; i < n; i++)
+        {
+            final_rand += rand() % 100000;
+        }
+
+        return (int)final_rand / n;
+    }
+
+    void testSplay()
+    {
+        // srand(xyz);
+        SplayTree<int> testTree;
+
+        // get data to insert (put it in a vector??)
+
+        // insert data - noting clock every 1000 elements
+
+        // remove data - noting clock every 1000 elements
+        
+
+
+    }
+
+    void testAVL()
+    {
+        // srand(xyz);
+        AVL_Tree<int> testTree;
+
+        // get data to insert (put it in a vector??)
+
+        // insert data - noting clock every 1000 elements
+
+        // remove data - noting clock every 1000 elements
+
+
+    }
+
+};
 
 int main()
 {
     //SplayTests rs;
     //rs.generalTests();
 
-    AVLTests av;
-    av.generalTests();
+    //AVLTests av;
+    //av.generalTests();
+
+
+   
+
+    // call functions
+
+
 }
 
 

@@ -315,7 +315,6 @@ private:
 		}
 
 	friend class AVLTests;
-
 };
 
 
