@@ -283,6 +283,7 @@ private:
 
 	public:
 		AVL_Tree() : _root(nullptr), _size(0) {}
+		size_t get_size() { return _size; }
 
 		bool insert(const T& elem)
 		{

@@ -313,7 +313,7 @@ public:
 
         const int m = 1000000; // one million
         clock_t timeForInsert;
-        //clock_t timeForRemove;
+        clock_t timeForRemove;
 
 
         SplayTree<int> testTree;
@@ -362,18 +362,22 @@ public:
         std::cout << "Average time per 1k inserts: " << avg << std::endl;
        
 
-        /*
-        // remove data - noting clock every 1000 elements
-        for (int i = 0; i < 100; i++)
-        {
-            for (int j = 0; j < 1000; j++)
-            {
-                testTree.remove(rands[j]);
-            }
+        //std::vector<clock_t> timesPer1kRemove;
+        timeForRemove = clock();
 
-            // clock value here??
+        // remove data - noting clock every 1000 elements
+        for (int i = 0; i < 100000; i++)
+        {
+            testTree.remove(i);
         }
-        */
+
+        timeForRemove = clock() - timeForRemove;
+
+        std::cout << std::endl;
+        std::cout << "Processor time taken for removing all elements from splay tree: "
+            << (float)timeForRemove / CLOCKS_PER_SEC << " seconds" << std::endl;
+
+        std::cout << "Tree size: " << testTree.get_size() << std::endl;
         
         return;
 
@@ -385,14 +389,72 @@ public:
 
         AVL_Tree<int> testTree;
 
-        // get data to insert (put it in a vector??)
-        // get uniform data
+        const int m = 1000000; // one million
+        clock_t timeForInsert;
+        clock_t timeForRemove;
 
+        std::vector<int> rands;
+
+        // get data to insert (put it in a vector??)
+        // get normal data
+
+        for (int i = 0; i < m; i++)
+        {
+            rands.push_back(rand_uniform(1));
+        }
 
         // insert data - noting clock every 1000 elements
+        std::vector<clock_t> timesPer1kInsert;
+
+        timeForInsert = clock();
+
+        for (int i = 0; i < 1000; i++)
+        {
+            for (int j = 0; j < 1000; j++)
+            {
+                testTree.insert(rands[j]);
+            }
+
+            timeForInsert = clock() - timeForInsert; // get clock time
+            timesPer1kInsert.push_back(timeForInsert);
+            timeForInsert = clock(); // reset clock
+        }
+
+        clock_t totalTime = 0;
+        float avg;
+
+        for (size_t i = 0; i < timesPer1kInsert.size(); i++)
+        {
+            totalTime += timesPer1kInsert[i];
+        }
+
+        avg = (float)totalTime / CLOCKS_PER_SEC;
+        avg = avg / timesPer1kInsert.size();
+
+        std::cout << "Processor time taken for inserting 1M elements into AVL tree: "
+            << (float)totalTime / CLOCKS_PER_SEC << " seconds" << std::endl;
+
+        std::cout << "Average time per 1k inserts: " << avg << std::endl;
+
+
+        //std::vector<clock_t> timesPer1kRemove;
+        timeForRemove = clock();
 
         // remove data - noting clock every 1000 elements
+        for (int i = 0; i < 100000; i++)
+        {
+            testTree.remove(i);
+        }
 
+        timeForRemove = clock() - timeForRemove;
+
+        std::cout << std::endl;
+        std::cout << "Processor time taken for removing all elements from AVL tree: "
+            << (float)timeForRemove / CLOCKS_PER_SEC << " seconds" << std::endl;
+
+        std::cout << "Tree size: " << testTree.get_size() << std::endl;
+
+        return;
 
     }
 
@@ -409,6 +471,9 @@ int main()
     Benchmark x;
 
     x.testSplay();
+    std::cout << std::endl;
+    std::cout << std::endl;
+    x.testAVL();
     // call functions
 
 
