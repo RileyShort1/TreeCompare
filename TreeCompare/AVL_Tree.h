@@ -1,8 +1,6 @@
 #ifndef AVL_Tree_h
 #define AVL_Tree_h
 
-#include <iostream>
-
 template<typename T> 
 class AVL_Tree {
 private:
