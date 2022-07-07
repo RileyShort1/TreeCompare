@@ -5,18 +5,16 @@
 #include <iostream>
 #include <string>
 #include <ctime>
+#include <vector>
+
 
 //
 // Link to a data structure visualization tool (https://www.cs.usfca.edu/~galles/visualization/Algorithms.html)
 //
 
+
+ 
 /*
- 
- Walter:
- 
- testing the github source control
- 
- */
 
 class AVLTests {
 public:
@@ -92,7 +90,7 @@ public:
         std::cout << std::endl;
         std::cout << std::endl;
 
-        /*
+       
         myTree.remove(10);
         myTree.remove(11);
         myTree.remove(12);
@@ -112,14 +110,14 @@ public:
         myTree.remove(300); // causes _size bug
         myTree.remove(300); // causes _size bug
         myTree.remove(300); // causes _size bug
-        */
+       
 
        // printTree(myTree._root);
        // std::cout << std::endl;
        // std::cout << "_root is " << myTree._root->_data << std::endl;
        // std::cout << "Tree size = " << myTree._size << std::endl;
 
-        /*
+      
         myTree.insert(15);
         myTree.insert(25);
         myTree.insert(10);
@@ -131,9 +129,9 @@ public:
         printTree(myTree._root);
 
         myTree._rotate_right(myTree._root);
-        */
+       
 
-        /*
+       
         myTree.insert(25);
         myTree.insert(10);
         myTree.insert(35);
@@ -151,7 +149,7 @@ public:
         std::cout << "_root is " << myTree._root->_data << std::endl;
         printTree(myTree._root);
 
-        */
+      
     }
 
     void printTree(AVL_Tree<int>::Node* p)
@@ -262,6 +260,8 @@ public:
         printTree(p->_right); 
     }
 };
+
+*/
 /*
 In your main you should
 srand(XYZ)
@@ -280,6 +280,7 @@ Pull the data into a google spreadsheetand we can generate any necessary plots.
 
 // class for our final benchmarking
 class Benchmark {
+public:
 
     // { 1,2,3,4,5,10 } with N = 1 yeilding uniform data, and N > 1 yeilding rands from aprox gaussian
     int rand_uniform(size_t n) // gets uniform data
@@ -308,25 +309,85 @@ class Benchmark {
 
     void testSplay()
     {
-        // srand(xyz);
+        srand(5); // seed rand
+
+        const int m = 1000000; // one million
+        clock_t timeForInsert;
+        //clock_t timeForRemove;
+
+
         SplayTree<int> testTree;
 
+        std::vector<int> rands;
+
         // get data to insert (put it in a vector??)
+        // get normal data
+
+        for (int i = 0; i < m; i++)
+        {
+            rands.push_back(rand_gaussian(10));
+        }
 
         // insert data - noting clock every 1000 elements
+        std::vector<clock_t> timesPer1kInsert;
 
+        timeForInsert = clock();
+
+        for (int i = 0; i < 1000; i++)
+        {
+            for (int j = 0; j < 1000; j++)
+            {
+                testTree.insert(rands[j]);
+            }
+
+            timeForInsert = clock() - timeForInsert; // get clock time
+            timesPer1kInsert.push_back(timeForInsert);
+            timeForInsert = clock(); // reset clock
+        }
+
+       clock_t totalTime = 0;
+       float avg;
+
+        for (size_t i = 0; i < timesPer1kInsert.size(); i++)
+        {
+            totalTime += timesPer1kInsert[i];
+        }
+
+        avg = (float)totalTime / CLOCKS_PER_SEC;
+        avg = avg / timesPer1kInsert.size();
+
+        std::cout << "Processor time taken for inserting 1M elements into splay tree: "
+            << (float)totalTime / CLOCKS_PER_SEC << " seconds" << std::endl;
+
+        std::cout << "Average time per 1k inserts: " << avg << std::endl;
+       
+
+        /*
         // remove data - noting clock every 1000 elements
-        
+        for (int i = 0; i < 100; i++)
+        {
+            for (int j = 0; j < 1000; j++)
+            {
+                testTree.remove(rands[j]);
+            }
 
+            // clock value here??
+        }
+        */
+        
+        return;
 
     }
 
     void testAVL()
     {
-        // srand(xyz);
+        srand(5); // seed rand
+
         AVL_Tree<int> testTree;
 
         // get data to insert (put it in a vector??)
+        // get uniform data
+
 
         // insert data - noting clock every 1000 elements
 
@@ -344,10 +405,10 @@ int main()
 
     //AVLTests av;
     //av.generalTests();
-
-
    
+    Benchmark x;
 
+    x.testSplay();
     // call functions
 
 
