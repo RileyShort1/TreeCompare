@@ -188,23 +188,25 @@ private:
 		return max;
 	}
     
-	Node* avl_remove(Node* root, const T& data) // currently building
+	Node* avl_remove(Node* root, const T& data)
 	{
-        if(root == nullptr){ //basic null condition
+        if (root == nullptr) { //basic null condition
             return nullptr;
         }
         
-        if(data < root->_data){     //search left tree
+        if (data < root->_data) {     //search left tree
             
             root->_left = avl_remove(root->_left, data);
         }
         
-        else if(data > root->_data){     //search right tree
+        else if (data > root->_data) {     //search right tree
             
             root->_right = avl_remove(root->_right, data);
         }
-        
-        else{
+
+        else {
+
+			_size--;
             
             if ((root->_left == nullptr) || (root->_right == nullptr)) { // one or fewer child nodes
                 
@@ -213,22 +215,24 @@ private:
                 if (root->_left != nullptr) { //if left is only child
                     temp = root->_left;
                 }
-                else if (root->_right != nullptr){ //if right is only child
+
+                else if (root->_right != nullptr) { //if right is only child
                     temp = root->_right;
                 }
                 
-                if(temp == nullptr){        // no child
+                if (temp == nullptr) {        // no child
                     
                     temp = root;
                     root = nullptr;
                 }
-                else{                       //one child
-                    *root = *temp;
-                    
+
+                else {                       //one child
+                    *root = *temp;   
                 }
                 
             }
-            else{
+
+            else {
                 
                 Node* temp = maxNode(root->_left);
                 
@@ -239,21 +243,16 @@ private:
 
         }
         
-        //is it necessary to check for null here? if there are bugs try it.
-        
-        if(root == nullptr){ //basic null condition
+        if (root == nullptr) { //basic null condition
+
             return nullptr;
         }
          
-        
         // get new height
-        
 		update(root);
      
         //balance of root
         int bal = get_balance(root);
-     
-        
      
         // double left
         if (bal > 1 && get_balance(root->_left) >= 0){
@@ -281,9 +280,7 @@ private:
             return _rotate_left(root);
         }
      
-        return root;
-        
-        
+        return root;  
 	}
 
 	public:
@@ -294,7 +291,7 @@ private:
 			int size = _size;
 			_root = avl_insert(_root, elem);
 
-			if (size == _size) // returns false on failure to insert even if item is in tree
+			if (size == _size)
 			{
 				return false;
 			}
@@ -304,19 +301,20 @@ private:
 
 		bool remove(const T& elem) 
 		{ 
-			if (avl_find(elem) == false) // Not in tree
-			{
-				return true; // we could return false
-   		    }
+			int size = _size;
 
 			_root = avl_remove(_root, elem);
-			_size--;
-			return true;
+
+			if (size != _size)
+			{
+				_size = size - 1;
+				return true;
+			}
+			
+			return false;
 		}
 
 	friend class AVLTests;
 };
-
-
 
 #endif /* AVL_Tree */
