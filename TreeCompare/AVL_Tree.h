@@ -123,9 +123,10 @@ private:
 
 	Node* avl_insert(Node* node, const T& data) // DONE
 	{
-		if (node == nullptr) 
+		if (node == nullptr) // base case adding new node
 		{
 			Node* temp = new Node(data, 1);
+			_size++;
 
 			return temp;
 		}
@@ -187,8 +188,6 @@ private:
 		return max;
 	}
     
-    
-
 	Node* avl_remove(Node* root, const T& data) // currently building
 	{
         if(root == nullptr){ //basic null condition
@@ -290,15 +289,16 @@ private:
 	public:
 		AVL_Tree() : _root(nullptr), _size(0) {}
 
-		bool insert(const T& elem) 
+		bool insert(const T& elem)
 		{
-			if (avl_find(elem) == true) // already in tree
-			{
-				return true; // we could return false
-			}
-			
+			int size = _size;
 			_root = avl_insert(_root, elem);
-			_size++;
+
+			if (size == _size) // returns false on failure to insert even if item is in tree
+			{
+				return false;
+			}
+
 			return true;
 		}
 
