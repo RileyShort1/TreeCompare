@@ -6,7 +6,6 @@
 #include <string>
 #include <ctime>
 #include <vector>
-#include <algorithm>
 
 
 //
@@ -308,11 +307,10 @@ public:
         return (int)final_rand / n;
     }
 
-    void testSplay()
+    void testSplay(int randSeed, size_t N)
     {
-        srand(5); // seed rand
+        srand(randSeed); // seed rand
 
-        const int m = 1000000; // one million
         clock_t timeForInsert;
         clock_t timeForRemove;
 
@@ -323,9 +321,9 @@ public:
         // get data to insert (put it in a vector??)
         // get normal data
 
-        for (int i = 0; i < m; i++)
+        for (int i = 0; i < 1000000; i++)
         {
-            rands.push_back(rand_gaussian(1));
+            rands.push_back(rand_gaussian(N));
         }
 
         // insert data - noting clock every 1000 elements
@@ -404,13 +402,12 @@ public:
 
     }
 
-    void testAVL()
+    void testAVL(int randSeed, size_t N)
     {
-        srand(5); // seed rand
+        srand(randSeed); // seed rand
 
         AVL_Tree<int> testTree;
 
-        const int m = 1000000; // one million
         clock_t timeForInsert;
         clock_t timeForRemove;
 
@@ -419,9 +416,9 @@ public:
         // get data to insert (put it in a vector??)
         // get normal data
 
-        for (int i = 0; i < m; i++)
+        for (int i = 0; i < 1000000; i++)
         {
-            rands.push_back(rand_uniform(1));
+            rands.push_back(rand_uniform(N));
         }
 
         // insert data - noting clock every 1000 elements
@@ -510,10 +507,10 @@ int main()
    
     Benchmark x;
 
-    x.testSplay();
+    x.testSplay(5, 1);
     std::cout << std::endl;
     std::cout << std::endl;
-    x.testAVL();
+    x.testAVL(5, 1);
     // call functions
 
 
