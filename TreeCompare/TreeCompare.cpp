@@ -289,7 +289,7 @@ public:
 
         for (size_t i = 0; i < n; i++)
         {
-            final_rand = rand() % 100000;
+            final_rand = rand() % 1000000;
         }
 
         return final_rand;
@@ -301,7 +301,7 @@ public:
 
         for (size_t i = 0; i < n; i++)
         {
-            final_rand += rand() % 100000;
+            final_rand += rand() % 1000000;
         }
 
         return (int)final_rand / n;
@@ -314,7 +314,6 @@ public:
         const int m = 1000000; // one million
         clock_t timeForInsert;
         clock_t timeForRemove;
-
 
         SplayTree<int> testTree;
 
@@ -360,24 +359,45 @@ public:
             << (float)totalTime / CLOCKS_PER_SEC << " seconds" << std::endl;
 
         std::cout << "Average time per 1k inserts: " << avg << std::endl;
-       
+        std::cout << "Splay tree size: " << testTree.get_size() << std::endl;
 
-        //std::vector<clock_t> timesPer1kRemove;
+
+
+        std::vector<clock_t> timesPer1kRemove;
         timeForRemove = clock();
 
         // remove data - noting clock every 1000 elements
-        for (int i = 0; i < 100000; i++)
+        // loop 1 - 100000
+        for (int i = 1; i < 100001; i++)
         {
             testTree.remove(i);
+
+            if (i % 1000 == 0)
+            {
+                timeForRemove = clock() - timeForRemove; // get clock time
+                timesPer1kRemove.push_back(timeForRemove);
+                timeForRemove = clock(); // reset clock
+            }
         }
 
-        timeForRemove = clock() - timeForRemove;
+        clock_t totalTimeRemove = 0;
+        float avgRemove;
 
-        std::cout << std::endl;
-        std::cout << "Processor time taken for removing all elements from splay tree: "
-            << (float)timeForRemove / CLOCKS_PER_SEC << " seconds" << std::endl;
+        for (size_t i = 0; i < timesPer1kRemove.size(); i++)
+        {
+            totalTimeRemove += timesPer1kRemove[i];
+        }
 
-        std::cout << "Tree size: " << testTree.get_size() << std::endl;
+        avgRemove = (float)totalTimeRemove / CLOCKS_PER_SEC;
+        avgRemove = avgRemove / timesPer1kRemove.size();
+
+        std::cout << "Processor time taken for removing elements from Splay tree: "
+            << (float)totalTimeRemove / CLOCKS_PER_SEC << " seconds" << std::endl;
+
+        std::cout << "Average time per 1k remove operations: " << avgRemove << std::endl;
+        std::cout << "Splay tree size: " << testTree.get_size() << std::endl;
+
+
         
         return;
 
@@ -435,25 +455,44 @@ public:
             << (float)totalTime / CLOCKS_PER_SEC << " seconds" << std::endl;
 
         std::cout << "Average time per 1k inserts: " << avg << std::endl;
+        std::cout << "AVL tree size: " << testTree.get_size() << std::endl;
 
 
-        //std::vector<clock_t> timesPer1kRemove;
+        std::vector<clock_t> timesPer1kRemove;
         timeForRemove = clock();
-
+     
         // remove data - noting clock every 1000 elements
-        for (int i = 0; i < 100000; i++)
+        // loop 1 - 100000
+        for (int i = 1; i < 100001; i++)
         {
             testTree.remove(i);
+
+            if (i % 1000 == 0)
+            {
+                timeForRemove = clock() - timeForRemove; // get clock time
+                timesPer1kRemove.push_back(timeForRemove);
+                timeForRemove = clock(); // reset clock
+            }
         }
 
-        timeForRemove = clock() - timeForRemove;
+        clock_t totalTimeRemove = 0;
+        float avgRemove;
 
-        std::cout << std::endl;
-        std::cout << "Processor time taken for removing all elements from AVL tree: "
-            << (float)timeForRemove / CLOCKS_PER_SEC << " seconds" << std::endl;
+        for (size_t i = 0; i < timesPer1kRemove.size(); i++)
+        {
+            totalTimeRemove += timesPer1kRemove[i];
+        }
 
-        std::cout << "Tree size: " << testTree.get_size() << std::endl;
+        avgRemove = (float)totalTimeRemove / CLOCKS_PER_SEC;
+        avgRemove = avgRemove / timesPer1kRemove.size();
 
+        std::cout << "Processor time taken for removing elements from AVL tree: "
+            << (float)totalTimeRemove / CLOCKS_PER_SEC << " seconds" << std::endl;
+
+        std::cout << "Average time per 1k remove operations: " << avgRemove << std::endl;
+        std::cout << "AVL tree size: " << testTree.get_size() << std::endl;
+
+       
         return;
 
     }
