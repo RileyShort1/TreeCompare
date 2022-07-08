@@ -6,6 +6,7 @@
 #include <string>
 #include <ctime>
 #include <vector>
+#include <algorithm>
 
 
 //
@@ -332,16 +333,16 @@ public:
 
         timeForInsert = clock();
 
-        for (int i = 0; i < 1000; i++)
+        for (int i = 1; i < 1000001; i++)
         {
-            for (int j = 0; j < 1000; j++)
+            testTree.insert(rands[i-1]);
+           
+            if (i % 1000 == 0)
             {
-                testTree.insert(rands[j]);
+                timeForInsert = clock() - timeForInsert; // get clock time
+                timesPer1kInsert.push_back(timeForInsert);
+                timeForInsert = clock(); // reset clock
             }
-
-            timeForInsert = clock() - timeForInsert; // get clock time
-            timesPer1kInsert.push_back(timeForInsert);
-            timeForInsert = clock(); // reset clock
         }
 
        clock_t totalTime = 0;
@@ -428,16 +429,16 @@ public:
 
         timeForInsert = clock();
 
-        for (int i = 0; i < 1000; i++)
-        {
-            for (int j = 0; j < 1000; j++)
-            {
-                testTree.insert(rands[j]);
-            }
+        for (int i = 1; i < 1000001; i++)
+        {         
+            testTree.insert(rands[i-1]);
 
-            timeForInsert = clock() - timeForInsert; // get clock time
-            timesPer1kInsert.push_back(timeForInsert);
-            timeForInsert = clock(); // reset clock
+            if (i % 1000 == 0)
+            {
+                timeForInsert = clock() - timeForInsert; // get clock time
+                timesPer1kInsert.push_back(timeForInsert);
+                timeForInsert = clock(); // reset clock
+            }
         }
 
         clock_t totalTime = 0;
