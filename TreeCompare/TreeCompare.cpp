@@ -289,7 +289,7 @@ public:
 
         for (size_t i = 0; i < n; i++)
         {
-            final_rand = rand() % 1000000;
+            final_rand = rand() % 100000;
         }
 
         return final_rand;
@@ -301,7 +301,7 @@ public:
 
         for (size_t i = 0; i < n; i++)
         {
-            final_rand += rand() % 1000000;
+            final_rand += rand() % 100000;
         }
 
         return (int)final_rand / n;
