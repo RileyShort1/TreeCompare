@@ -325,7 +325,7 @@ public:
 
         for (int i = 0; i < m; i++)
         {
-            rands.push_back(rand_gaussian(10));
+            rands.push_back(rand_gaussian(1));
         }
 
         // insert data - noting clock every 1000 elements
@@ -371,7 +371,7 @@ public:
         // loop 1 - 100000
         for (int i = 1; i < 100001; i++)
         {
-            testTree.remove(i);
+            testTree.remove(i-1);
 
             if (i % 1000 == 0)
             {
@@ -466,7 +466,7 @@ public:
         // loop 1 - 100000
         for (int i = 1; i < 100001; i++)
         {
-            testTree.remove(i);
+            testTree.remove(i-1);
 
             if (i % 1000 == 0)
             {
