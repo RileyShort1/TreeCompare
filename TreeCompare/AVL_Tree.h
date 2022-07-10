@@ -204,7 +204,7 @@ private:
 
         else {
 
-			_size--;
+            _size--;
             
             if ((root->_left == nullptr) || (root->_right == nullptr)) { // one or fewer child nodes
                 
@@ -228,10 +228,10 @@ private:
                     *root = *temp;   
                 }
 
-				if (temp != nullptr)
-				{
-					delete temp;
-				}   
+                if (temp != nullptr)
+                {
+                    delete temp;
+                }   
             }
 
             else {
@@ -251,7 +251,7 @@ private:
         }
          
         // get new height
-		update(root);
+        update(root);
      
         //balance of root
         int bal = get_balance(root);
