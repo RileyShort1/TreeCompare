@@ -227,7 +227,11 @@ private:
                 else {                       //one child
                     *root = *temp;   
                 }
-                
+
+				if (temp != nullptr)
+				{
+					delete temp;
+				}   
             }
 
             else {
