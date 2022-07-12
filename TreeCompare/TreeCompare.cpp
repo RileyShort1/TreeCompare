@@ -22,135 +22,8 @@ public:
 
     void generalTests()
     {
-        AVL_Tree<int> myTree;
-
-        myTree.insert(1); 
-        myTree.insert(2); 
-        myTree.insert(3); 
-        myTree.insert(4); 
-        myTree.insert(5);
-        myTree.insert(6);
-        myTree.insert(7);
-        myTree.insert(8);
-        myTree.insert(9);
-        myTree.insert(10);
-        myTree.insert(11);
-        myTree.insert(12);
-
-        myTree.insert(21);
-        myTree.insert(22);
-        myTree.insert(23);
-        myTree.insert(24);
-        myTree.insert(25);
-        myTree.insert(26);
-        myTree.insert(27);
-        myTree.insert(28);
-        myTree.insert(29);
-        myTree.insert(210);
-        myTree.insert(211);
-        myTree.insert(212);
-
-        myTree.remove(2);
-        myTree.remove(3);
-        myTree.remove(4);
-        myTree.remove(5);
-        myTree.remove(6);
-        myTree.remove(7);
-        myTree.remove(8);
-        myTree.remove(9);
-        myTree.remove(10);
-        myTree.remove(11);
-        myTree.remove(12);
-
-        myTree.remove(21);
-        myTree.remove(22);
-        myTree.remove(23);
-        myTree.remove(24);
-        myTree.remove(25);
-        myTree.remove(26);
-        myTree.remove(27);
-        myTree.remove(28);
-        myTree.remove(29);
-        myTree.remove(210);
-        myTree.remove(211);
-        myTree.remove(212);
-        myTree.remove(1);
-
-        printTree(myTree._root);
-        std::cout << std::endl;
-        if (myTree._root != nullptr)
-        {
-            std::cout << "_root is " << myTree._root->_data << std::endl;
-        }
-        else
-        {
-            std::cout << "_root is NULL" << std::endl;
-        }
        
-        std::cout << "Tree size = " << myTree._size << std::endl;
-        std::cout << std::endl;
-        std::cout << std::endl;
-
-       
-        myTree.remove(10);
-        myTree.remove(11);
-        myTree.remove(12);
-
-        myTree.remove(21);
-        myTree.remove(22);
-        myTree.remove(23);
-        myTree.remove(24); // root changes to 4 here
-        myTree.remove(25);
-
-        myTree.remove(1);
-        myTree.remove(2);
-        myTree.remove(3);
-
-        myTree.remove(300); // causes _size bug
-        myTree.remove(300); // causes _size bug
-        myTree.remove(300); // causes _size bug
-        myTree.remove(300); // causes _size bug
-        myTree.remove(300); // causes _size bug
-       
-
-       // printTree(myTree._root);
-       // std::cout << std::endl;
-       // std::cout << "_root is " << myTree._root->_data << std::endl;
-       // std::cout << "Tree size = " << myTree._size << std::endl;
-
-      
-        myTree.insert(15);
-        myTree.insert(25);
-        myTree.insert(10);
-        myTree.insert(12);
-        myTree.insert(5);
-        myTree.insert(6);
-        myTree.insert(2);
-        std::cout << "_root is " << myTree._root->_data << std::endl;
-        printTree(myTree._root);
-
-        myTree._rotate_right(myTree._root);
-       
-
-       
-        myTree.insert(25);
-        myTree.insert(10);
-        myTree.insert(35);
-        myTree.insert(28);
-        myTree.insert(45);
-        myTree.insert(37);
-        myTree.insert(50);
-        std::cout << "_root is " << myTree._root->_data << std::endl;
-        printTree(myTree._root);
-
-        myTree._rotate_left(myTree._root);
-
-        std::cout << std::endl;
-        std::cout << std::endl;
-        std::cout << "_root is " << myTree._root->_data << std::endl;
-        printTree(myTree._root);
-
-      
+      return;
     }
 
     void printTree(AVL_Tree<int>::Node* p)
@@ -190,41 +63,10 @@ public:
 
 class SplayTests {
 public:
-    // NOTES: 
-    // splay tree matches refrence site for most insertions, but is different for some
-    // our splay tree still maintains the correct properties, so I think the our tree just 
-    // splays in a different way compared to the test site.
-
+    
     void generalTests() // contains the general tests to make sure the tree works
     {
-        SplayTree<int> myTree;
- 
-        myTree.insert(5); // matches example site
-        myTree.insert(21); // matches example site
-        myTree.insert(35); // matches example site
-        myTree.insert(100); // matches example site
-        myTree.insert(6); // matches example site
-        myTree.insert(1); // matches example site
-        myTree.insert(4); // matches example site
-        myTree.insert(10); // Does NOT match refrence site (right sub-tree matches, but left sub-tree does not) 
-        myTree.insert(13); // Does NOT match refrence site (right sub-tree matches, but left sub-tree does not) 
-
-        //printTree(myTree._root);
-        //std::cout << "Size of tree: " << myTree._size << std::endl;
-        //std::cout << "Root is: " << myTree._root->_data << std::endl;
-
-        myTree.remove(5); // matches refrence site 
-        myTree.remove(10); // matches refrence site 
-        myTree.remove(1); // matches refrence site
-        myTree.remove(21); // Does NOT match refrence site (right sub-tree matches, but left sub-tree does not) 
-        myTree.remove(35); // Does NOT match refrence site (right sub-tree matches, but left sub-tree does not) 
-        myTree.remove(6); // matches refrence site
-        myTree.remove(100); // matches refrence site
-
-        printTree(myTree._root);
-        std::cout << "Size of tree: " << myTree._size << std::endl;
-        std::cout << "Root is: " << myTree._root->_data << std::endl;
-
+       
         return;
     }
 
