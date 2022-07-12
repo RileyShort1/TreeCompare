@@ -6,6 +6,7 @@
 #include <string>
 #include <ctime>
 #include <vector>
+#include <iomanip>
 
 
 //
@@ -310,6 +311,7 @@ public:
     void testSplay(int randSeed, size_t N, int num_rands)
     {
         srand(randSeed); // seed rand
+        int seconds_to_micro = 1000000; // convert to microseconds
 
         clock_t timeForInsert;
         clock_t timeForRemove;
@@ -326,6 +328,7 @@ public:
             rands.push_back(rand_gaussian(N));
         }
 
+        // ------------------------------- SPLAY INSERT -----------------------------------------------
         // insert data - noting clock every 1000 elements
         std::vector<clock_t> timesPer1kInsert;
 
@@ -351,17 +354,20 @@ public:
             totalTime += timesPer1kInsert[i];
         }
 
-        avg = (double)totalTime / CLOCKS_PER_SEC;
+        avg = (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro;
         avg = avg / timesPer1kInsert.size();
 
         std::cout << "Processor time taken for inserting 1M elements into splay tree: "
-            << (double)totalTime / CLOCKS_PER_SEC << " seconds" << std::endl;
+            << std::fixed << std::setprecision(5) << (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
 
-        std::cout << "Average time per 1k inserts: " << avg << std::endl;
+        std::cout << "Average time per 1k inserts in microseconds: " << std::fixed << std::setprecision(5) << avg << std::endl;
         std::cout << "Splay tree size: " << testTree.get_size() << std::endl;
 
+        // ------------------------------------ SPLAY FIND -----------------------------------------------
 
+        // xyz
 
+        // ------------------------------- SPLAY REMOVE ---------------------------------------------------
         std::vector<clock_t> timesPer1kRemove;
         timeForRemove = clock();
 
@@ -387,13 +393,13 @@ public:
             totalTimeRemove += timesPer1kRemove[i];
         }
 
-        avgRemove = (double)totalTimeRemove / CLOCKS_PER_SEC;
+        avgRemove = (double)totalTimeRemove / CLOCKS_PER_SEC * seconds_to_micro;
         avgRemove = avgRemove / timesPer1kRemove.size();
 
         std::cout << "Processor time taken for removing elements from Splay tree: "
-            << (double)totalTimeRemove / CLOCKS_PER_SEC << " seconds" << std::endl;
+            << std::fixed << std::setprecision(5) << (double)totalTimeRemove / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
 
-        std::cout << "Average time per 1k remove operations: " << avgRemove << std::endl;
+        std::cout << "Average time per 1k remove operations in microseconds: " << std::fixed << std::setprecision(5) << avgRemove << std::endl;
         std::cout << "Splay tree size: " << testTree.get_size() << std::endl;
 
 
@@ -405,6 +411,7 @@ public:
     void testAVL(int randSeed, size_t N, int num_rands)
     {
         srand(randSeed); // seed rand
+        int seconds_to_micro = 1000000; // convert to microseconds
 
         AVL_Tree<int> testTree;
 
@@ -421,6 +428,7 @@ public:
             rands.push_back(rand_uniform(N));
         }
 
+        // ------------------------------ AVL INSERT --------------------------------------
         // insert data - noting clock every 1000 elements
         std::vector<clock_t> timesPer1kInsert;
 
@@ -446,15 +454,20 @@ public:
             totalTime += timesPer1kInsert[i];
         }
 
-        avg = (double)totalTime / CLOCKS_PER_SEC;
+        avg = (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro;
         avg = avg / timesPer1kInsert.size();
 
         std::cout << "Processor time taken for inserting 1M elements into AVL tree: "
-            << (double)totalTime / CLOCKS_PER_SEC << " seconds" << std::endl;
+           << std::fixed << std::setprecision(5) << (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
 
-        std::cout << "Average time per 1k inserts: " << avg << std::endl;
+        std::cout << "Average time per 1k inserts in microseconds: " << std::fixed << std::setprecision(5) << avg << std::endl;
         std::cout << "AVL tree size: " << testTree.get_size() << std::endl;
 
+        // ----------------------------- AVL FIND ----------------------------------------------
+
+        //xyz
+
+        // ----------------------------- AVL REMOVE ---------------------------------------------
 
         std::vector<clock_t> timesPer1kRemove;
         timeForRemove = clock();
@@ -481,13 +494,13 @@ public:
             totalTimeRemove += timesPer1kRemove[i];
         }
 
-        avgRemove = (double)totalTimeRemove / CLOCKS_PER_SEC;
+        avgRemove = (double)totalTimeRemove / CLOCKS_PER_SEC * seconds_to_micro;
         avgRemove = avgRemove / timesPer1kRemove.size();
 
         std::cout << "Processor time taken for removing elements from AVL tree: "
-            << (double)totalTimeRemove / CLOCKS_PER_SEC << " seconds" << std::endl;
+          << std::fixed << std::setprecision(5) << (double)totalTimeRemove / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
 
-        std::cout << "Average time per 1k remove operations: " << avgRemove << std::endl;
+        std::cout << "Average time per 1k remove operations in microseconds: " << std::fixed << std::setprecision(5) << avgRemove << std::endl;
         std::cout << "AVL tree size: " << testTree.get_size() << std::endl;
 
        
@@ -507,10 +520,10 @@ int main()
    
     Benchmark x;
 
-    x.testSplay(5, 1, 1000000);
+    x.testSplay(5, 1, 5000000);
     std::cout << std::endl;
     std::cout << std::endl;
-    x.testAVL(5, 1, 1000000);
+    x.testAVL(5, 1, 5000000);
     // call functions
 
 
