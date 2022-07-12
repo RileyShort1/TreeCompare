@@ -369,7 +369,7 @@ public:
 
         timeForFind = clock();
 
-        for (size_t i = 1; i < rands.size() - 1; i++)
+        for (size_t i = 1; i < rands.size() + 1; i++)
         {
             testTree.contains(rands[i - 1]);
 
@@ -502,7 +502,7 @@ public:
 
         timeForFind = clock();
 
-        for (size_t i = 1; i < rands.size() - 1; i++)
+        for (size_t i = 1; i < rands.size() + 1; i++)
         {
             testTree.contains(rands[i - 1]);
 
