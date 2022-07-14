@@ -157,6 +157,12 @@ public:
         srand(randSeed); // seed rand
         int seconds_to_micro = 1000000; // convert to microseconds
 
+        if (createFile == true) // create file branch
+        {
+            std::fstream fout; // output file
+            fout.open("Splay_Data.csv", std::ios::out | std::ios::app);
+        }
+
         clock_t timeForInsert;
         clock_t timeForRemove;
 
@@ -277,6 +283,35 @@ public:
 
         std::cout << "Average time per 1k remove operations in microseconds: " << std::fixed << std::setprecision(5) << avgRemove << std::endl;
         std::cout << "Splay tree size: " << testTree.get_size() << "\n";
+
+        if (createFile == true)
+        {
+
+
+        }
+        else
+        {
+            // ------------------------------------- INSERT ---------------------------------
+            std::cout << "Processor time taken for inserting 1M elements into splay tree: "
+                << std::fixed << std::setprecision(5) << (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
+
+            std::cout << "Average time per 1k inserts in microseconds: " << std::fixed << std::setprecision(5) << avg << std::endl;
+            std::cout << "Splay tree size: " << testTree.get_size() << "\n\n";
+
+            // ----------------------------------- FIND ----------------------------------------
+            std::cout << "Processor time taken to find 1m elements in Splay tree: "
+                << std::fixed << std::setprecision(5) << (double)totalTimeFind / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
+
+            std::cout << "Average time per 1k find operations in microseconds: " << std::fixed << std::setprecision(5) << avgFind << std::endl;
+            std::cout << "Splay tree size: " << testTree.get_size() << "\n\n";
+
+            // ------------------------------------ DELETE -------------------------------------
+            std::cout << "Processor time taken for removing all elements (1 - 100,000) from Splay tree: "
+                << std::fixed << std::setprecision(5) << (double)totalTimeRemove / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
+
+            std::cout << "Average time per 1k remove operations in microseconds: " << std::fixed << std::setprecision(5) << avgRemove << std::endl;
+            std::cout << "Splay tree size: " << testTree.get_size() << "\n";
+        }
 
 
         
