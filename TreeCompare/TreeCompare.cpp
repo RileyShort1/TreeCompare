@@ -157,12 +157,6 @@ public:
         srand(randSeed); // seed rand
         int seconds_to_micro = 1000000; // convert to microseconds
 
-        if (createFile == true) // create file branch
-        {
-            std::fstream fout; // output file
-            fout.open("Splay_Data.csv", std::ios::out | std::ios::app);
-        }
-
         clock_t timeForInsert;
         clock_t timeForRemove;
 
@@ -207,11 +201,7 @@ public:
         avg = (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro;
         avg = avg / timesPer1kInsert.size();
 
-        std::cout << "Processor time taken for inserting 1M elements into splay tree: "
-            << std::fixed << std::setprecision(5) << (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
-
-        std::cout << "Average time per 1k inserts in microseconds: " << std::fixed << std::setprecision(5) << avg << std::endl;
-        std::cout << "Splay tree size: " << testTree.get_size() << "\n\n";
+        size_t sizeAfterInsert = testTree.get_size();
 
         // ------------------------------------ SPLAY FIND -----------------------------------------------
         clock_t timeForFind;
@@ -242,13 +232,6 @@ public:
         avgFind = (double)totalTimeFind / CLOCKS_PER_SEC * seconds_to_micro;
         avgFind = avgFind / timesPer1kFind.size();
 
-        std::cout << "Processor time taken to find 1m elements in Splay tree: "
-            << std::fixed << std::setprecision(5) << (double)totalTimeFind / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
-
-        std::cout << "Average time per 1k find operations in microseconds: " << std::fixed << std::setprecision(5) << avgFind << std::endl;
-        std::cout << "Splay tree size: " << testTree.get_size() << "\n\n";
-
-
         // ------------------------------- SPLAY REMOVE ---------------------------------------------------
         std::vector<clock_t> timesPer1kRemove;
         timeForRemove = clock();
@@ -278,16 +261,18 @@ public:
         avgRemove = (double)totalTimeRemove / CLOCKS_PER_SEC * seconds_to_micro;
         avgRemove = avgRemove / timesPer1kRemove.size();
 
-        std::cout << "Processor time taken for removing all elements (1 - 100,000) from Splay tree: "
-            << std::fixed << std::setprecision(5) << (double)totalTimeRemove / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
+        size_t sizeAfterRemove = testTree.get_size();
 
-        std::cout << "Average time per 1k remove operations in microseconds: " << std::fixed << std::setprecision(5) << avgRemove << std::endl;
-        std::cout << "Splay tree size: " << testTree.get_size() << "\n";
-
+      
         if (createFile == true)
         {
+            std::fstream fout; // output file
+            fout.open("Splay_Data.csv", std::ios::out | std::ios::app);
 
-
+            fout << (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro << ", " << avg << ", " <<
+                (double)totalTimeFind / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgFind << ", " <<
+                (double)totalTimeRemove / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgRemove << ", " << sizeAfterInsert <<
+                "\n";
         }
         else
         {
@@ -296,21 +281,21 @@ public:
                 << std::fixed << std::setprecision(5) << (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
 
             std::cout << "Average time per 1k inserts in microseconds: " << std::fixed << std::setprecision(5) << avg << std::endl;
-            std::cout << "Splay tree size: " << testTree.get_size() << "\n\n";
+            std::cout << "Splay tree size: " << sizeAfterInsert << "\n\n";
 
             // ----------------------------------- FIND ----------------------------------------
             std::cout << "Processor time taken to find 1m elements in Splay tree: "
                 << std::fixed << std::setprecision(5) << (double)totalTimeFind / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
 
             std::cout << "Average time per 1k find operations in microseconds: " << std::fixed << std::setprecision(5) << avgFind << std::endl;
-            std::cout << "Splay tree size: " << testTree.get_size() << "\n\n";
+            std::cout << "Splay tree size: " << sizeAfterInsert << "\n\n";
 
             // ------------------------------------ DELETE -------------------------------------
             std::cout << "Processor time taken for removing all elements (1 - 100,000) from Splay tree: "
                 << std::fixed << std::setprecision(5) << (double)totalTimeRemove / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
 
             std::cout << "Average time per 1k remove operations in microseconds: " << std::fixed << std::setprecision(5) << avgRemove << std::endl;
-            std::cout << "Splay tree size: " << testTree.get_size() << "\n";
+            std::cout << "Splay tree size: " << sizeAfterRemove << "\n";
         }
 
 
@@ -325,13 +310,7 @@ public:
         int seconds_to_micro = 1000000; // convert to microseconds
 
         AVL_Tree<int> testTree;
-
-        if (createFile == true) // create file branch
-        {
-            std::fstream fout; // output file
-            fout.open("AVL_Data.csv", std::ios::out | std::ios::app);
-        }
-        
+      
         clock_t timeForInsert;
         clock_t timeForRemove;
 
@@ -373,6 +352,8 @@ public:
 
         avg = (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro;
         avg = avg / timesPer1kInsert.size();
+
+        size_t sizeAfterInsert = testTree.get_size();
 
         // ----------------------------- AVL FIND ----------------------------------------------
 
@@ -435,11 +416,20 @@ public:
         avgRemove = (double)totalTimeRemove / CLOCKS_PER_SEC * seconds_to_micro;
         avgRemove = avgRemove / timesPer1kRemove.size();
 
+        size_t sizeAfterRemove = testTree.get_size();
+
        
         // compile data
         if (createFile == true) // insert data in file
         {
 
+            std::fstream fout; // output file
+            fout.open("AVL_Data.csv", std::ios::out | std::ios::app);
+
+            fout << (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro << ", " << avg << ", " <<
+                (double)totalTimeFind / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgFind << ", " <<
+                (double)totalTimeRemove / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgRemove << ", " << sizeAfterInsert <<
+                "\n";
         }
         else // just print for testing
         {
@@ -449,7 +439,7 @@ public:
                 << std::fixed << std::setprecision(5) << (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
 
             std::cout << "Average time per 1k inserts in microseconds: " << std::fixed << std::setprecision(5) << avg << std::endl;
-            std::cout << "AVL tree size: " << testTree.get_size() << "\n\n";
+            std::cout << "AVL tree size: " << sizeAfterInsert << "\n\n";
 
             // ----------------------------- FIND ---------------------------------------------
 
@@ -457,7 +447,7 @@ public:
                 << std::fixed << std::setprecision(5) << (double)totalTimeFind / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
 
             std::cout << "Average time per 1k find operations in microseconds: " << std::fixed << std::setprecision(5) << avgFind << std::endl;
-            std::cout << "AVL tree size: " << testTree.get_size() << "\n\n";
+            std::cout << "AVL tree size: " << sizeAfterInsert << "\n\n";
 
             // ------------------------------- REMOVE ---------------------------------------
 
@@ -465,7 +455,7 @@ public:
                 << std::fixed << std::setprecision(5) << (double)totalTimeRemove / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
 
             std::cout << "Average time per 1k remove operations in microseconds: " << std::fixed << std::setprecision(5) << avgRemove << std::endl;
-            std::cout << "AVL tree size: " << testTree.get_size() << "\n";
+            std::cout << "AVL tree size: " << sizeAfterRemove << "\n";
         }
 
         return;
