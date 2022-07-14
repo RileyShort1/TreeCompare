@@ -471,6 +471,7 @@ int main()
     //av.generalTests();
    
     Benchmark x;
+
     std::cout << "SPLAY: \n";
     //       seed, N, number of rand calls, output to file?
     x.testSplay(5, 1, 1000000, false);
@@ -480,6 +481,8 @@ int main()
     //     seed, N, number of rand calls, output to file?
     x.testAVL(5, 1, 1000000, false);
     // call functions
+
+
 
     
 }
