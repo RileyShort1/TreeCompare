@@ -7,6 +7,8 @@
 #include <ctime>
 #include <vector>
 #include <iomanip>
+#include <sstream>
+#include <fstream>
 
 
 //
@@ -150,7 +152,7 @@ public:
         return (int)final_rand / n;
     }
 
-    void testSplay(int randSeed, size_t N, int num_rands)
+    void testSplay(int randSeed, size_t N, int num_rands, bool createFile)
     {
         srand(randSeed); // seed rand
         int seconds_to_micro = 1000000; // convert to microseconds
@@ -282,13 +284,19 @@ public:
 
     }
 
-    void testAVL(int randSeed, size_t N, int num_rands)
+    void testAVL(int randSeed, size_t N, int num_rands, bool createFile)
     {
         srand(randSeed); // seed rand
         int seconds_to_micro = 1000000; // convert to microseconds
 
         AVL_Tree<int> testTree;
 
+        if (createFile == true) // create file branch
+        {
+            std::fstream fout; // output file
+            fout.open("AVL_Data.csv", std::ios::out | std::ios::app);
+        }
+        
         clock_t timeForInsert;
         clock_t timeForRemove;
 
@@ -330,12 +338,6 @@ public:
 
         avg = (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro;
         avg = avg / timesPer1kInsert.size();
-       
-        std::cout << "Processor time taken for inserting 1M elements into AVL tree: "
-           << std::fixed << std::setprecision(5) << (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
-
-        std::cout << "Average time per 1k inserts in microseconds: " << std::fixed << std::setprecision(5) << avg << std::endl;
-        std::cout << "AVL tree size: " << testTree.get_size() << "\n\n";
 
         // ----------------------------- AVL FIND ----------------------------------------------
 
@@ -367,12 +369,7 @@ public:
         avgFind = (double)totalTimeFind / CLOCKS_PER_SEC * seconds_to_micro;
         avgFind = avgFind / timesPer1kFind.size();
 
-        std::cout << "Processor time taken to find 1m elements in AVL tree: "
-            << std::fixed << std::setprecision(5) << (double)totalTimeFind / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
-
-        std::cout << "Average time per 1k find operations in microseconds: " << std::fixed << std::setprecision(5) << avgFind << std::endl;
-        std::cout << "AVL tree size: " << testTree.get_size() << "\n\n";
-
+     
         // ----------------------------- AVL REMOVE ---------------------------------------------
 
         std::vector<clock_t> timesPer1kRemove;
@@ -403,17 +400,41 @@ public:
         avgRemove = (double)totalTimeRemove / CLOCKS_PER_SEC * seconds_to_micro;
         avgRemove = avgRemove / timesPer1kRemove.size();
 
-        std::cout << "Processor time taken for removing all elements (1 - 100,000) from AVL tree: "
-          << std::fixed << std::setprecision(5) << (double)totalTimeRemove / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
-
-        std::cout << "Average time per 1k remove operations in microseconds: " << std::fixed << std::setprecision(5) << avgRemove << std::endl;
-        std::cout << "AVL tree size: " << testTree.get_size() << "\n";
-
        
+        // compile data
+        if (createFile == true) // insert data in file
+        {
+
+        }
+        else // just print for testing
+        {
+            // ------------------------ INSERT -------------------------------------------
+
+            std::cout << "Processor time taken for inserting 1M elements into AVL tree: "
+                << std::fixed << std::setprecision(5) << (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
+
+            std::cout << "Average time per 1k inserts in microseconds: " << std::fixed << std::setprecision(5) << avg << std::endl;
+            std::cout << "AVL tree size: " << testTree.get_size() << "\n\n";
+
+            // ----------------------------- FIND ---------------------------------------------
+
+            std::cout << "Processor time taken to find 1m elements in AVL tree: "
+                << std::fixed << std::setprecision(5) << (double)totalTimeFind / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
+
+            std::cout << "Average time per 1k find operations in microseconds: " << std::fixed << std::setprecision(5) << avgFind << std::endl;
+            std::cout << "AVL tree size: " << testTree.get_size() << "\n\n";
+
+            // ------------------------------- REMOVE ---------------------------------------
+
+            std::cout << "Processor time taken for removing all elements (1 - 100,000) from AVL tree: "
+                << std::fixed << std::setprecision(5) << (double)totalTimeRemove / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
+
+            std::cout << "Average time per 1k remove operations in microseconds: " << std::fixed << std::setprecision(5) << avgRemove << std::endl;
+            std::cout << "AVL tree size: " << testTree.get_size() << "\n";
+        }
+
         return;
-
     }
-
 };
 
 int main()
@@ -426,16 +447,16 @@ int main()
    
     Benchmark x;
     std::cout << "SPLAY: \n";
-    //       seed, N, number of rand calls
-    x.testSplay(5, 1, 1000000);
+    //       seed, N, number of rand calls, output to file?
+    x.testSplay(5, 1, 1000000, false);
     std::cout << std::endl;
     std::cout << std::endl;
     std::cout << "AVL: \n";
-    //     seed, N, number of rand calls
-    x.testAVL(5, 1, 1000000);
+    //     seed, N, number of rand calls, output to file?
+    x.testAVL(5, 1, 1000000, false);
     // call functions
 
-
+    
 }
 
 
