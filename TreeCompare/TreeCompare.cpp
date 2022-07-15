@@ -152,7 +152,7 @@ public:
         return (int)final_rand / n;
     }
 
-    void testSplay(int randSeed, size_t N, int num_rands, bool createFile)
+    void testSplay(int randSeed, size_t N, int num_rands, bool createFile, bool normalDist)
     {
         srand(randSeed); // seed rand
         int seconds_to_micro = 1000000; // convert to microseconds
@@ -164,13 +164,24 @@ public:
 
         std::vector<int> rands;
 
-        // get data to insert (put it in a vector??)
-        // get normal data
+        // get appropriate data distribution
 
-        for (int i = 0; i < num_rands; i++)
+        if (normalDist == true)
         {
-            rands.push_back(rand_gaussian(N));
+            for (int i = 0; i < num_rands; i++)
+            {
+                rands.push_back(rand_gaussian(N));
+            }
         }
+        else
+        {
+            for (int i = 0; i < num_rands; i++)
+            {
+                rands.push_back(rand_uniform(N));
+            }
+        }
+
+        
 
         // ------------------------------- SPLAY INSERT -----------------------------------------------
         // insert data - noting clock every 1000 elements
@@ -304,7 +315,7 @@ public:
 
     }
 
-    void testAVL(int randSeed, size_t N, int num_rands, bool createFile)
+    void testAVL(int randSeed, size_t N, int num_rands, bool createFile, bool normalDist)
     {
         srand(randSeed); // seed rand
         int seconds_to_micro = 1000000; // convert to microseconds
@@ -319,9 +330,19 @@ public:
         // get data to insert (put it in a vector??)
         // get normal data
 
-        for (int i = 0; i < num_rands; i++)
+        if (normalDist == true)
         {
-            rands.push_back(rand_uniform(N));
+            for (int i = 0; i < num_rands; i++)
+            {
+                rands.push_back(rand_gaussian(N));
+            }
+        }
+        else
+        {
+            for (int i = 0; i < num_rands; i++)
+            {
+                rands.push_back(rand_uniform(N));
+            }
         }
 
         // ------------------------------ AVL INSERT --------------------------------------
@@ -472,14 +493,16 @@ int main()
    
     Benchmark x;
 
+   // Results were generated for values of N{ 1, 2, 3, 4, 5, 10 }.
+
     std::cout << "SPLAY: \n";
-    //       seed, N, number of rand calls, output to file?
-    x.testSplay(5, 1, 1000000, false);
+    //   rand seed, N, number of rand calls, output to file?, normal Distribution?
+    x.testSplay(5, 1, 1000000, false, false);
     std::cout << std::endl;
     std::cout << std::endl;
     std::cout << "AVL: \n";
-    //     seed, N, number of rand calls, output to file?
-    x.testAVL(5, 1, 1000000, false);
+    // rand seed, N, number of rand calls, output to file?, normal Distribution?
+    x.testAVL(5, 1, 1000000, false, false);
     // call functions
 
 
