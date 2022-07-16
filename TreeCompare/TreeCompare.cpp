@@ -278,7 +278,7 @@ public:
             std::fstream fout; // output file
             fout.open(fileName, std::ios::out | std::ios::app);
 
-            fout << (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro << ", " << avg << ", " <<
+            fout << std::fixed << std::setprecision(1) << (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro << ", " << avg << ", " <<
                 (double)totalTimeFind / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgFind << ", " <<
                 (double)totalTimeRemove / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgRemove << ", " << sizeAfterInsert <<
                 "\n";
@@ -445,7 +445,7 @@ public:
             std::fstream fout; // output file
             fout.open(fileName, std::ios::out | std::ios::app);
 
-            fout << (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro << ", " << avg << ", " <<
+            fout << std::fixed << std::setprecision(1) << (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro << ", " << avg << ", " <<
                 (double)totalTimeFind / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgFind << ", " <<
                 (double)totalTimeRemove / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgRemove << ", " << sizeAfterInsert <<
                 "\n";
@@ -496,7 +496,7 @@ public:
             << ", " << "Max tree size" << "\n";
         foutAVL.close();
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 3; i++)
         {
             testSplay(5, 1, 1000000, true, false, "Splay1.csv");
             testAVL(5, 1, 1000000, true, false, "AVL1.csv");
