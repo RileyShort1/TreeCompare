@@ -152,7 +152,7 @@ public:
         return (int)final_rand / n;
     }
 
-    void testSplay(int randSeed, size_t N, int num_rands, bool createFile, bool normalDist)
+    void testSplay(int randSeed, size_t N, int num_rands, bool createFile, bool normalDist, std::string fileName)
     {
         srand(randSeed); // seed rand
         int seconds_to_micro = 1000000; // convert to microseconds
@@ -180,8 +180,6 @@ public:
                 rands.push_back(rand_uniform(N));
             }
         }
-
-        
 
         // ------------------------------- SPLAY INSERT -----------------------------------------------
         // insert data - noting clock every 1000 elements
@@ -278,7 +276,7 @@ public:
         if (createFile == true)
         {
             std::fstream fout; // output file
-            fout.open("Splay_Data.csv", std::ios::out | std::ios::app);
+            fout.open(fileName, std::ios::out | std::ios::app);
 
             fout << (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro << ", " << avg << ", " <<
                 (double)totalTimeFind / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgFind << ", " <<
@@ -287,15 +285,16 @@ public:
         }
         else
         {
+            std::cout << "SPLAY TREE: " << std::endl;
             // ------------------------------------- INSERT ---------------------------------
-            std::cout << "Processor time taken for inserting 1M elements into splay tree: "
+            std::cout << "Processor time taken for attempting insertion of " << num_rands << " elements into splay tree: "
                 << std::fixed << std::setprecision(5) << (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
 
-            std::cout << "Average time per 1k inserts in microseconds: " << std::fixed << std::setprecision(5) << avg << std::endl;
+            std::cout << "Average time per 1k insert attempts in microseconds: " << std::fixed << std::setprecision(5) << avg << std::endl;
             std::cout << "Splay tree size: " << sizeAfterInsert << "\n\n";
 
             // ----------------------------------- FIND ----------------------------------------
-            std::cout << "Processor time taken to find 1m elements in Splay tree: "
+            std::cout << "Processor time taken for attempting to find " << num_rands << " in Splay tree: "
                 << std::fixed << std::setprecision(5) << (double)totalTimeFind / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
 
             std::cout << "Average time per 1k find operations in microseconds: " << std::fixed << std::setprecision(5) << avgFind << std::endl;
@@ -315,7 +314,7 @@ public:
 
     }
 
-    void testAVL(int randSeed, size_t N, int num_rands, bool createFile, bool normalDist)
+    void testAVL(int randSeed, size_t N, int num_rands, bool createFile, bool normalDist, std::string fileName)
     {
         srand(randSeed); // seed rand
         int seconds_to_micro = 1000000; // convert to microseconds
@@ -439,13 +438,12 @@ public:
 
         size_t sizeAfterRemove = testTree.get_size();
 
-       
         // compile data
         if (createFile == true) // insert data in file
         {
 
             std::fstream fout; // output file
-            fout.open("AVL_Data.csv", std::ios::out | std::ios::app);
+            fout.open(fileName, std::ios::out | std::ios::app);
 
             fout << (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro << ", " << avg << ", " <<
                 (double)totalTimeFind / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgFind << ", " <<
@@ -454,30 +452,57 @@ public:
         }
         else // just print for testing
         {
-            // ------------------------ INSERT -------------------------------------------
-
-            std::cout << "Processor time taken for inserting 1M elements into AVL tree: "
+            // ------------------------------------- INSERT ---------------------------------
+            std::cout << "AVL TREE: " << std::endl;
+            std::cout << "Processor time taken for attempting insertion of " << num_rands << " elements into splay tree: "
                 << std::fixed << std::setprecision(5) << (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
 
-            std::cout << "Average time per 1k inserts in microseconds: " << std::fixed << std::setprecision(5) << avg << std::endl;
-            std::cout << "AVL tree size: " << sizeAfterInsert << "\n\n";
+            std::cout << "Average time per 1k insert attempts in microseconds: " << std::fixed << std::setprecision(5) << avg << std::endl;
+            std::cout << "Splay tree size: " << sizeAfterInsert << "\n\n";
 
-            // ----------------------------- FIND ---------------------------------------------
-
-            std::cout << "Processor time taken to find 1m elements in AVL tree: "
+            // ----------------------------------- FIND ----------------------------------------
+            std::cout << "Processor time taken for attempting to find " << num_rands << " in Splay tree: "
                 << std::fixed << std::setprecision(5) << (double)totalTimeFind / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
 
             std::cout << "Average time per 1k find operations in microseconds: " << std::fixed << std::setprecision(5) << avgFind << std::endl;
-            std::cout << "AVL tree size: " << sizeAfterInsert << "\n\n";
+            std::cout << "Splay tree size: " << sizeAfterInsert << "\n\n";
 
-            // ------------------------------- REMOVE ---------------------------------------
-
-            std::cout << "Processor time taken for removing all elements (1 - 100,000) from AVL tree: "
+            // ------------------------------------ DELETE -------------------------------------
+            std::cout << "Processor time taken for removing all elements (1 - 100,000) from Splay tree: "
                 << std::fixed << std::setprecision(5) << (double)totalTimeRemove / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
 
             std::cout << "Average time per 1k remove operations in microseconds: " << std::fixed << std::setprecision(5) << avgRemove << std::endl;
-            std::cout << "AVL tree size: " << sizeAfterRemove << "\n";
+            std::cout << "Splay tree size: " << sizeAfterRemove << "\n";
         }
+
+        return;
+    }
+    void run_tests()
+    {
+        std::fstream foutSplay; // output file
+        foutSplay.open("Splay1.csv", std::ios::out | std::ios::app);
+
+        foutSplay << "Rand seed = 5" << ", " << "N = 1" << ", " << "num of rands = 1m" << ", " 
+            << "Uniform Distribution" << ", " << "Splay Tree with microsecond time" << "\n"
+            << "Insert (total, avg)" << ", " << "Find (total, avg)" << ", " << "Delete (total, avg)" 
+            << ", " << "Max tree size" << "\n";
+        foutSplay.close();
+
+        std::fstream foutAVL; // output file
+        foutAVL.open("AVL1.csv", std::ios::out | std::ios::app);
+        foutAVL << "Rand seed = 5" << ", " << "N = 1" << ", " << "num of rands = 1m" << ", " 
+            << "Uniform Distribution" << ", " << "AVL Tree with microsecond time" << "\n"
+            << "Insert (total, avg)" << ", " << "Find (total, avg)" << ", " << "Delete (total, avg)" 
+            << ", " << "Max tree size" << "\n";
+        foutAVL.close();
+
+        for (int i = 0; i < 10; i++)
+        {
+            testSplay(5, 1, 1000000, true, false, "Splay1.csv");
+            testAVL(5, 1, 1000000, true, false, "AVL1.csv");
+        }
+
+       
 
         return;
     }
@@ -495,15 +520,18 @@ int main()
 
    // Results were generated for values of N{ 1, 2, 3, 4, 5, 10 }.
 
+    /*
     std::cout << "SPLAY: \n";
-    //   rand seed, N, number of rand calls, output to file?, normal Distribution?
-    x.testSplay(5, 1, 1000000, false, false);
+    //   rand seed, N, number of rand calls, output to file?, normal Distribution?, filename
+    x.testSplay(5, 1, 1000000, true, false, "Splay.csv");
     std::cout << std::endl;
     std::cout << std::endl;
     std::cout << "AVL: \n";
-    // rand seed, N, number of rand calls, output to file?, normal Distribution?
-    x.testAVL(5, 1, 1000000, false, false);
-    // call functions
+    // rand seed, N, number of rand calls, output to file?, normal Distribution?, filename
+    x.testAVL(5, 1, 1000000, true, false, "AVL.csv");
+    */
+
+    x.run_tests();
 
 
 
