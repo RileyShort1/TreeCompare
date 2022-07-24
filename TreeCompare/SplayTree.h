@@ -19,10 +19,10 @@ private:
 			return;
 		}
 
-		Node* mid = new Node(0, nullptr, nullptr);
-
-		Node* rightTreeMin = mid;
-		Node* leftTreeMax = mid;
+		Node* left_t = nullptr;
+		Node* right_t = nullptr; 
+		Node* leftMax = nullptr;
+		Node* rightMin = nullptr;
 
 		while (p != nullptr)
 		{
@@ -46,10 +46,17 @@ private:
 				// add root to rightTree at its minimum node - 
 				// update the rightTreeMin to point to this node
 
-				rightTreeMin->_left = p;
-				rightTreeMin = rightTreeMin->_left;
+				if (right_t == nullptr)
+				{
+					right_t = p;
+				}
+				else
+				{
+					rightMin->_left = p;
+				}
+
+				rightMin = p;
 				p = p->_left;
-				rightTreeMin->_left = nullptr;
 			}
 
 			else if (x > p->_data)
@@ -69,11 +76,17 @@ private:
 					}
 				}
 
-				// add root to leftTree at its maximum node - update the leftTreeMax to point to this node
-				leftTreeMax->_right = p;
-				leftTreeMax = leftTreeMax->_right;
+				if (left_t == nullptr)
+				{
+					left_t = p;
+				}
+				else
+				{
+					leftMax->_right = p;
+				}
+
+				leftMax = p;
 				p = p->_right;
-				leftTreeMax->_right = nullptr;
 			}
 
 			else // we have found the value
@@ -82,24 +95,18 @@ private:
 			}
 		}
 
-		if (leftTreeMax != nullptr)
+		if (left_t != nullptr)
 		{
-			leftTreeMax->_right = p->_left;
+			leftMax->_right = p->_left;
+			p->_left = left_t;
 		}
-		if (rightTreeMin != nullptr)
+		if (right_t != nullptr)
 		{
-			rightTreeMin->_left = p->_right;
-		}
-
-		if (p != nullptr)
-		{
-			p->_left = mid->_right;
-			p->_right = mid->_left;
+			rightMin->_left = p->_right;
+			p->_right = right_t;
 		}
 
-		delete mid;
-		
-		return;
+		return;	
 	}
 
 	Node* _rotate_right(Node*& node)
@@ -146,46 +153,21 @@ private:
 			return false;
 		}
 
-		// else dismantle
-		if (_root->_data != x)
+		if (x < _root->_data) // root shifts right
 		{
-			if (x > _root->_data) // x belongs to the the right
-			{
-				if (_root->_right != nullptr && _root->_right->_data > x) // we need to attach on the right of new node
-				{
-					Node* newNode = new Node(x, nullptr, _root->_right);
-					_root->_right = newNode;
-				}
-				else // we attach on the left of new node
-				{
-					Node* newNode = new Node(x, _root->_right, nullptr);
-					_root->_right = newNode;
-				}
-				_size++;
-				_splay(_root, x);
-				return true;
-			}
-
-			if (x < _root->_data) // x belongs to the left
-			{
-				if (_root->_left != nullptr && _root->_left->_data > x) // we need to attach on the right of new node
-				{
-					Node* newNode = new Node(x, nullptr, _root->_left);
-					_root->_left = newNode;
-				}
-				else // we attach on the left of new node
-				{
-					Node* newNode = new Node(x, _root->_left, nullptr);
-					_root->_left = newNode;
-				}
-
-				_size++;
-				_splay(_root, x);
-				return true;
-			}
+			Node* new_root = new Node(x, _root->_left, _root);
+			_root->_left = nullptr;
+			_root = new_root;
+		}
+		else if (x > _root->_data) // root shifts left
+		{
+			Node* new_root = new Node(x, _root, _root->_right);
+			_root->_right = nullptr;
+			_root = new_root;
 		}
 
-		return false;
+		_size++;
+		return true;	
 	}
 
 	bool splay_remove(const T& x)
@@ -202,50 +184,23 @@ private:
 			return false;
 		}
 
+		Node* new_root = nullptr;
+
 		if (_root->_left == nullptr)
 		{
-			Node* temp1 = _root;
-			_root = _root->_right;
-			temp1->_left = nullptr;
-			temp1->_right = nullptr;
-			delete temp1;
-			_size--;
-			return true;
+			new_root = _root->_right;
 		}
-
-		if (_root->_right == nullptr)
+		else
 		{
-			Node* temp1 = _root;
-			_root = _root->_left;
-			temp1->_left = nullptr;
-			temp1->_right = nullptr;
-			delete temp1;
-			_size--;
-			return true;
+			new_root = _root->_left;
+			_splay(new_root, x);
+			new_root->_right = _root->_right;
 		}
 
-		if (_root->_data == x) // we must remove x
-		{
-			// splay left child
-			_splay(_root->_left, x);
-
-
-			Node* newRoot = _root->_left;
-			Node* xRight = _root->_right;
-
-			if (_root->_left != nullptr)
-			{
-				_root->_left->_right = xRight;
-			}
-
-			Node* temp = _root;
-			_root = newRoot;
-
-			temp->_left = nullptr;
-			temp->_right = nullptr;
-			delete temp;
-		}
+		delete _root;
+		_root = new_root;
 		_size--;
+
 		return true;
 	}
 
