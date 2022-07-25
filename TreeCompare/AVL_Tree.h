@@ -318,7 +318,7 @@ private:
 			return false;
 		}
 
-	friend class AVLTests;
+	//friend class AVLTests;
 };
 
 #endif /* AVL_Tree */

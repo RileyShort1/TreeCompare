@@ -242,7 +242,7 @@ public:
 	bool insert(const T& elem) { return splay_insert(elem); }
 	bool remove(const T& elem) { return splay_remove(elem); }
 
-	friend class SplayTests;
+	//friend class SplayTests;
 };
 
 #endif /* SplayTree_h */
