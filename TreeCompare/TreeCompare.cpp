@@ -477,30 +477,121 @@ public:
 
         return;
     }
-    void run_tests()
+    void buildFileHeader(int randSeed, size_t N, int numRandCalls, std::string dataType, std::string fileNameSplay, std::string fileNameAVL) // writes header for two files
     {
-        std::fstream foutSplay; // output file
-        foutSplay.open("Splay1.csv", std::ios::out | std::ios::app);
+        std::fstream foutSplay2; // output file
+        foutSplay2.open(fileNameSplay, std::ios::out | std::ios::app);
 
-        foutSplay << "Rand seed = 5" << ", " << "N = 1" << ", " << "num of rands = 1m" << ", " 
-            << "Uniform Distribution" << ", " << "Splay Tree with microsecond time" << "\n"
-            << "Insert (total, avg)" << ", " << "Find (total, avg)" << ", " << "Delete (total, avg)" 
+        foutSplay2 << "Rand seed = " << randSeed << ", " << "N = " << N << ", " << "num of rands = " << numRandCalls << ", "
+            << dataType << ", " << "Splay Tree with microsecond time" << "\n"
+            << "Insert (total, avg)" << ", " << "Find (total, avg)" << ", " << "Delete (total, avg)"
             << ", " << "Max tree size" << "\n";
-        foutSplay.close();
+        foutSplay2.close();
 
-        std::fstream foutAVL; // output file
-        foutAVL.open("AVL1.csv", std::ios::out | std::ios::app);
-        foutAVL << "Rand seed = 5" << ", " << "N = 1" << ", " << "num of rands = 1m" << ", " 
-            << "Uniform Distribution" << ", " << "AVL Tree with microsecond time" << "\n"
-            << "Insert (total, avg)" << ", " << "Find (total, avg)" << ", " << "Delete (total, avg)" 
+        std::fstream foutAVL2; // output file
+        foutAVL2.open(fileNameAVL, std::ios::out | std::ios::app);
+        foutAVL2 << "Rand seed = " << randSeed << ", " << "N = " << N << ", " << "num of rands = " << numRandCalls << ", "
+            << dataType << ", " << "AVL Tree with microsecond time" << "\n"
+            << "Insert (total, avg)" << ", " << "Find (total, avg)" << ", " << "Delete (total, avg)"
             << ", " << "Max tree size" << "\n";
-        foutAVL.close();
+        foutAVL2.close();
 
-        for (int i = 0; i < 3; i++)
+        return;
+    }
+    void run_tests(int runsPerTest)
+    {
+        // input vars -------------
+        int randSeed = 5;
+        size_t N = 1;
+        int numRandCalls = 1000000;
+        //-------------------------
+
+
+        // TEST 1 - Uniform Dist, rand seed = 5, N = 1 ---------------------------- 
+        buildFileHeader(randSeed, N, numRandCalls, "Uniform Data", "Splay1.csv", "AVL1.csv"); // builds two files
+
+        for (int i = 0; i < runsPerTest; i++) // run tests
         {
-            testSplay(5, 1, 1000000, true, false, "Splay1.csv");
-            testAVL(5, 1, 1000000, true, false, "AVL1.csv");
+            testSplay(randSeed, N, numRandCalls, true, false, "Splay1.csv");
+            testAVL(randSeed, N, numRandCalls, true, false, "AVL1.csv");
         }
+        // ------------------------------------------------------------------
+
+
+        // TEST 2 - Uniform Dist, rand seed = 5, N = 2 ------------------
+       
+        N = 2;
+    
+        buildFileHeader(randSeed, N, numRandCalls, "Uniform Data", "Splay2.csv", "AVL2.csv"); // builds two files
+
+        for (int i = 0; i < runsPerTest; i++) // run tests
+        {
+            testSplay(randSeed, N, numRandCalls, true, false, "Splay2.csv");
+            testAVL(randSeed, N, numRandCalls, true, false, "AVL2.csv");
+        }
+        // -------------------------------------------------------------
+
+        // TEST 3 - Uniform Dist, rand seed = 5, N = 3 ------------------
+
+        N = 3;
+
+        buildFileHeader(randSeed, N, numRandCalls, "Uniform Data", "Splay3.csv", "AVL3.csv"); // builds two files
+
+        for (int i = 0; i < runsPerTest; i++) // run tests
+        {
+            testSplay(randSeed, N, numRandCalls, true, false, "Splay3.csv");
+            testAVL(randSeed, N, numRandCalls, true, false, "AVL3.csv");
+        }
+        // -------------------------------------------------------------
+
+        // TEST 4 - Uniform Dist, rand seed = 5, N = 4 ------------------
+
+        N = 4;
+
+        buildFileHeader(randSeed, N, numRandCalls, "Uniform Data", "Splay4.csv", "AVL4.csv"); // builds two files
+
+        for (int i = 0; i < runsPerTest; i++) // run tests
+        {
+            testSplay(randSeed, N, numRandCalls, true, false, "Splay4.csv");
+            testAVL(randSeed, N, numRandCalls, true, false, "AVL4.csv");
+        }
+        // -------------------------------------------------------------
+
+        // TEST 5 - Uniform Dist, rand seed = 5, N = 5 ------------------
+
+        N = 5;
+
+        buildFileHeader(randSeed, N, numRandCalls, "Uniform Data", "Splay5.csv", "AVL5.csv"); // builds two files
+
+        for (int i = 0; i < runsPerTest; i++) // run tests
+        {
+            testSplay(randSeed, N, numRandCalls, true, false, "Splay5.csv");
+            testAVL(randSeed, N, numRandCalls, true, false, "AVL5.csv");
+        }
+        // -------------------------------------------------------------
+
+
+        // TEST 2 - Uniform Dist, rand seed = 5, N = 10 ------------------
+
+        N = 10;
+
+        buildFileHeader(randSeed, N, numRandCalls, "Uniform Data", "Splay6.csv", "AVL6.csv"); // builds two files
+
+        for (int i = 0; i < runsPerTest; i++) // run tests
+        {
+            testSplay(randSeed, N, numRandCalls, true, false, "Splay6.csv");
+            testAVL(randSeed, N, numRandCalls, true, false, "AVL6.csv");
+        }
+        // -------------------------------------------------------------
+
+
+
+
+
+
+
+
+
 
        
 
@@ -531,7 +622,7 @@ int main()
     x.testAVL(5, 1, 1000000, true, false, "AVL.csv");
     */
 
-    x.run_tests();
+    x.run_tests(5);
 
 
 
