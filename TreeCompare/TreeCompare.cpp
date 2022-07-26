@@ -152,7 +152,7 @@ public:
         return (int)final_rand / n;
     }
 
-    void testSplay(int randSeed, size_t N, int num_rands, bool createFile, bool normalDist, std::string fileName)
+    void testSplay(int randSeed, size_t N, int num_rands, bool normalDist, std::string fileName)
     {
         srand(randSeed); // seed rand
         int seconds_to_micro = 1000000; // convert to microseconds
@@ -273,8 +273,7 @@ public:
         size_t sizeAfterRemove = testTree.get_size();
 
       
-        if (createFile == true)
-        {
+        
             std::fstream fout; // output file
             fout.open(fileName, std::ios::out | std::ios::app);
 
@@ -282,39 +281,12 @@ public:
                 (double)totalTimeFind / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgFind << ", " <<
                 (double)totalTimeRemove / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgRemove << ", " << sizeAfterInsert <<
                 "\n";
-        }
-        else
-        {
-            std::cout << "SPLAY TREE: " << std::endl;
-            // ------------------------------------- INSERT ---------------------------------
-            std::cout << "Processor time taken for attempting insertion of " << num_rands << " elements into splay tree: "
-                << std::fixed << std::setprecision(5) << (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
-
-            std::cout << "Average time per 1k insert attempts in microseconds: " << std::fixed << std::setprecision(5) << avg << std::endl;
-            std::cout << "Splay tree size: " << sizeAfterInsert << "\n\n";
-
-            // ----------------------------------- FIND ----------------------------------------
-            std::cout << "Processor time taken for attempting to find " << num_rands << " in Splay tree: "
-                << std::fixed << std::setprecision(5) << (double)totalTimeFind / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
-
-            std::cout << "Average time per 1k find operations in microseconds: " << std::fixed << std::setprecision(5) << avgFind << std::endl;
-            std::cout << "Splay tree size: " << sizeAfterInsert << "\n\n";
-
-            // ------------------------------------ DELETE -------------------------------------
-            std::cout << "Processor time taken for removing all elements (1 - 100,000) from Splay tree: "
-                << std::fixed << std::setprecision(5) << (double)totalTimeRemove / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
-
-            std::cout << "Average time per 1k remove operations in microseconds: " << std::fixed << std::setprecision(5) << avgRemove << std::endl;
-            std::cout << "Splay tree size: " << sizeAfterRemove << "\n";
-        }
-
-
-        
+       
         return;
 
     }
 
-    void testAVL(int randSeed, size_t N, int num_rands, bool createFile, bool normalDist, std::string fileName)
+    void testAVL(int randSeed, size_t N, int num_rands, bool normalDist, std::string fileName)
     {
         srand(randSeed); // seed rand
         int seconds_to_micro = 1000000; // convert to microseconds
@@ -439,9 +411,7 @@ public:
         size_t sizeAfterRemove = testTree.get_size();
 
         // compile data
-        if (createFile == true) // insert data in file
-        {
-
+       
             std::fstream fout; // output file
             fout.open(fileName, std::ios::out | std::ios::app);
 
@@ -449,32 +419,7 @@ public:
                 (double)totalTimeFind / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgFind << ", " <<
                 (double)totalTimeRemove / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgRemove << ", " << sizeAfterInsert <<
                 "\n";
-        }
-        else // just print for testing
-        {
-            // ------------------------------------- INSERT ---------------------------------
-            std::cout << "AVL TREE: " << std::endl;
-            std::cout << "Processor time taken for attempting insertion of " << num_rands << " elements into splay tree: "
-                << std::fixed << std::setprecision(5) << (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
-
-            std::cout << "Average time per 1k insert attempts in microseconds: " << std::fixed << std::setprecision(5) << avg << std::endl;
-            std::cout << "Splay tree size: " << sizeAfterInsert << "\n\n";
-
-            // ----------------------------------- FIND ----------------------------------------
-            std::cout << "Processor time taken for attempting to find " << num_rands << " in Splay tree: "
-                << std::fixed << std::setprecision(5) << (double)totalTimeFind / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
-
-            std::cout << "Average time per 1k find operations in microseconds: " << std::fixed << std::setprecision(5) << avgFind << std::endl;
-            std::cout << "Splay tree size: " << sizeAfterInsert << "\n\n";
-
-            // ------------------------------------ DELETE -------------------------------------
-            std::cout << "Processor time taken for removing all elements (1 - 100,000) from Splay tree: "
-                << std::fixed << std::setprecision(5) << (double)totalTimeRemove / CLOCKS_PER_SEC * seconds_to_micro << " microseconds" << std::endl;
-
-            std::cout << "Average time per 1k remove operations in microseconds: " << std::fixed << std::setprecision(5) << avgRemove << std::endl;
-            std::cout << "Splay tree size: " << sizeAfterRemove << "\n";
-        }
-
+      
         return;
     }
     void buildFileHeader(int randSeed, size_t N, int numRandCalls, std::string dataType, std::string fileNameSplay, std::string fileNameAVL) // writes header for two files
@@ -498,102 +443,45 @@ public:
 
         return;
     }
-    void run_tests(int runsPerTest)
+    void runTest_x(int randSeed, size_t N, int numRandCalls, std::string dataType, std::string fileNameSplay, std::string fileNameAVL, int runsPerTest)
     {
-        // input vars -------------
-        int randSeed = 5;
-        size_t N = 1;
+        buildFileHeader(randSeed, N, numRandCalls, dataType, fileNameSplay, fileNameAVL); // builds two files
+
+        bool normalDist = false;
+
+        if (dataType == "Normal Data")
+        {
+            normalDist = true;
+        }
+
+        for (int i = 0; i < runsPerTest; i++) // run tests
+        {
+            testSplay(randSeed, N, numRandCalls, normalDist, fileNameSplay);
+            testAVL(randSeed, N, numRandCalls, normalDist, fileNameAVL);
+        }
+
+        return;
+    }
+    void run_tests(int runsPerTest, int randSeed)
+    {
         int numRandCalls = 1000000;
-        //-------------------------
 
+        // Tests 1-6 with Uniform Distribution
+        runTest_x(randSeed, 1, numRandCalls, "Uniform Data", "SplayTest1.csv", "AVLTest1.csv", runsPerTest);
+        runTest_x(randSeed, 2, numRandCalls, "Uniform Data", "SplayTest2.csv", "AVLTest2.csv", runsPerTest);
+        runTest_x(randSeed, 3, numRandCalls, "Uniform Data", "SplayTest3.csv", "AVLTest3.csv", runsPerTest);
+        runTest_x(randSeed, 4, numRandCalls, "Uniform Data", "SplayTest4.csv", "AVLTest4.csv", runsPerTest);
+        runTest_x(randSeed, 5, numRandCalls, "Uniform Data", "SplayTest5.csv", "AVLTest5.csv", runsPerTest);
+        runTest_x(randSeed, 10, numRandCalls, "Uniform Data", "SplayTest6.csv", "AVLTest6.csv", runsPerTest);
 
-        // TEST 1 - Uniform Dist, rand seed = 5, N = 1 ---------------------------- 
-        buildFileHeader(randSeed, N, numRandCalls, "Uniform Data", "Splay1.csv", "AVL1.csv"); // builds two files
+        // Tests 7 - 12 with Normal Data
+        runTest_x(randSeed, 1, numRandCalls, "Normal Data", "SplayTest7.csv", "AVLTest7.csv", runsPerTest);
+        runTest_x(randSeed, 2, numRandCalls, "Normal Data", "SplayTest8.csv", "AVLTest8.csv", runsPerTest);
+        runTest_x(randSeed, 3, numRandCalls, "Normal Data", "SplayTest9.csv", "AVLTest9.csv", runsPerTest);
+        runTest_x(randSeed, 4, numRandCalls, "Normal Data", "SplayTest10.csv", "AVLTest10.csv", runsPerTest);
+        runTest_x(randSeed, 5, numRandCalls, "Normal Data", "SplayTest11.csv", "AVLTest11.csv", runsPerTest);
+        runTest_x(randSeed, 10, numRandCalls, "Normal Data", "SplayTest12.csv", "AVLTest12.csv", runsPerTest);
 
-        for (int i = 0; i < runsPerTest; i++) // run tests
-        {
-            testSplay(randSeed, N, numRandCalls, true, false, "Splay1.csv");
-            testAVL(randSeed, N, numRandCalls, true, false, "AVL1.csv");
-        }
-        // ------------------------------------------------------------------
-
-
-        // TEST 2 - Uniform Dist, rand seed = 5, N = 2 ------------------
-       
-        N = 2;
-    
-        buildFileHeader(randSeed, N, numRandCalls, "Uniform Data", "Splay2.csv", "AVL2.csv"); // builds two files
-
-        for (int i = 0; i < runsPerTest; i++) // run tests
-        {
-            testSplay(randSeed, N, numRandCalls, true, false, "Splay2.csv");
-            testAVL(randSeed, N, numRandCalls, true, false, "AVL2.csv");
-        }
-        // -------------------------------------------------------------
-
-        // TEST 3 - Uniform Dist, rand seed = 5, N = 3 ------------------
-
-        N = 3;
-
-        buildFileHeader(randSeed, N, numRandCalls, "Uniform Data", "Splay3.csv", "AVL3.csv"); // builds two files
-
-        for (int i = 0; i < runsPerTest; i++) // run tests
-        {
-            testSplay(randSeed, N, numRandCalls, true, false, "Splay3.csv");
-            testAVL(randSeed, N, numRandCalls, true, false, "AVL3.csv");
-        }
-        // -------------------------------------------------------------
-
-        // TEST 4 - Uniform Dist, rand seed = 5, N = 4 ------------------
-
-        N = 4;
-
-        buildFileHeader(randSeed, N, numRandCalls, "Uniform Data", "Splay4.csv", "AVL4.csv"); // builds two files
-
-        for (int i = 0; i < runsPerTest; i++) // run tests
-        {
-            testSplay(randSeed, N, numRandCalls, true, false, "Splay4.csv");
-            testAVL(randSeed, N, numRandCalls, true, false, "AVL4.csv");
-        }
-        // -------------------------------------------------------------
-
-        // TEST 5 - Uniform Dist, rand seed = 5, N = 5 ------------------
-
-        N = 5;
-
-        buildFileHeader(randSeed, N, numRandCalls, "Uniform Data", "Splay5.csv", "AVL5.csv"); // builds two files
-
-        for (int i = 0; i < runsPerTest; i++) // run tests
-        {
-            testSplay(randSeed, N, numRandCalls, true, false, "Splay5.csv");
-            testAVL(randSeed, N, numRandCalls, true, false, "AVL5.csv");
-        }
-        // -------------------------------------------------------------
-
-
-        // TEST 2 - Uniform Dist, rand seed = 5, N = 10 ------------------
-
-        N = 10;
-
-        buildFileHeader(randSeed, N, numRandCalls, "Uniform Data", "Splay6.csv", "AVL6.csv"); // builds two files
-
-        for (int i = 0; i < runsPerTest; i++) // run tests
-        {
-            testSplay(randSeed, N, numRandCalls, true, false, "Splay6.csv");
-            testAVL(randSeed, N, numRandCalls, true, false, "AVL6.csv");
-        }
-        // -------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-       
 
         return;
     }
@@ -621,8 +509,8 @@ int main()
     // rand seed, N, number of rand calls, output to file?, normal Distribution?, filename
     x.testAVL(5, 1, 1000000, true, false, "AVL.csv");
     */
-
-    x.run_tests(5);
+      // num runs / rand Seed
+    x.run_tests(1, 5);
 
 
 
