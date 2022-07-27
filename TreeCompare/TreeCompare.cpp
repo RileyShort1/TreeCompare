@@ -270,10 +270,7 @@ public:
         avgRemove = (double)totalTimeRemove / CLOCKS_PER_SEC * seconds_to_micro;
         avgRemove = avgRemove / timesPer1kRemove.size();
 
-        size_t sizeAfterRemove = testTree.get_size();
-
-      
-        
+   
             std::fstream fout; // output file
             fout.open(fileName, std::ios::out | std::ios::app);
 
@@ -407,8 +404,6 @@ public:
 
         avgRemove = (double)totalTimeRemove / CLOCKS_PER_SEC * seconds_to_micro;
         avgRemove = avgRemove / timesPer1kRemove.size();
-
-        size_t sizeAfterRemove = testTree.get_size();
 
         // compile data
        
