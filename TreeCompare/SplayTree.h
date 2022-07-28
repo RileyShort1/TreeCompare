@@ -211,6 +211,11 @@ private:
 			return nullptr;
 		}
 
+		if (_root->_data == x) // This addition makes splay faster for repeat lookups
+		{
+			return _root;
+		}
+
 		_splay(_root, x);
 
 		if (_root->_data != x) 

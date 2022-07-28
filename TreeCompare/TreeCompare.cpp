@@ -9,6 +9,8 @@
 #include <iomanip>
 #include <sstream>
 #include <fstream>
+#include <chrono>
+using namespace std::chrono;
 
 
 //
@@ -126,6 +128,109 @@ Pull the data into a google spreadsheetand we can generate any necessary plots.
 // class for our final benchmarking
 class Benchmark {
 public:
+
+    // New function to tests repeat lookups
+    void repeatLookups(int randSeed, size_t N, bool normalData, int numTests)
+    {
+        srand(randSeed);
+
+        // Tree creation
+        SplayTree<int> SplayTestTree;
+        AVL_Tree<int> AVLTestTree;
+        
+
+        // get data
+
+        std::vector<int> rands;
+
+        if (normalData == true)
+        {
+            for (int i = 0; i < 1000000; i++)
+            {
+                rands.push_back(rand_gaussian(N));
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 1000000; i++)
+            {
+                rands.push_back(rand_uniform(N));
+            }
+        }
+
+        // fill tree
+        for (size_t i = 0; i < rands.size(); i++)
+        {
+            SplayTestTree.insert(rands[i]);
+            AVLTestTree.insert(rands[i]);
+        }
+
+        // test lookup
+        clock_t AVLFind;
+        clock_t SplayFind;
+
+        std::vector<double> AVLTimes;
+        std::vector<double> SplayTimes;
+
+        srand(randSeed);
+        int randIndex = rand() % 1000000;
+
+        // Splay
+
+        for (int i = 0; i < numTests; i++)
+        {
+            auto start = high_resolution_clock::now();
+
+            SplayTestTree.contains(rands[randIndex]);
+
+            auto stop = high_resolution_clock::now();
+            duration<double, std::milli> ms_double = stop - start;
+            SplayTimes.push_back(ms_double.count());
+        }
+
+        // AVL
+      
+        for (int i = 0; i < numTests; i++)
+        {
+            auto start2 = high_resolution_clock::now();
+
+            AVLTestTree.contains(rands[randIndex]);
+
+            auto stop2 = high_resolution_clock::now();
+            duration<double, std::milli> ms_double2 = stop2 - start2;
+            AVLTimes.push_back(ms_double2.count());
+        }
+
+
+        // compute averages for Splay
+        double SplayTotal = 0;
+        for (int i = 0; i < SplayTimes.size(); i++)
+        {
+            SplayTotal += SplayTimes[i];
+        }
+
+        std::cout << "Splay Average find for " << rands[randIndex] << " was: " << SplayTotal / SplayTimes.size() << " milliseconds" << std::endl;
+
+        // compute averages for AVL
+        double AVLTotal = 0;
+        for (int i = 0; i < AVLTimes.size(); i++)
+        {
+            AVLTotal += AVLTimes[i];
+        }
+
+        std::cout << "AVL Average find for " << rands[randIndex] << " was: " << AVLTotal / AVLTimes.size() << " milliseconds" << std::endl;
+       
+        if (SplayTotal / SplayTimes.size() < AVLTotal / AVLTimes.size())
+        {
+            std::cout << "Splay is Faster!" << std::endl;
+        }
+        else
+        {
+            std::cout << "AVL is Faster!" << std::endl;
+        }
+
+        return;
+    }
 
     // { 1,2,3,4,5,10 } with N = 1 yeilding uniform data, and N > 1 yeilding rands from aprox gaussian
     int rand_uniform(size_t n) // gets uniform data
@@ -505,7 +610,13 @@ int main()
     x.testAVL(5, 1, 1000000, true, false, "AVL.csv");
     */
       // num runs / rand Seed
-    x.run_tests(1, 5);
+   // x.run_tests(5, 5);
+    x.repeatLookups(15, 7, true, 1000);
+    x.repeatLookups(10, 7, true, 1000);
+    x.repeatLookups(100, 7, true, 1000);
+    x.repeatLookups(20, 7, true, 1000);
+    x.repeatLookups(2, 7, true, 1000);
+    x.repeatLookups(155, 7, true, 1000);
 
 
 
