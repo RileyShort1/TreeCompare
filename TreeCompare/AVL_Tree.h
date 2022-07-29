@@ -285,10 +285,31 @@ private:
         return root;  
 	}
 
+	bool _recursive_delete(Node*& p)
+	{
+		if (p == nullptr)
+		{
+			return true;
+		}
+
+		_recursive_delete(p->_left);
+		_recursive_delete(p->_right);
+
+		p = nullptr;
+		delete p;
+		_size--;
+
+		return true;
+	}
+
 	public:
 		AVL_Tree() : _root(nullptr), _size(0) {}
+
 		size_t get_size() { return _size; }
 		bool contains(const T& data) { return avl_find(data); }
+		const Node* get(const T& elem) { return avl_get(elem); }
+
+		bool clear() { return _recursive_delete(_root); }
 
 		bool insert(const T& elem)
 		{
@@ -319,6 +340,7 @@ private:
 		}
 
 	//friend class AVLTests;
+	friend class Benchmark;
 };
 
 #endif /* AVL_Tree */

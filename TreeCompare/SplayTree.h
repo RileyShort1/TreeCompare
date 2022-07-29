@@ -236,18 +236,37 @@ private:
 		return true;
 	}
 
+	bool _recursive_delete(Node*& p)
+	{
+		if (p == nullptr)
+		{
+			return true;
+		}
+
+		_recursive_delete(p->_left);
+		_recursive_delete(p->_right);
+
+		p = nullptr;
+		delete p;
+		_size--;
+
+		return true;
+	}
+
 public:
 	SplayTree() : _root(nullptr), _size(0) {}
 
 	size_t get_size() const { return _size; }
-
 	bool contains(const T& elem) { return splay_contains(elem); }
 	const Node* get(const T& elem) { return splay_get(elem); }
+
+	bool clear() { return _recursive_delete(_root); }
 	
 	bool insert(const T& elem) { return splay_insert(elem); }
 	bool remove(const T& elem) { return splay_remove(elem); }
 
 	//friend class SplayTests;
+	friend class Benchmark
 };
 
 #endif /* SplayTree_h */

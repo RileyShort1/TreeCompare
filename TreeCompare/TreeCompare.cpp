@@ -129,6 +129,11 @@ Pull the data into a google spreadsheetand we can generate any necessary plots.
 class Benchmark {
 public:
 
+    void build_avl_tree(AVL_Tree<int>& theTree)
+    {
+
+
+    }
     void searchTestsAVL(size_t N) // uniform data
     {
 
