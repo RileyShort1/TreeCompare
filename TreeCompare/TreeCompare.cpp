@@ -129,107 +129,33 @@ Pull the data into a google spreadsheetand we can generate any necessary plots.
 class Benchmark {
 public:
 
-    // New function to tests repeat lookups
-    void repeatLookups(int randSeed, size_t N, bool normalData, int numTests)
+    void searchTestsAVL(size_t N) // uniform data
     {
-        srand(randSeed);
 
-        // Tree creation
-        SplayTree<int> SplayTestTree;
-        AVL_Tree<int> AVLTestTree;
-        
+        // tests will use 1k rand seeds (1 - 1000)
 
-        // get data
-
-        std::vector<int> rands;
-
-        if (normalData == true)
+        for (int i = 1; i < 1001; i++) // rand seeds
         {
-            for (int i = 0; i < 1000000; i++)
+            srand(i);
+
+            for (int k = 1; k < 1001; k++) // 1 - 1000 diff 100k node AVL Trees
             {
-                rands.push_back(rand_gaussian(N));
-            }
-        }
-        else
-        {
-            for (int i = 0; i < 1000000; i++)
-            {
-                rands.push_back(rand_uniform(N));
+                // some function call to build tree
+
+                for (int j = 1; j < 1001; j++) // 1k rand find targets
+                {
+                    // time = clock()
+                    // find
+                    // time = clock() - time
+                }
+
+                // time = time / 1000;
+                // Total_Over_1K_Trees += Time;
             }
         }
 
-        // fill tree
-        for (size_t i = 0; i < rands.size(); i++)
-        {
-            SplayTestTree.insert(rands[i]);
-            AVLTestTree.insert(rands[i]);
-        }
+        // avg_time_per_find_avl_uniform = Total_Over_1K_Trees / 1000.0;
 
-        // test lookup
-        clock_t AVLFind;
-        clock_t SplayFind;
-
-        std::vector<double> AVLTimes;
-        std::vector<double> SplayTimes;
-
-        srand(randSeed);
-        int randIndex = rand() % 1000000;
-
-        // Splay
-
-        for (int i = 0; i < numTests; i++)
-        {
-            auto start = high_resolution_clock::now();
-
-            SplayTestTree.contains(rands[randIndex]);
-
-            auto stop = high_resolution_clock::now();
-            duration<double, std::milli> ms_double = stop - start;
-            SplayTimes.push_back(ms_double.count());
-        }
-
-        // AVL
-      
-        for (int i = 0; i < numTests; i++)
-        {
-            auto start2 = high_resolution_clock::now();
-
-            AVLTestTree.contains(rands[randIndex]);
-
-            auto stop2 = high_resolution_clock::now();
-            duration<double, std::milli> ms_double2 = stop2 - start2;
-            AVLTimes.push_back(ms_double2.count());
-        }
-
-
-        // compute averages for Splay
-        double SplayTotal = 0;
-        for (int i = 0; i < SplayTimes.size(); i++)
-        {
-            SplayTotal += SplayTimes[i];
-        }
-
-        std::cout << "Splay Average find for " << rands[randIndex] << " was: " << SplayTotal / SplayTimes.size() << " milliseconds" << std::endl;
-
-        // compute averages for AVL
-        double AVLTotal = 0;
-        for (int i = 0; i < AVLTimes.size(); i++)
-        {
-            AVLTotal += AVLTimes[i];
-        }
-
-        std::cout << "AVL Average find for " << rands[randIndex] << " was: " << AVLTotal / AVLTimes.size() << " milliseconds" << std::endl;
-       
-        if (SplayTotal / SplayTimes.size() < AVLTotal / AVLTimes.size())
-        {
-            std::cout << "Splay is Faster!" << std::endl;
-        }
-        else
-        {
-            std::cout << "AVL is Faster!" << std::endl;
-        }
-
-        return;
     }
 
     // { 1,2,3,4,5,10 } with N = 1 yeilding uniform data, and N > 1 yeilding rands from aprox gaussian
@@ -611,13 +537,12 @@ int main()
     */
       // num runs / rand Seed
    // x.run_tests(5, 5);
-    x.repeatLookups(15, 7, true, 1000);
-    x.repeatLookups(10, 7, true, 1000);
-    x.repeatLookups(100, 7, true, 1000);
-    x.repeatLookups(20, 7, true, 1000);
-    x.repeatLookups(2, 7, true, 1000);
-    x.repeatLookups(155, 7, true, 1000);
-
+    for (size_t i = 1; i < 20; i++)
+    {
+        x.repeatLookups(15, i, true, 1000);
+    }
+   
+   
 
 
     
