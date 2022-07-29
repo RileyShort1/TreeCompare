@@ -129,15 +129,32 @@ Pull the data into a google spreadsheetand we can generate any necessary plots.
 class Benchmark {
 public:
 
-    void build_avl_tree(AVL_Tree<int>& theTree)
+    void build_avl_tree(AVL_Tree<int>& theTree, bool normalData, size_t N) // builds tree of size 100k
     {
+        theTree.clear(); // delete everything in tree
 
+        // fill tree
+        if (normalData == true)
+        {
+            for (int i = 0; i < 100000; i++)
+            {
+                // call rand_gaussian
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 100000; i++)
+            {
+                // call rand_normal
+            }
+        }
 
+        return;
     }
-    void searchTestsAVL(size_t N) // uniform data
+    void searchTestsAVL(size_t N, bool normalData) // uniform data
     {
-
-        // tests will use 1k rand seeds (1 - 1000)
+        
+        AVL_Tree<int> testTree;
 
         for (int i = 1; i < 1001; i++) // rand seeds
         {
@@ -145,7 +162,8 @@ public:
 
             for (int k = 1; k < 1001; k++) // 1 - 1000 diff 100k node AVL Trees
             {
-                // some function call to build tree
+                // function call to build tree
+                build_avl_tree(testTree, normalData, N);
 
                 for (int j = 1; j < 1001; j++) // 1k rand find targets
                 {
@@ -161,6 +179,10 @@ public:
 
         // avg_time_per_find_avl_uniform = Total_Over_1K_Trees / 1000.0;
 
+
+        // write to file 
+
+        return;
     }
 
     // { 1,2,3,4,5,10 } with N = 1 yeilding uniform data, and N > 1 yeilding rands from aprox gaussian

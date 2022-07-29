@@ -295,8 +295,8 @@ private:
 		_recursive_delete(p->_left);
 		_recursive_delete(p->_right);
 
-		p = nullptr;
 		delete p;
+		p = nullptr;
 		_size--;
 
 		return true;
