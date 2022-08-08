@@ -1,6 +1,8 @@
 #ifndef AVL_Tree_h
 #define AVL_Tree_h
 
+#include <iostream>
+
 template<typename T> 
 class AVL_Tree {
 private:
@@ -313,7 +315,7 @@ private:
 
 		bool insert(const T& elem)
 		{
-			int size = _size;
+			int size = (int) _size;
 			_root = avl_insert(_root, elem);
 
 			if (size == _size)

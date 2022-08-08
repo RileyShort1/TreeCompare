@@ -1,6 +1,8 @@
 #ifndef SplayTree_h
 #define SplayTree_h
 
+#include <iostream>
+
 template<typename T>
 class SplayTree {
 private:
