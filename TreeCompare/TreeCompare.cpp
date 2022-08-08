@@ -154,41 +154,44 @@ public:
     void searchTestsAVL(size_t N, bool normalData) // uniform data
     {
         AVL_Tree<int> testTree;
-        int seconds_to_micro = 1000000;
-        clock_t Total_Over_1K_Trees = 0;
-        clock_t avg_time_per_find_avl_uniform;
-        clock_t time = 0;
-        
+ 
+        double Total_Over_1K_Trees = 0;
+        double avg_time_per_find_avl_uniform;
+        double per1k = 0;
+        high_resolution_clock::time_point timeper1k;
+       
 
-        for (int i = 1; i < 1000; i++) // rand seeds
+        for (int i = 1; i < 11; i++) // rand seeds
         {
             srand(i);
 
-            for (int k = 1; k < 1000; k++) // 1 - 1000 diff 100k node AVL Trees
+            for (int k = 1; k < 11; k++) // 1 - 1000 diff 100k node AVL Trees
             {
                 // function call to build tree
                 build_avl_tree(testTree, normalData, N);
 
-                for (int j = 1; j < 1000; j++) // 1k rand find targets
+                for (int j = 1; j < 11; j++) // 1k rand find targets
                 {
-                    time -= clock();
+                    auto start = high_resolution_clock::now();
                     testTree.contains(rand() % 100000);
-                    time -= clock();
+                    auto stop = high_resolution_clock::now();
+                    duration<double, std::micro> ms_double = stop - start;
+                    //std::cout << "Time taken by function: "
+                        //<< ms_double.count() << " microseconds" << std::endl;
+                    per1k += ms_double.count();
                 }
 
-                time /= 1000;
-                Total_Over_1K_Trees += time;
+                per1k /= 10;
+                Total_Over_1K_Trees += per1k;
+                per1k = 0;
             }
         }
 
-        avg_time_per_find_avl_uniform = Total_Over_1K_Trees / 1000.0;
-
+        avg_time_per_find_avl_uniform = Total_Over_1K_Trees / 100.0;
+        std::cout << avg_time_per_find_avl_uniform << std::endl;
 
         // write to file
-        double theTime = (double)avg_time_per_find_avl_uniform / CLOCKS_PER_SEC * seconds_to_micro;
-
-        std::cout << theTime << std::endl;
-
+      
         return;
     }
 
