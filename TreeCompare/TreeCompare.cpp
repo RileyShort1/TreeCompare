@@ -158,9 +158,7 @@ public:
         double Total_Over_1K_Trees = 0;
         double avg_time_per_find_avl_uniform;
         double per1k = 0;
-        high_resolution_clock::time_point timeper1k;  //unused
-       
-
+  
         for (int i = 1; i < 11; i++) // rand seeds
         {
             srand(i);
