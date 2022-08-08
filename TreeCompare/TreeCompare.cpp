@@ -217,6 +217,7 @@ public:
 
         clock_t timeForInsert;
         clock_t timeForRemove;
+        clock_t timePer1k = 0;
 
         SplayTree<int> testTree;
 
@@ -242,23 +243,25 @@ public:
         // ------------------------------- SPLAY INSERT -----------------------------------------------
         // insert data - noting clock every 1000 elements
         std::vector<clock_t> timesPer1kInsert;
-
-        timeForInsert = clock();
-
-        for (int i = 1; i < num_rands + 1; i++)
+        int counter = 0;
+     
+        for (int i = 0; i < 1000; i++)
         {
-            testTree.insert(rands[i - 1]);
-           
-            if (i % 1000 == 0)
+            for (int j = 0; j < 1000; j++)
             {
-                timeForInsert = clock() - timeForInsert; // get clock time
-                timesPer1kInsert.push_back(timeForInsert);
-                timeForInsert = clock(); // reset clock
+                timeForInsert = clock(); // start clock
+                testTree.insert(rands[counter]); // insert
+                timeForInsert = clock() - timeForInsert; // stop clock
+                timePer1k += timeForInsert; // add time
+                counter++;
             }
+
+            timesPer1kInsert.push_back(timePer1k); 
+            timePer1k = 0;
         }
 
-       clock_t totalTime = 0;
-       double avg;
+        clock_t totalTime = 0;
+        double avg;
 
         for (size_t i = 0; i < timesPer1kInsert.size(); i++)
         {
@@ -274,18 +277,21 @@ public:
         clock_t timeForFind;
         std::vector<clock_t> timesPer1kFind;
 
-        timeForFind = clock();
-
-        for (size_t i = 1; i < rands.size() + 1; i++)
+        timePer1k = 0;
+        counter = 0;
+        for (int i = 0; i < 1000; i++)
         {
-            testTree.contains(rands[i - 1]);
-
-            if (i % 1000 == 0)
+            for (int j = 0; j < 1000; j++)
             {
-                timeForFind = clock() - timeForFind; // get clock time
-                timesPer1kFind.push_back(timeForFind);
-                timeForFind = clock(); // reset clock
+                timeForFind = clock(); // start clock
+                testTree.contains(rands[counter]); // find
+                timeForFind = clock() - timeForFind; // stop clock
+                timePer1k += timeForFind; // add time
+                counter++;
             }
+
+            timesPer1kFind.push_back(timePer1k);
+            timePer1k = 0;
         }
 
         clock_t totalTimeFind = 0;
@@ -301,20 +307,26 @@ public:
 
         // ------------------------------- SPLAY REMOVE ---------------------------------------------------
         std::vector<clock_t> timesPer1kRemove;
-        timeForRemove = clock();
 
         // remove data - noting clock every 1000 elements
         // loop 1 - 100000
-        for (int i = 1; i < 100001; i++)
-        {
-            testTree.remove(i);
+       
+        timePer1k = 0;
+        counter = 0;
 
-            if (i % 1000 == 0)
+        for (int i = 0; i < 100; i++)
+        {
+            for (int j = 0; j < 1000; j++)
             {
-                timeForRemove = clock() - timeForRemove; // get clock time
-                timesPer1kRemove.push_back(timeForRemove);
-                timeForRemove = clock(); // reset clock
+                timeForRemove = clock(); // start clock
+                testTree.contains(rands[counter]); // find
+                timeForRemove = clock() - timeForRemove; // stop clock
+                timePer1k += timeForRemove; // add time
+                counter++;
             }
+
+            timesPer1kRemove.push_back(timePer1k);
+            timePer1k = 0;
         }
 
         clock_t totalTimeRemove = 0;
@@ -350,6 +362,7 @@ public:
       
         clock_t timeForInsert;
         clock_t timeForRemove;
+        clock_t timePer1k = 0;
 
         std::vector<int> rands;
 
@@ -374,19 +387,21 @@ public:
         // ------------------------------ AVL INSERT --------------------------------------
         // insert data - noting clock every 1000 elements
         std::vector<clock_t> timesPer1kInsert;
+        int counter = 0;
 
-        timeForInsert = clock();
-
-        for (int i = 1; i < num_rands + 1; i++)
-        {         
-            testTree.insert(rands[i-1]);
-
-            if (i % 1000 == 0)
+        for (int i = 0; i < 1000; i++)
+        {
+            for (int j = 0; j < 1000; j++)
             {
-                timeForInsert = clock() - timeForInsert; // get clock time
-                timesPer1kInsert.push_back(timeForInsert);
-                timeForInsert = clock(); // reset clock
+                timeForInsert = clock(); // start clock
+                testTree.insert(rands[counter]); // insert
+                timeForInsert = clock() - timeForInsert; // stop clock
+                timePer1k += timeForInsert; // add time
+                counter++;
             }
+
+            timesPer1kInsert.push_back(timePer1k);
+            timePer1k = 0;
         }
 
         clock_t totalTime = 0;
@@ -407,18 +422,21 @@ public:
         clock_t timeForFind;
         std::vector<clock_t> timesPer1kFind;
 
-        timeForFind = clock();
-
-        for (size_t i = 1; i < rands.size() + 1; i++)
+        timePer1k = 0;
+        counter = 0;
+        for (int i = 0; i < 1000; i++)
         {
-            testTree.contains(rands[i - 1]);
-
-            if (i % 1000 == 0)
+            for (int j = 0; j < 1000; j++)
             {
-                timeForFind = clock() - timeForFind; // get clock time
-                timesPer1kFind.push_back(timeForFind);
-                timeForFind = clock(); // reset clock
+                timeForFind = clock(); // start clock
+                testTree.contains(rands[counter]); // find
+                timeForFind = clock() - timeForFind; // stop clock
+                timePer1k += timeForFind; // add time
+                counter++;
             }
+
+            timesPer1kFind.push_back(timePer1k);
+            timePer1k = 0;
         }
 
         clock_t totalTimeFind = 0;
@@ -436,20 +454,25 @@ public:
         // ----------------------------- AVL REMOVE ---------------------------------------------
 
         std::vector<clock_t> timesPer1kRemove;
-        timeForRemove = clock();
      
         // remove data - noting clock every 1000 elements
         // loop 1 - 100000
-        for (int i = 1; i < 100001; i++)
-        {
-            testTree.remove(i);
+        timePer1k = 0;
+        counter = 0;
 
-            if (i % 1000 == 0)
+        for (int i = 0; i < 100; i++)
+        {
+            for (int j = 0; j < 1000; j++)
             {
-                timeForRemove = clock() - timeForRemove; // get clock time
-                timesPer1kRemove.push_back(timeForRemove);
-                timeForRemove = clock(); // reset clock
+                timeForRemove = clock(); // start clock
+                testTree.contains(rands[counter]); // find
+                timeForRemove = clock() - timeForRemove; // stop clock
+                timePer1k += timeForRemove; // add time
+                counter++;
             }
+
+            timesPer1kRemove.push_back(timePer1k);
+            timePer1k = 0;
         }
 
         clock_t totalTimeRemove = 0;
@@ -563,11 +586,13 @@ int main()
     x.testAVL(5, 1, 1000000, true, false, "AVL.csv");
     */
       // num runs / rand Seed
-   // x.run_tests(5, 5);
-    for (size_t i = 1; i < 20; i++)
-    {
-        x.repeatLookups(15, i, true, 1000);
-    }
+      x.run_tests(5, 5);
+   
+    
+   // for (size_t i = 1; i < 20; i++)
+    //{
+       // x.repeatLookups(15, i, true, 1000);
+   // }
    
    
 
