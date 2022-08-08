@@ -266,7 +266,7 @@ public:
 	bool remove(const T& elem) { return splay_remove(elem); }
 
 	//friend class SplayTests;
-	friend class Benchmark
+	friend class Benchmark;
 };
 
 #endif /* SplayTree_h */
