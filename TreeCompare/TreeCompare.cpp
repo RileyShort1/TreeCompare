@@ -158,7 +158,7 @@ public:
         double Total_Over_1K_Trees = 0;
         double avg_time_per_find_avl_uniform;
         double per1k = 0;
-        high_resolution_clock::time_point timeper1k;
+        high_resolution_clock::time_point timeper1k;  //unused
        
 
         for (int i = 1; i < 11; i++) // rand seeds
@@ -177,7 +177,7 @@ public:
                     auto stop = high_resolution_clock::now();
                     duration<double, std::micro> ms_double = stop - start;
                     //std::cout << "Time taken by function: "
-                        //<< ms_double.count() << " microseconds" << std::endl;
+                        // << ms_double.count() << " microseconds" << std::endl;
                     per1k += ms_double.count();
                 }
 
