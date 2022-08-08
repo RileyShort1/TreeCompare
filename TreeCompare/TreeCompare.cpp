@@ -138,14 +138,14 @@ public:
         {
             for (int i = 0; i < 100000; i++)
             {
-                // call rand_gaussian
+                theTree.insert(rand_gaussian(N));
             }
         }
         else
         {
             for (int i = 0; i < 100000; i++)
             {
-                // call rand_normal
+                theTree.insert(rand_uniform(N));
             }
         }
 
@@ -153,34 +153,41 @@ public:
     }
     void searchTestsAVL(size_t N, bool normalData) // uniform data
     {
-        
         AVL_Tree<int> testTree;
+        int seconds_to_micro = 1000000;
+        clock_t Total_Over_1K_Trees = 0;
+        clock_t avg_time_per_find_avl_uniform;
+        clock_t time = 0;
+        
 
-        for (int i = 1; i < 1001; i++) // rand seeds
+        for (int i = 1; i < 1000; i++) // rand seeds
         {
             srand(i);
 
-            for (int k = 1; k < 1001; k++) // 1 - 1000 diff 100k node AVL Trees
+            for (int k = 1; k < 1000; k++) // 1 - 1000 diff 100k node AVL Trees
             {
                 // function call to build tree
                 build_avl_tree(testTree, normalData, N);
 
-                for (int j = 1; j < 1001; j++) // 1k rand find targets
+                for (int j = 1; j < 1000; j++) // 1k rand find targets
                 {
-                    // time = clock()
-                    // find
-                    // time = clock() - time
+                    time -= clock();
+                    testTree.contains(rand() % 100000);
+                    time -= clock();
                 }
 
-                // time = time / 1000;
-                // Total_Over_1K_Trees += Time;
+                time /= 1000;
+                Total_Over_1K_Trees += time;
             }
         }
 
-        // avg_time_per_find_avl_uniform = Total_Over_1K_Trees / 1000.0;
+        avg_time_per_find_avl_uniform = Total_Over_1K_Trees / 1000.0;
 
 
-        // write to file 
+        // write to file
+        double theTime = (double)avg_time_per_find_avl_uniform / CLOCKS_PER_SEC * seconds_to_micro;
+
+        std::cout << theTime << std::endl;
 
         return;
     }
@@ -586,7 +593,7 @@ int main()
     x.testAVL(5, 1, 1000000, true, false, "AVL.csv");
     */
       // num runs / rand Seed
-      x.run_tests(5, 5);
+      //x.run_tests(5, 5);
    
     
    // for (size_t i = 1; i < 20; i++)
@@ -594,6 +601,7 @@ int main()
        // x.repeatLookups(15, i, true, 1000);
    // }
    
+    x.searchTestsAVL(3, false);
    
 
 
