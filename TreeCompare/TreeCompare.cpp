@@ -129,29 +129,30 @@ Pull the data into a google spreadsheetand we can generate any necessary plots.
 class Benchmark {
 public:
 
-    void build_avl_tree(AVL_Tree<int>& theTree, bool normalData, size_t N) // builds tree of size 100k
+    template<typename T> void build_tree(T& theTree, bool normalData, size_t N) // builds tree of size 100k
     {
-        theTree.clear(); // delete everything in tree
+         theTree.clear(); // delete everything in tree
 
-        // fill tree
-        if (normalData == true)
-        {
-            for (int i = 0; i < 100000; i++)
-            {
-                theTree.insert(rand_gaussian(N));
-            }
-        }
-        else
-        {
-            for (int i = 0; i < 100000; i++)
-            {
-                theTree.insert(rand_uniform(N));
-            }
-        }
+         // fill tree
+         if (normalData == true)
+         {
+             for (int i = 0; i < 100000; i++)
+             {
+                 theTree.insert(rand_gaussian(N));
+             }
+         }
+         else
+         {
+             for (int i = 0; i < 100000; i++)
+             {
+                 theTree.insert(rand_uniform(N));
+             }
+         }
 
-        return;
+         return;
     }
-    void searchTestsAVL(size_t N, bool normalData) // uniform data
+
+    double searchTestsAVL(size_t N, bool normalData) // uniform data
     {
         AVL_Tree<int> testTree;
  
@@ -165,8 +166,46 @@ public:
 
             for (int k = 1; k < 11; k++) // 1 - 1000 diff 100k node AVL Trees
             {
+                // function call to build tree k
+                build_tree(testTree, normalData, N);
+
+                for (int j = 1; j < 11; j++) // 1k rand find targets
+                {
+                    auto start = high_resolution_clock::now();
+                    testTree.contains(rand() % 100000);     
+                    auto stop = high_resolution_clock::now();
+                    duration<double, std::micro> ms_double = stop - start;
+                    per1k += ms_double.count(); // add single find time to pool of times for tree k
+                }
+
+                per1k /= 10; // avg single find time for tree k (total time / num find operations)
+                Total_Over_1K_Trees += per1k; // adds avg find time of items in tree k 
+                per1k = 0; 
+            }
+        }
+
+        avg_time_per_find_avl_uniform = Total_Over_1K_Trees / 100.0; // divide by # of trees tested to get avg time across all trees
+        // should be yielding avg time to find a single item across all trees tested 
+
+        return avg_time_per_find_avl_uniform;
+    }
+
+    double searchTestsSplay(size_t N, bool normalData) // uniform data
+    {
+        SplayTree<int> testTree;
+
+        double Total_Over_1K_Trees = 0;
+        double avg_time_per_find_avl_uniform;
+        double per1k = 0;
+
+        for (int i = 1; i < 11; i++) // rand seeds
+        {
+            srand(i);
+
+            for (int k = 1; k < 11; k++) // 1 - 1000 diff 100k node AVL Trees
+            {
                 // function call to build tree
-                build_avl_tree(testTree, normalData, N);
+                build_tree(testTree, normalData, N);
 
                 for (int j = 1; j < 11; j++) // 1k rand find targets
                 {
@@ -174,8 +213,6 @@ public:
                     testTree.contains(rand() % 100000);
                     auto stop = high_resolution_clock::now();
                     duration<double, std::micro> ms_double = stop - start;
-                    //std::cout << "Time taken by function: "
-                        // << ms_double.count() << " microseconds" << std::endl;
                     per1k += ms_double.count();
                 }
 
@@ -185,12 +222,9 @@ public:
             }
         }
 
-        avg_time_per_find_avl_uniform = Total_Over_1K_Trees / 100.0;
-        std::cout << avg_time_per_find_avl_uniform << std::endl;
+        avg_time_per_find_avl_uniform = Total_Over_1K_Trees / 100.0; // divide by # of trees
 
-        // write to file
-      
-        return;
+        return avg_time_per_find_avl_uniform;     
     }
 
     // { 1,2,3,4,5,10 } with N = 1 yeilding uniform data, and N > 1 yeilding rands from aprox gaussian
@@ -602,11 +636,47 @@ int main()
        // x.repeatLookups(15, i, true, 1000);
    // }
    
-    x.searchTestsAVL(3, false);
+    x.searchTestsAVL(1, false);
+    x.searchTestsSplay(1, false);
+
+
+    std::fstream fout; // output file
+    fout.open("FindTests.csv", std::ios::out | std::ios::app);
+
+    fout << "Splay vs. AVL Find Tests: N = 1 - Uniform Data - Time in microseconds\n" << "AVL" << ", " << "Splay\n";
+
+    double avlTotal = 0;
+    double splayTotal = 0;
+    double avlData;
+    double splayData;
+
+    for (int i = 0; i < 10; i++)
+    {
+        avlData = x.searchTestsAVL(1, false);
+        splayData = x.searchTestsSplay(1, false);
+        avlTotal += avlData;
+        splayTotal += splayData;
+
+        fout << avlData << ", " << splayData << "\n";
+    }
+
+    fout << "AVL avg = " << avlTotal / 10 << ", " << "Splay avg = " << splayTotal / 10 << "\n";
+
+    if (avlTotal / 10 < splayTotal / 10) // AVL wins
+    {
+        fout << "AVL beats Splay by " << (splayTotal / 10) - (avlTotal / 10) << " microseconds\n";
+    }
+    else // splay wins
+    {
+        fout << "Splay beats AVL by " << (avlTotal / 10) - (splayTotal / 10) << " microseconds\n";
+    }
+
+    fout.close();
+      
    
 
 
-    
+    return 0;
 }
 
 
