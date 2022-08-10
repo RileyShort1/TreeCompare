@@ -10,6 +10,7 @@
 #include <sstream>
 #include <fstream>
 #include <chrono>
+#include <random>
 using namespace std::chrono;
 
 
@@ -250,6 +251,46 @@ public:
         }
 
         return (int)final_rand / n;
+    }
+
+    //
+    // https://www.gigacalculator.com/calculators/normality-test-calculator.php
+    //
+
+    void uniform(std::vector<int>& randNums, const int randSeed) // return vector or single rand??
+    {
+        // Mersenne Twister random engine
+        std::mt19937 urbg{randSeed};
+
+        std::uniform_int_distribution<int> rands{1, 100000}; 
+
+        randNums.clear();
+
+        for (int i = 0; i < 100000; i++) 
+        {
+            randNums.push_back(rands(urbg));
+        }
+
+        return;
+    }
+
+    void gaussian(std::vector<int>& randNums, const int randSeed) // return vector or single rand??
+    {
+        // Mersenne Twister random engine
+        std::mt19937 urbg{randSeed};
+
+        // https://en.cppreference.com/w/cpp/numeric/random/binomial_distribution
+        // https://mathworld.wolfram.com/BinomialDistribution.html
+        std::binomial_distribution<int> rands{100000, 0.5}; // stl normal dist does not return an int 
+
+        randNums.clear();
+
+        for (int i = 0; i < 100000; i++)
+        {
+            randNums.push_back(rands(urbg));
+        }
+
+        return;
     }
 
     void testSplay(int randSeed, size_t N, int num_rands, bool normalDist, std::string fileName)
