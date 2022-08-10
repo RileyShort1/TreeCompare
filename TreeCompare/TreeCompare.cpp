@@ -257,7 +257,7 @@ public:
     // https://www.gigacalculator.com/calculators/normality-test-calculator.php
     //
 
-    void uniform(std::vector<int>& randNums, const size_t randSeed) // return vector or single rand??
+    void uniform(std::vector<int>& randNums, unsigned int randSeed) // return vector or single rand??
     {
         // Mersenne Twister random engine
         std::mt19937 urbg{randSeed};
@@ -274,7 +274,7 @@ public:
         return;
     }
 
-    void gaussian(std::vector<int>& randNums, const size_t randSeed) // return vector or single rand??
+    void gaussian(std::vector<int>& randNums, unsigned int randSeed) // return vector or single rand??
     {
         // Mersenne Twister random engine
         std::mt19937 urbg{randSeed};
