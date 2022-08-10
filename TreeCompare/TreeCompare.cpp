@@ -153,35 +153,41 @@ public:
          return;
     }
 
-    double searchTestsAVL(size_t N, bool normalData) // uniform data
+    double searchTestsAVL(size_t N, bool is_normal) // uniform data
+        //note: & wanted to get rid of the bool parameter and for us to use a conditional in the function instead
+    
     {
-        AVL_Tree<int> testTree;
+        AVL_Tree<int> avl_tree;
  
         double Total_Over_1K_Trees = 0;
         double avg_time_per_find_avl_uniform;
-        double per1k = 0;
+        double time_per_batch = 0;
   
-        for (int i = 1; i < 11; i++) // rand seeds
+        for (int i = 0; i < 10; i++) // rand seeds
         {
             srand(i);
+            
+            Total_Over_1K_Trees = 0;
 
-            for (int k = 1; k < 11; k++) // 1 - 1000 diff 100k node AVL Trees
+            for (int num_trees = 0; num_trees < 10; num_trees++)
             {
                 // function call to build tree k
-                build_tree(testTree, normalData, N);
+                build_tree(avl_tree, is_normal, N);
+                
+                time_per_batch = 0;
 
-                for (int j = 1; j < 11; j++) // 1k rand find targets
+                for (int j = 1; j < 11; j++) // 1k rand find targets //change to 1000
                 {
                     auto start = high_resolution_clock::now();
-                    testTree.contains(rand() % 100000);     
+                    avl_tree.contains(rand() % 100000);     
                     auto stop = high_resolution_clock::now();
                     duration<double, std::micro> ms_double = stop - start;
-                    per1k += ms_double.count(); // add single find time to pool of times for tree k
+                    time_per_batch += ms_double.count(); // add single find time to pool of times for tree k
                 }
 
-                per1k /= 10; // avg single find time for tree k (total time / num find operations)
-                Total_Over_1K_Trees += per1k; // adds avg find time of items in tree k 
-                per1k = 0; 
+                time_per_batch /= 10; // avg single find time for tree k (total time / num find operations)
+                Total_Over_1K_Trees += time_per_batch; // adds avg find time of items in tree k 
+                //time_per_batch = 0;
             }
         }
 
