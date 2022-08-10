@@ -130,12 +130,12 @@ Pull the data into a google spreadsheetand we can generate any necessary plots.
 class Benchmark {
 public:
 
-    template<typename T> void build_tree(T& theTree, bool normalData, size_t N) // builds tree of size 100k
+    template<typename T> void build_tree(T& theTree, bool is_normal, size_t N) // builds tree of size 100k
     {
          theTree.clear(); // delete everything in tree
 
          // fill tree
-         if (normalData == true)
+         if (is_normal == true)
          {
              for (int i = 0; i < 100000; i++)
              {
@@ -235,6 +235,7 @@ public:
     }
 
     // { 1,2,3,4,5,10 } with N = 1 yeilding uniform data, and N > 1 yeilding rands from aprox gaussian
+    
     int rand_uniform(size_t n) // gets uniform data
     {
         int final_rand = 0;
@@ -258,6 +259,7 @@ public:
 
         return (int)final_rand / n;
     }
+    
 
     //
     // https://www.gigacalculator.com/calculators/normality-test-calculator.php
@@ -266,15 +268,15 @@ public:
     void uniform(std::vector<int>& randNums, unsigned int randSeed) // return vector or single rand??
     {
         // Mersenne Twister random engine
-        std::mt19937 urbg{randSeed};
+        std::mt19937 randEngine{randSeed};
 
-        std::uniform_int_distribution<int> rands{1, 100000}; 
+        std::uniform_int_distribution<int> generator{0, 500000}; // range 0 to 500k
 
         randNums.clear();
 
-        for (int i = 0; i < 100000; i++) 
+        for (int i = 0; i < 1000000; i++) // 1m rands
         {
-            randNums.push_back(rands(urbg));
+            randNums.push_back(generator(randEngine));
         }
 
         return;
@@ -283,17 +285,15 @@ public:
     void gaussian(std::vector<int>& randNums, unsigned int randSeed) // return vector or single rand??
     {
         // Mersenne Twister random engine
-        std::mt19937 urbg{randSeed};
+        std::mt19937 randEngine{randSeed};
 
-        // https://en.cppreference.com/w/cpp/numeric/random/binomial_distribution
-        // https://mathworld.wolfram.com/BinomialDistribution.html
-        std::binomial_distribution<int> rands{100000, 0.5}; // stl normal dist does not return an int 
+        std::normal_distribution<double> generator{250000.0, 2.0}; // (mean, stddev) Note: can't set explicit range, just mean
 
         randNums.clear();
 
-        for (int i = 0; i < 100000; i++)
+        for (int i = 0; i < 1000000; i++) // 1m rands
         {
-            randNums.push_back(rands(urbg));
+            randNums.push_back(generator(randEngine));
         }
 
         return;
