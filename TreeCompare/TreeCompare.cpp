@@ -689,10 +689,7 @@ int main()
        // x.repeatLookups(15, i, true, 1000);
    // }
    
-    x.searchTestsAVL(1, false);
-    x.searchTestsSplay(1, false);
-
-
+ 
     std::fstream fout; // output file
     fout.open("FindTests.csv", std::ios::out | std::ios::app);
 
