@@ -130,32 +130,37 @@ Pull the data into a google spreadsheetand we can generate any necessary plots.
 class Benchmark {
 public:
 
-    template<typename T> void build_tree(T& theTree, bool is_normal, size_t N) // builds tree of size 100k
+    template<typename T> void build_tree(T& theTree, bool is_normal, unsigned int seed)
     {
          theTree.clear(); // delete everything in tree
+
+         std::vector<int> rands;
 
          // fill tree
          if (is_normal == true)
          {
-             for (int i = 0; i < 100000; i++)
+             gaussian(rands, seed); // grab rands from generator
+
+             for (unsigned int i = 0; i < rands.size(); i++)
              {
-                 theTree.insert(rand_gaussian(N));
+                 theTree.insert(rands[i]);
              }
          }
          else
          {
-             for (int i = 0; i < 100000; i++)
+             uniform(rands, seed); // grab rands from generator
+
+             for (unsigned int i = 0; i < rands.size(); i++)
              {
-                 theTree.insert(rand_uniform(N));
+                 theTree.insert(rands[i]);
              }
          }
 
          return;
     }
 
-    double searchTestsAVL(size_t N, bool is_normal) // uniform data
-        //note: & wanted to get rid of the bool parameter and for us to use a conditional in the function instead
-    
+    //note: & wanted to get rid of the bool parameter and for us to use a conditional in the function instead
+    double searchTestsAVL(size_t N, bool is_normal)   
     {
         AVL_Tree<int> avl_tree;
  
@@ -163,31 +168,29 @@ public:
         double avg_time_per_find_avl_uniform;
         double time_per_batch = 0;
   
-        for (int i = 0; i < 10; i++) // rand seeds
+        for (int num_seeds = 0; num_seeds < 10; num_seeds++)
         {
-            srand(i);
-            
+            srand(num_seeds);
             Total_Over_1K_Trees = 0;
 
             for (int num_trees = 0; num_trees < 10; num_trees++)
             {
                 // function call to build tree k
-                build_tree(avl_tree, is_normal, N);
+                build_tree(avl_tree, is_normal, num_seeds);
                 
                 time_per_batch = 0;
 
-                for (int j = 1; j < 11; j++) // 1k rand find targets //change to 1000
+                for (int num_find_calls = 0; num_find_calls < 10; num_find_calls++) //change to 1000
                 {
                     auto start = high_resolution_clock::now();
-                    avl_tree.contains(rand() % 100000);     
+                    avl_tree.contains(rand() % 500000);     
                     auto stop = high_resolution_clock::now();
-                    duration<double, std::micro> ms_double = stop - start;
-                    time_per_batch += ms_double.count(); // add single find time to pool of times for tree k
+                    duration<double, std::micro> single_time = stop - start;
+                    time_per_batch += single_time.count(); // add single find time to pool of times for tree k
                 }
 
                 time_per_batch /= 10; // avg single find time for tree k (total time / num find operations)
                 Total_Over_1K_Trees += time_per_batch; // adds avg find time of items in tree k 
-                //time_per_batch = 0;
             }
         }
 
@@ -197,41 +200,44 @@ public:
         return avg_time_per_find_avl_uniform;
     }
 
-    double searchTestsSplay(size_t N, bool normalData) // uniform data
+    double searchTestsSplay(size_t N, bool is_normal) // uniform data
     {
-        SplayTree<int> testTree;
+        SplayTree<int> splay_tree;
 
         double Total_Over_1K_Trees = 0;
         double avg_time_per_find_avl_uniform;
-        double per1k = 0;
+        double time_per_batch = 0;
 
-        for (int i = 1; i < 11; i++) // rand seeds
+        for (int num_seeds = 0; num_seeds < 10; num_seeds++)
         {
-            srand(i);
+            srand(num_seeds);
+            Total_Over_1K_Trees = 0;
 
-            for (int k = 1; k < 11; k++) // 1 - 1000 diff 100k node AVL Trees
+            for (int num_trees = 0; num_trees < 10; num_trees++)
             {
-                // function call to build tree
-                build_tree(testTree, normalData, N);
+                // function call to build tree k
+                build_tree(splay_tree, is_normal, num_seeds);
 
-                for (int j = 1; j < 11; j++) // 1k rand find targets
+                time_per_batch = 0;
+
+                for (int num_find_calls = 0; num_find_calls < 10; num_find_calls++) //change to 1000
                 {
                     auto start = high_resolution_clock::now();
-                    testTree.contains(rand() % 100000);
+                    splay_tree.contains(rand() % 500000);
                     auto stop = high_resolution_clock::now();
-                    duration<double, std::micro> ms_double = stop - start;
-                    per1k += ms_double.count();
+                    duration<double, std::micro> single_time = stop - start;
+                    time_per_batch += single_time.count(); // add single find time to pool of times for tree k
                 }
 
-                per1k /= 10;
-                Total_Over_1K_Trees += per1k;
-                per1k = 0;
+                time_per_batch /= 10; // avg single find time for tree k (total time / num find operations)
+                Total_Over_1K_Trees += time_per_batch; // adds avg find time of items in tree k 
             }
         }
 
-        avg_time_per_find_avl_uniform = Total_Over_1K_Trees / 100.0; // divide by # of trees
+        avg_time_per_find_avl_uniform = Total_Over_1K_Trees / 100.0; // divide by # of trees tested to get avg time across all trees
+        // should be yielding avg time to find a single item across all trees tested 
 
-        return avg_time_per_find_avl_uniform;     
+        return avg_time_per_find_avl_uniform;
     }
 
     // { 1,2,3,4,5,10 } with N = 1 yeilding uniform data, and N > 1 yeilding rands from aprox gaussian
