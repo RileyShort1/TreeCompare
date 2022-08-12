@@ -240,33 +240,6 @@ public:
         return avg_time_per_find_avl_uniform;
     }
 
-    // { 1,2,3,4,5,10 } with N = 1 yeilding uniform data, and N > 1 yeilding rands from aprox gaussian
-    
-    int rand_uniform(size_t n) // gets uniform data
-    {
-        int final_rand = 0;
-
-        for (size_t i = 0; i < n; i++)
-        {
-            final_rand = rand() % 100000;
-        }
-
-        return final_rand;
-    }
-
-    int rand_gaussian(size_t n) // gets normal data
-    {
-        int final_rand = 0;
-
-        for (size_t i = 0; i < n; i++)
-        {
-            final_rand += rand() % 100000;
-        }
-
-        return (int)final_rand / n;
-    }
-    
-
     //
     // https://www.gigacalculator.com/calculators/normality-test-calculator.php
     //
