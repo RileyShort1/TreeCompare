@@ -328,7 +328,7 @@ private:
 
 		bool remove(const T& elem) 
 		{ 
-			int size = _size;
+			size_t size = _size;
 
 			_root = avl_remove(_root, elem);
 
