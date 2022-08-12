@@ -130,7 +130,7 @@ Pull the data into a google spreadsheetand we can generate any necessary plots.
 class Benchmark {
 public:
 
-    template<typename T> void build_tree(T& theTree, bool is_normal, unsigned int seed)
+    template<typename T> void build_tree(T& theTree, bool is_normal, unsigned int seed, double stddev)
     {
          theTree.clear(); // delete everything in tree
 
@@ -139,7 +139,7 @@ public:
          // fill tree
          if (is_normal == true)
          {
-             gaussian(rands, seed); // grab rands from generator
+             gaussian(rands, seed, stddev); // grab rands from generator
 
              for (unsigned int i = 0; i < rands.size(); i++)
              {
@@ -160,7 +160,7 @@ public:
     }
 
     //note: & wanted to get rid of the bool parameter and for us to use a conditional in the function instead
-    double searchTestsAVL(size_t N, bool is_normal)   
+    double searchTestsAVL(size_t N, bool is_normal, double stddev = 2.0)   
     {
         AVL_Tree<int> avl_tree;
  
@@ -176,7 +176,7 @@ public:
             for (int num_trees = 0; num_trees < 10; num_trees++)
             {
                 // function call to build tree k
-                build_tree(avl_tree, is_normal, num_seeds);
+                build_tree(avl_tree, is_normal, num_seeds, stddev);
                 
                 time_per_batch = 0;
 
@@ -200,7 +200,7 @@ public:
         return avg_time_per_find_avl_uniform;
     }
 
-    double searchTestsSplay(size_t N, bool is_normal) // uniform data
+    double searchTestsSplay(size_t N, bool is_normal, double stddev = 2.0) // uniform data
     {
         SplayTree<int> splay_tree;
 
@@ -216,7 +216,7 @@ public:
             for (int num_trees = 0; num_trees < 10; num_trees++)
             {
                 // function call to build tree k
-                build_tree(splay_tree, is_normal, num_seeds);
+                build_tree(splay_tree, is_normal, num_seeds, stddev);
 
                 time_per_batch = 0;
 
@@ -299,7 +299,7 @@ public:
 
         for (int i = 0; i < 1000000; i++) // 1m rands
         {
-            randNums.push_back(generator(randEngine));
+            randNums.push_back(double(generator(randEngine)));
         }
 
         return;
