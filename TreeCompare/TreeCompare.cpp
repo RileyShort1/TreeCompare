@@ -271,12 +271,12 @@ public:
     // https://www.gigacalculator.com/calculators/normality-test-calculator.php
     //
 
-    void uniform(std::vector<int>& randNums, unsigned int randSeed) // return vector or single rand??
+    void uniform(std::vector<int>& randNums, unsigned int randSeed) 
     {
         // Mersenne Twister random engine
-        std::mt19937 randEngine{randSeed};
+        std::mt19937 randEngine{ randSeed };
 
-        std::uniform_int_distribution<int> generator{0, 500000}; // range 0 to 500k
+        std::uniform_int_distribution<int> generator{ 0, 500000 }; // range 0 to 500k
 
         randNums.clear();
 
@@ -288,12 +288,12 @@ public:
         return;
     }
 
-    void gaussian(std::vector<int>& randNums, unsigned int randSeed) // return vector or single rand??
+    void gaussian(std::vector<int>& randNums, unsigned int randSeed, double stddev) 
     {
         // Mersenne Twister random engine
-        std::mt19937 randEngine{randSeed};
+        std::mt19937 randEngine{ randSeed };
 
-        std::normal_distribution<double> generator{250000.0, 2.0}; // (mean, stddev) Note: can't set explicit range, just mean
+        std::normal_distribution<double> generator{ 250000.0, stddev }; // (mean, stddev) Note: can't set explicit range, just mean
 
         randNums.clear();
 
@@ -305,16 +305,14 @@ public:
         return;
     }
 
-    void testSplay(int randSeed, size_t N, int num_rands, bool normalDist, std::string fileName)
+    void testSplay(unsigned int randSeed, double stddev, int num_rands, bool normalDist, std::string fileName)
     {
-        srand(randSeed); // seed rand
         int seconds_to_micro = 1000000; // convert to microseconds
-
-        clock_t timeForInsert;
         clock_t timeForRemove;
-        clock_t timePer1k = 0;
+        clock_t timeForInsert;
+        clock_t time_per_batch;
 
-        SplayTree<int> testTree;
+        SplayTree<int> splay_tree;
 
         std::vector<int> rands;
 
@@ -322,275 +320,170 @@ public:
 
         if (normalDist == true)
         {
-            for (int i = 0; i < num_rands; i++)
-            {
-                rands.push_back(rand_gaussian(N));
-            }
+            gaussian(rands, randSeed, stddev);
         }
         else
         {
-            for (int i = 0; i < num_rands; i++)
-            {
-                rands.push_back(rand_uniform(N));
-            }
+            uniform(rands, randSeed);
         }
 
         // ------------------------------- SPLAY INSERT -----------------------------------------------
         // insert data - noting clock every 1000 elements
-        std::vector<clock_t> timesPer1kInsert;
+        clock_t totalInsertTime = 0;
+        double avgInsert;
         int counter = 0;
      
         for (int i = 0; i < 1000; i++)
         {
+            time_per_batch = 0;
+
             for (int j = 0; j < 1000; j++)
             {
                 timeForInsert = clock(); // start clock
-                testTree.insert(rands[counter]); // insert
+                splay_tree.insert(rands[counter]); // insert
                 timeForInsert = clock() - timeForInsert; // stop clock
-                timePer1k += timeForInsert; // add time
+                time_per_batch += timeForInsert; // add time
                 counter++;
             }
 
-            timesPer1kInsert.push_back(timePer1k); 
-            timePer1k = 0;
+            totalInsertTime += time_per_batch;
         }
 
-        clock_t totalTime = 0;
-        double avg;
+        avgInsert = (double)totalInsertTime / CLOCKS_PER_SEC * seconds_to_micro; // convert to ms
+        avgInsert = avgInsert / 1000000; // get avg time per insert
 
-        for (size_t i = 0; i < timesPer1kInsert.size(); i++)
-        {
-            totalTime += timesPer1kInsert[i];
-        }
-
-        avg = (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro;
-        avg = avg / timesPer1kInsert.size();
-
-        size_t sizeAfterInsert = testTree.get_size();
-
-        // ------------------------------------ SPLAY FIND -----------------------------------------------
-        clock_t timeForFind;
-        std::vector<clock_t> timesPer1kFind;
-
-        timePer1k = 0;
-        counter = 0;
-        for (int i = 0; i < 1000; i++)
-        {
-            for (int j = 0; j < 1000; j++)
-            {
-                timeForFind = clock(); // start clock
-                testTree.contains(rands[counter]); // find
-                timeForFind = clock() - timeForFind; // stop clock
-                timePer1k += timeForFind; // add time
-                counter++;
-            }
-
-            timesPer1kFind.push_back(timePer1k);
-            timePer1k = 0;
-        }
-
-        clock_t totalTimeFind = 0;
-        double avgFind;
-
-        for (size_t i = 0; i < timesPer1kFind.size(); i++)
-        {
-            totalTimeFind += timesPer1kFind[i];
-        }
-
-        avgFind = (double)totalTimeFind / CLOCKS_PER_SEC * seconds_to_micro;
-        avgFind = avgFind / timesPer1kFind.size();
+        size_t sizeAfterInsert = splay_tree.get_size();
 
         // ------------------------------- SPLAY REMOVE ---------------------------------------------------
-        std::vector<clock_t> timesPer1kRemove;
+        clock_t totalRemoveTime = 0;
+        double avgRemove;
 
         // remove data - noting clock every 1000 elements
-        // loop 1 - 100000
+        // loop 1 - 500000
        
-        timePer1k = 0;
-        counter = 0;
+        counter = 0; // num to remove
 
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 500; i++)
         {
+            time_per_batch = 0;
+
             for (int j = 0; j < 1000; j++)
             {
                 timeForRemove = clock(); // start clock
-                testTree.contains(rands[counter]); // find
+                splay_tree.remove(counter); // remove
                 timeForRemove = clock() - timeForRemove; // stop clock
-                timePer1k += timeForRemove; // add time
+                time_per_batch += timeForRemove; // add time
                 counter++;
             }
 
-            timesPer1kRemove.push_back(timePer1k);
-            timePer1k = 0;
+            totalRemoveTime += time_per_batch;
         }
 
-        clock_t totalTimeRemove = 0;
-        double avgRemove;
+        avgRemove = (double)totalRemoveTime / CLOCKS_PER_SEC * seconds_to_micro; // convert to ms
+        avgRemove = avgRemove / 500; // get avg time per insert
 
-        for (size_t i = 0; i < timesPer1kRemove.size(); i++)
-        {
-            totalTimeRemove += timesPer1kRemove[i];
-        }
 
-        avgRemove = (double)totalTimeRemove / CLOCKS_PER_SEC * seconds_to_micro;
-        avgRemove = avgRemove / timesPer1kRemove.size();
-
+        // Write results
    
-            std::fstream fout; // output file
-            fout.open(fileName, std::ios::out | std::ios::app);
+        std::fstream fout; // output file
+        fout.open(fileName, std::ios::out | std::ios::app);
 
-            fout << std::fixed << std::setprecision(1) << (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro << ", " << avg << ", " <<
-                (double)totalTimeFind / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgFind << ", " <<
-                (double)totalTimeRemove / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgRemove << ", " << sizeAfterInsert <<
-                "\n";
+        fout << std::fixed << std::setprecision(1) << (double)totalInsertTime / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgInsert << ", " <<
+            (double)totalRemoveTime / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgRemove << ", " << sizeAfterInsert <<
+            "\n";
        
-        return;
 
+        return;
     }
 
-    void testAVL(int randSeed, size_t N, int num_rands, bool normalDist, std::string fileName)
+    void testAVL(unsigned int randSeed, double stddev, int num_rands, bool normalDist, std::string fileName)
     {
-        srand(randSeed); // seed rand
         int seconds_to_micro = 1000000; // convert to microseconds
-
-        AVL_Tree<int> testTree;
-      
-        clock_t timeForInsert;
         clock_t timeForRemove;
-        clock_t timePer1k = 0;
+        clock_t timeForInsert;
+        clock_t time_per_batch;
+
+        AVL_Tree<int> avl_tree;
 
         std::vector<int> rands;
 
-        // get data to insert (put it in a vector??)
-        // get normal data
+        // get appropriate data distribution
 
         if (normalDist == true)
         {
-            for (int i = 0; i < num_rands; i++)
-            {
-                rands.push_back(rand_gaussian(N));
-            }
+            gaussian(rands, randSeed, stddev);
         }
         else
         {
-            for (int i = 0; i < num_rands; i++)
-            {
-                rands.push_back(rand_uniform(N));
-            }
+            uniform(rands, randSeed);
         }
 
-        // ------------------------------ AVL INSERT --------------------------------------
+        // ------------------------------- SPLAY INSERT -----------------------------------------------
         // insert data - noting clock every 1000 elements
-        std::vector<clock_t> timesPer1kInsert;
+        clock_t totalInsertTime = 0;
+        double avgInsert;
         int counter = 0;
 
         for (int i = 0; i < 1000; i++)
         {
+            time_per_batch = 0;
+
             for (int j = 0; j < 1000; j++)
             {
                 timeForInsert = clock(); // start clock
-                testTree.insert(rands[counter]); // insert
+                avl_tree.insert(rands[counter]); // insert
                 timeForInsert = clock() - timeForInsert; // stop clock
-                timePer1k += timeForInsert; // add time
+                time_per_batch += timeForInsert; // add time
                 counter++;
             }
 
-            timesPer1kInsert.push_back(timePer1k);
-            timePer1k = 0;
+            totalInsertTime += time_per_batch;
         }
 
-        clock_t totalTime = 0;
-        double avg;
+        avgInsert = (double)totalInsertTime / CLOCKS_PER_SEC * seconds_to_micro; // convert to ms
+        avgInsert = avgInsert / 1000000; // get avg time per insert
 
-        for (size_t i = 0; i < timesPer1kInsert.size(); i++)
-        {
-            totalTime += timesPer1kInsert[i];
-        }
+        size_t sizeAfterInsert = avl_tree.get_size();
 
-        avg = (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro;
-        avg = avg / timesPer1kInsert.size();
+        // ------------------------------- SPLAY REMOVE ---------------------------------------------------
+        clock_t totalRemoveTime = 0;
+        double avgRemove;
 
-        size_t sizeAfterInsert = testTree.get_size();
-
-        // ----------------------------- AVL FIND ----------------------------------------------
-
-        clock_t timeForFind;
-        std::vector<clock_t> timesPer1kFind;
-
-        timePer1k = 0;
-        counter = 0;
-        for (int i = 0; i < 1000; i++)
-        {
-            for (int j = 0; j < 1000; j++)
-            {
-                timeForFind = clock(); // start clock
-                testTree.contains(rands[counter]); // find
-                timeForFind = clock() - timeForFind; // stop clock
-                timePer1k += timeForFind; // add time
-                counter++;
-            }
-
-            timesPer1kFind.push_back(timePer1k);
-            timePer1k = 0;
-        }
-
-        clock_t totalTimeFind = 0;
-        double avgFind;
-
-        for (size_t i = 0; i < timesPer1kFind.size(); i++)
-        {
-            totalTimeFind += timesPer1kFind[i];
-        }
-
-        avgFind = (double)totalTimeFind / CLOCKS_PER_SEC * seconds_to_micro;
-        avgFind = avgFind / timesPer1kFind.size();
-
-     
-        // ----------------------------- AVL REMOVE ---------------------------------------------
-
-        std::vector<clock_t> timesPer1kRemove;
-     
         // remove data - noting clock every 1000 elements
-        // loop 1 - 100000
-        timePer1k = 0;
-        counter = 0;
+        // loop 1 - 500000
 
-        for (int i = 0; i < 100; i++)
+        counter = 0; // num to remove
+
+        for (int i = 0; i < 500; i++)
         {
+            time_per_batch = 0;
+
             for (int j = 0; j < 1000; j++)
             {
                 timeForRemove = clock(); // start clock
-                testTree.contains(rands[counter]); // find
+                avl_tree.remove(counter); // remove
                 timeForRemove = clock() - timeForRemove; // stop clock
-                timePer1k += timeForRemove; // add time
+                time_per_batch += timeForRemove; // add time
                 counter++;
             }
 
-            timesPer1kRemove.push_back(timePer1k);
-            timePer1k = 0;
+            totalRemoveTime += time_per_batch;
         }
 
-        clock_t totalTimeRemove = 0;
-        double avgRemove;
+        avgRemove = (double)totalRemoveTime / CLOCKS_PER_SEC * seconds_to_micro; // convert to ms
+        avgRemove = avgRemove / 500; // get avg time per insert
 
-        for (size_t i = 0; i < timesPer1kRemove.size(); i++)
-        {
-            totalTimeRemove += timesPer1kRemove[i];
-        }
 
-        avgRemove = (double)totalTimeRemove / CLOCKS_PER_SEC * seconds_to_micro;
-        avgRemove = avgRemove / timesPer1kRemove.size();
+        // Write results
 
-        // compile data
-       
-            std::fstream fout; // output file
-            fout.open(fileName, std::ios::out | std::ios::app);
+        std::fstream fout; // output file
+        fout.open(fileName, std::ios::out | std::ios::app);
 
-            fout << std::fixed << std::setprecision(1) << (double)totalTime / CLOCKS_PER_SEC * seconds_to_micro << ", " << avg << ", " <<
-                (double)totalTimeFind / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgFind << ", " <<
-                (double)totalTimeRemove / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgRemove << ", " << sizeAfterInsert <<
-                "\n";
-      
+        fout << std::fixed << std::setprecision(1) << (double)totalInsertTime / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgInsert << ", " <<
+            (double)totalRemoveTime / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgRemove << ", " << sizeAfterInsert <<
+            "\n";
+
+
         return;
     }
     void buildFileHeader(int randSeed, size_t N, int numRandCalls, std::string dataType, std::string fileNameSplay, std::string fileNameAVL) // writes header for two files
@@ -667,28 +560,6 @@ int main()
     //av.generalTests();
    
     Benchmark x;
-
-   // Results were generated for values of N{ 1, 2, 3, 4, 5, 10 }.
-
-    /*
-    std::cout << "SPLAY: \n";
-    //   rand seed, N, number of rand calls, output to file?, normal Distribution?, filename
-    x.testSplay(5, 1, 1000000, true, false, "Splay.csv");
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << "AVL: \n";
-    // rand seed, N, number of rand calls, output to file?, normal Distribution?, filename
-    x.testAVL(5, 1, 1000000, true, false, "AVL.csv");
-    */
-      // num runs / rand Seed
-      //x.run_tests(5, 5);
-   
-    
-   // for (size_t i = 1; i < 20; i++)
-    //{
-       // x.repeatLookups(15, i, true, 1000);
-   // }
-   
  
     std::fstream fout; // output file
     fout.open("FindTests.csv", std::ios::out | std::ios::app);
