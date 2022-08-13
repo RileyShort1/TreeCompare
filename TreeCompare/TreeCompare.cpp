@@ -128,7 +128,7 @@ Pull the data into a google spreadsheetand we can generate any necessary plots.
 
 // class for our final benchmarking
 class Benchmark {
-public:
+private:
 
     template<typename T> void build_tree(T& theTree, bool is_normal, unsigned int seed, double stddev)
     {
@@ -160,13 +160,14 @@ public:
     }
 
     //note: & wanted to get rid of the bool parameter and for us to use a conditional in the function instead
-    double searchTestsAVL(size_t N, bool is_normal, double stddev = 2.0)   
+    void searchTestsAVL(bool is_normal, std::string fileName, double stddev = 2.0)   
     {
         AVL_Tree<int> avl_tree;
  
         double Total_Over_1K_Trees = 0;
-        double avg_time_per_find_avl_uniform;
+        double avg_time_per_find_avl;
         double time_per_batch = 0;
+        size_t avgTreeSize = 0;
   
         for (int num_seeds = 0; num_seeds < 10; num_seeds++)
         {
@@ -177,6 +178,7 @@ public:
             {
                 // function call to build tree k
                 build_tree(avl_tree, is_normal, num_seeds, stddev);
+                avgTreeSize += avl_tree.get_size();
                 
                 time_per_batch = 0;
 
@@ -194,19 +196,30 @@ public:
             }
         }
 
-        avg_time_per_find_avl_uniform = Total_Over_1K_Trees / 100.0; // divide by # of trees tested to get avg time across all trees
+        avg_time_per_find_avl = Total_Over_1K_Trees / 100.0; // divide by # of trees tested to get avg time across all trees
         // should be yielding avg time to find a single item across all trees tested 
 
-        return avg_time_per_find_avl_uniform;
+        avgTreeSize /= 100; // get avg tree size
+
+        std::fstream AVLFind; // output file
+        AVLFind.open(fileName, std::ios::out | std::ios::app);
+
+        AVLFind << avg_time_per_find_avl << ", " <<
+            avgTreeSize << ", " << "\n";
+
+        AVLFind.close();
+
+        return;
     }
 
-    double searchTestsSplay(size_t N, bool is_normal, double stddev = 2.0) // uniform data
+    void searchTestsSplay(bool is_normal, std::string fileName, double stddev = 2.0) // uniform data
     {
         SplayTree<int> splay_tree;
 
         double Total_Over_1K_Trees = 0;
-        double avg_time_per_find_avl_uniform;
+        double avg_time_per_find_splay;
         double time_per_batch = 0;
+        size_t avgTreeSize = 0;
 
         for (int num_seeds = 0; num_seeds < 10; num_seeds++)
         {
@@ -217,6 +230,7 @@ public:
             {
                 // function call to build tree k
                 build_tree(splay_tree, is_normal, num_seeds, stddev);
+                avgTreeSize += splay_tree.get_size();
 
                 time_per_batch = 0;
 
@@ -234,10 +248,20 @@ public:
             }
         }
 
-        avg_time_per_find_avl_uniform = Total_Over_1K_Trees / 100.0; // divide by # of trees tested to get avg time across all trees
+        avg_time_per_find_splay = Total_Over_1K_Trees / 100.0; // divide by # of trees tested to get avg time across all trees
         // should be yielding avg time to find a single item across all trees tested 
 
-        return avg_time_per_find_avl_uniform;
+        avgTreeSize /= 100; // get avg tree size
+
+        std::fstream SplayFind; // output file
+        SplayFind.open(fileName, std::ios::out | std::ios::app);
+
+        SplayFind << avg_time_per_find_splay << ", " <<
+            avgTreeSize << ", " << "\n";
+
+        SplayFind.close();
+
+        return;
     }
 
     //
@@ -365,8 +389,7 @@ public:
             "\n";
 
         fout.close();
-       
-
+    
         return;
     }
 
@@ -459,6 +482,60 @@ public:
             "\n";
 
         fout.close();
+
+        return;
+    }
+
+public: // ============================================= Public =============================================
+
+    void runSplayFindTest(bool is_normal, std::string fileName, double stddev = 2.0)
+    {
+        std::string dataType;
+
+        if (is_normal == true)
+        {
+            dataType = "Normal/Gaussian Data";
+        }
+        else
+        {
+            dataType = "Uniform Data";
+        }
+
+        std::fstream foutSplayFind; // output file
+        foutSplayFind.open(fileName, std::ios::out | std::ios::app);
+
+        foutSplayFind << "Rand seeds 0-1k " << ", " << "Stddev = " << stddev << ", " << "1m nums per tree" << ", "
+            << dataType << ", " << "Splay Tree with microsecond time" << "\n"
+            << "Find avg - Avg Tree size" << "\n";
+        foutSplayFind.close();
+
+        searchTestsSplay(is_normal, fileName, stddev);
+
+        return;
+    }
+
+    void runAVLFindTest(bool is_normal, std::string fileName, double stddev = 2.0)
+    {
+        std::string dataType;
+
+        if (is_normal == true)
+        {
+            dataType = "Normal/Gaussian Data";
+        }
+        else
+        {
+            dataType = "Uniform Data";
+        }
+
+        std::fstream foutAVLFind; // output file
+        foutAVLFind.open(fileName, std::ios::out | std::ios::app);
+
+        foutAVLFind << "Rand seeds 0-1k" << ", " << "Stddev = " << stddev << ", " << "1m nums per tree" << ", "
+            << dataType << ", " << "AVL Tree with microsecond time" << "\n"
+            << "Find avg - Avg Tree size" << "\n";
+        foutAVLFind.close();
+
+        searchTestsAVL(is_normal, fileName, stddev);
 
         return;
     }
@@ -568,9 +645,11 @@ int main()
     fout.close();
       
    */
-    x.runSplayTests(250, 2.0, false, "SplayTree.csv");
+   // x.runSplayTests(250, 2.0, false, "SplayTree.csv");
 
-    x.runAVLTests(250, 2.0, false, "AVLTree.csv");
+   // x.runAVLTests(250, 2.0, false, "AVLTree.csv");
+
+    x.runSplayFindTest(true, "SplayFind.csv", 15.0);
 
     return 0;
 }
