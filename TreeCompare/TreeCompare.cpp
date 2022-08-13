@@ -278,7 +278,7 @@ public:
         return;
     }
 
-    void testSplay(unsigned int randSeed, double stddev, int num_rands, bool normalDist, std::string fileName)
+    void testSplayInsRmv(unsigned int randSeed, double stddev, bool normalDist, std::string fileName)
     {
         int seconds_to_micro = 1000000; // convert to microseconds
         clock_t timeForRemove;
@@ -353,8 +353,7 @@ public:
         }
 
         avgRemove = (double)totalRemoveTime / CLOCKS_PER_SEC * seconds_to_micro; // convert to ms
-        avgRemove = avgRemove / 500; // get avg time per insert
-
+        avgRemove = avgRemove / 500000; // get avg time per 1 
 
         // Write results
    
@@ -364,12 +363,14 @@ public:
         fout << std::fixed << std::setprecision(1) << (double)totalInsertTime / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgInsert << ", " <<
             (double)totalRemoveTime / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgRemove << ", " << sizeAfterInsert <<
             "\n";
+
+        fout.close();
        
 
         return;
     }
 
-    void testAVL(unsigned int randSeed, double stddev, int num_rands, bool normalDist, std::string fileName)
+    void testAVLInsRmv(unsigned int randSeed, double stddev, bool normalDist, std::string fileName)
     {
         int seconds_to_micro = 1000000; // convert to microseconds
         clock_t timeForRemove;
@@ -444,7 +445,7 @@ public:
         }
 
         avgRemove = (double)totalRemoveTime / CLOCKS_PER_SEC * seconds_to_micro; // convert to ms
-        avgRemove = avgRemove / 500; // get avg time per insert
+        avgRemove = avgRemove / 500000; // get avg time per remove
 
 
         // Write results
@@ -452,73 +453,71 @@ public:
         std::fstream fout; // output file
         fout.open(fileName, std::ios::out | std::ios::app);
 
-        fout << std::fixed << std::setprecision(1) << (double)totalInsertTime / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgInsert << ", " <<
+        fout << std::fixed << std::setprecision(1) << (double)totalInsertTime / CLOCKS_PER_SEC * seconds_to_micro << ", " 
+            << avgInsert << ", " <<
             (double)totalRemoveTime / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgRemove << ", " << sizeAfterInsert <<
             "\n";
 
+        fout.close();
 
         return;
     }
-    void buildFileHeader(int randSeed, size_t N, int numRandCalls, std::string dataType, std::string fileNameSplay, std::string fileNameAVL) // writes header for two files
-    {
-        std::fstream foutSplay2; // output file
-        foutSplay2.open(fileNameSplay, std::ios::out | std::ios::app);
 
-        foutSplay2 << "Rand seed = " << randSeed << ", " << "N = " << N << ", " << "num of rands = " << numRandCalls << ", "
+    void runSplayTests(unsigned int randSeed, double stddev, bool is_normal, std::string fileName)
+    {
+        std::string dataType;
+
+        if (is_normal == true)
+        {
+            dataType = "Normal/Gaussian Data";
+        }
+        else
+        {
+            dataType = "Uniform Data";
+        }
+
+        std::fstream foutSplay2; // output file
+        foutSplay2.open(fileName, std::ios::out | std::ios::app);
+
+        foutSplay2 << "Rand seed = " << randSeed << ", " << "Stddev = " << stddev << ", " << "1m random numbers" << ", "
             << dataType << ", " << "Splay Tree with microsecond time" << "\n"
-            << "Insert (total, avg)" << ", " << "Find (total, avg)" << ", " << "Delete (total, avg)"
+            << "Insert (total, avg)" << ", " << "Delete (total, avg)"
             << ", " << "Max tree size" << "\n";
         foutSplay2.close();
 
+        for (int i = 0; i < 10; i++)
+        {
+            testSplayInsRmv(randSeed, stddev, is_normal, fileName);
+        }
+
+        return;
+    }
+
+    void runAVLTests(unsigned int randSeed, double stddev, bool is_normal, std::string fileName)
+    {
+        std::string dataType;
+
+        if (is_normal == true)
+        {
+            dataType = "Normal/Gaussian Data";
+        }
+        else
+        {
+            dataType = "Uniform Data";
+        }
+
         std::fstream foutAVL2; // output file
-        foutAVL2.open(fileNameAVL, std::ios::out | std::ios::app);
-        foutAVL2 << "Rand seed = " << randSeed << ", " << "N = " << N << ", " << "num of rands = " << numRandCalls << ", "
+        foutAVL2.open(fileName, std::ios::out | std::ios::app);
+        foutAVL2 << "Rand seed = " << randSeed << ", " << "Stddev = " << stddev << ", " << "1m random numbers" << ", "
             << dataType << ", " << "AVL Tree with microsecond time" << "\n"
-            << "Insert (total, avg)" << ", " << "Find (total, avg)" << ", " << "Delete (total, avg)"
+            << "Insert (total, avg)" << ", " << "Delete (total, avg)"
             << ", " << "Max tree size" << "\n";
         foutAVL2.close();
 
-        return;
-    }
-    void runTest_x(int randSeed, size_t N, int numRandCalls, std::string dataType, std::string fileNameSplay, std::string fileNameAVL, int runsPerTest)
-    {
-        buildFileHeader(randSeed, N, numRandCalls, dataType, fileNameSplay, fileNameAVL); // builds two files
-
-        bool normalDist = false;
-
-        if (dataType == "Normal Data")
+        for (int i = 0; i < 10; i++)
         {
-            normalDist = true;
+            testAVLInsRmv(randSeed, stddev, is_normal, fileName);
         }
-
-        for (int i = 0; i < runsPerTest; i++) // run tests
-        {
-            testSplay(randSeed, N, numRandCalls, normalDist, fileNameSplay);
-            testAVL(randSeed, N, numRandCalls, normalDist, fileNameAVL);
-        }
-
-        return;
-    }
-    void run_tests(int runsPerTest, int randSeed)
-    {
-        int numRandCalls = 1000000;
-
-        // Tests 1-6 with Uniform Distribution
-        runTest_x(randSeed, 1, numRandCalls, "Uniform Data", "SplayTest1.csv", "AVLTest1.csv", runsPerTest);
-        runTest_x(randSeed, 2, numRandCalls, "Uniform Data", "SplayTest2.csv", "AVLTest2.csv", runsPerTest);
-        runTest_x(randSeed, 3, numRandCalls, "Uniform Data", "SplayTest3.csv", "AVLTest3.csv", runsPerTest);
-        runTest_x(randSeed, 4, numRandCalls, "Uniform Data", "SplayTest4.csv", "AVLTest4.csv", runsPerTest);
-        runTest_x(randSeed, 5, numRandCalls, "Uniform Data", "SplayTest5.csv", "AVLTest5.csv", runsPerTest);
-        runTest_x(randSeed, 10, numRandCalls, "Uniform Data", "SplayTest6.csv", "AVLTest6.csv", runsPerTest);
-
-        // Tests 7 - 12 with Normal Data
-        runTest_x(randSeed, 1, numRandCalls, "Normal Data", "SplayTest7.csv", "AVLTest7.csv", runsPerTest);
-        runTest_x(randSeed, 2, numRandCalls, "Normal Data", "SplayTest8.csv", "AVLTest8.csv", runsPerTest);
-        runTest_x(randSeed, 3, numRandCalls, "Normal Data", "SplayTest9.csv", "AVLTest9.csv", runsPerTest);
-        runTest_x(randSeed, 4, numRandCalls, "Normal Data", "SplayTest10.csv", "AVLTest10.csv", runsPerTest);
-        runTest_x(randSeed, 5, numRandCalls, "Normal Data", "SplayTest11.csv", "AVLTest11.csv", runsPerTest);
-        runTest_x(randSeed, 10, numRandCalls, "Normal Data", "SplayTest12.csv", "AVLTest12.csv", runsPerTest);
-
 
         return;
     }
@@ -534,6 +533,7 @@ int main()
    
     Benchmark x;
  
+    /*
     std::fstream fout; // output file
     fout.open("FindTests.csv", std::ios::out | std::ios::app);
 
@@ -567,8 +567,10 @@ int main()
 
     fout.close();
       
-   
+   */
+    x.runSplayTests(250, 2.0, false, "SplayTree.csv");
 
+    x.runAVLTests(250, 2.0, false, "AVLTree.csv");
 
     return 0;
 }
