@@ -358,7 +358,7 @@ private:
         // remove data - noting clock every 1000 elements
         // loop 1 - 500000
        
-        counter = 0; // num to remove
+        srand(randSeed);
 
         for (int i = 0; i < 500; i++)
         {
@@ -367,10 +367,9 @@ private:
             for (int j = 0; j < 1000; j++)
             {
                 timeForRemove = clock(); // start clock
-                splay_tree.remove(counter); // remove
+                splay_tree.remove(rands[rand() % rands.size()]); // remove
                 timeForRemove = clock() - timeForRemove; // stop clock
                 time_per_batch += timeForRemove; // add time
-                counter++;
             }
 
             totalRemoveTime += time_per_batch;
@@ -449,7 +448,7 @@ private:
         // remove data - noting clock every 1000 elements
         // loop 1 - 500000
 
-        counter = 0; // num to remove
+        srand(randSeed);
 
         for (int i = 0; i < 500; i++)
         {
@@ -458,10 +457,9 @@ private:
             for (int j = 0; j < 1000; j++)
             {
                 timeForRemove = clock(); // start clock
-                avl_tree.remove(counter); // remove
+                avl_tree.remove(rands[rand() % rands.size()]); // remove
                 timeForRemove = clock() - timeForRemove; // stop clock
                 time_per_batch += timeForRemove; // add time
-                counter++;
             }
 
             totalRemoveTime += time_per_batch;
