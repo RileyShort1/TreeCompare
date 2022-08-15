@@ -358,34 +358,37 @@ private:
         // remove data - noting clock every 1000 elements
         // loop 1 - 500000
        
-        srand(randSeed);
+        counter = 0;
 
-        for (int i = 0; i < 500; i++)
+        for (int i = 0; i < 1000; i++)
         {
             time_per_batch = 0;
 
             for (int j = 0; j < 1000; j++)
             {
                 timeForRemove = clock(); // start clock
-                splay_tree.remove(rands[rand() % rands.size()]); // remove
+                splay_tree.remove(rands[counter]); // remove
                 timeForRemove = clock() - timeForRemove; // stop clock
                 time_per_batch += timeForRemove; // add time
+                counter++;
             }
 
             totalRemoveTime += time_per_batch;
         }
 
         avgRemove = (double)totalRemoveTime / CLOCKS_PER_SEC * seconds_to_micro; // convert to ms
-        avgRemove = avgRemove / 500000; // get avg time per 1 
+        avgRemove = avgRemove / 1000000; // get avg time per 1 
+
+        size_t sizeAfterRemove = splay_tree.get_size();
 
         // Write results
    
         std::fstream fout; // output file
         fout.open(fileName, std::ios::out | std::ios::app);
 
-        fout << std::fixed << std::setprecision(1) << (double)totalInsertTime / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgInsert << ", " <<
-            (double)totalRemoveTime / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgRemove << ", " << sizeAfterInsert <<
-            "\n";
+        fout << std::fixed << std::setprecision(1) << (double)totalInsertTime / CLOCKS_PER_SEC * seconds_to_micro << ", "
+            << avgInsert << ", " << (double)totalRemoveTime / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgRemove
+            << ", " << sizeAfterInsert << ", " << sizeAfterRemove << "\n";
 
         fout.close();
     
@@ -448,26 +451,28 @@ private:
         // remove data - noting clock every 1000 elements
         // loop 1 - 500000
 
-        srand(randSeed);
+        counter = 0;
 
-        for (int i = 0; i < 500; i++)
+        for (int i = 0; i < 1000; i++)
         {
             time_per_batch = 0;
 
             for (int j = 0; j < 1000; j++)
             {
                 timeForRemove = clock(); // start clock
-                avl_tree.remove(rands[rand() % rands.size()]); // remove
+                avl_tree.remove(rands[counter]); // remove
                 timeForRemove = clock() - timeForRemove; // stop clock
                 time_per_batch += timeForRemove; // add time
+                counter++;
             }
 
             totalRemoveTime += time_per_batch;
         }
 
         avgRemove = (double)totalRemoveTime / CLOCKS_PER_SEC * seconds_to_micro; // convert to ms
-        avgRemove = avgRemove / 500000; // get avg time per remove
+        avgRemove = avgRemove / 1000000; // get avg time per remove
 
+        size_t sizeAfterRemove = avl_tree.get_size();
 
         // Write results
 
@@ -475,9 +480,8 @@ private:
         fout.open(fileName, std::ios::out | std::ios::app);
 
         fout << std::fixed << std::setprecision(1) << (double)totalInsertTime / CLOCKS_PER_SEC * seconds_to_micro << ", " 
-            << avgInsert << ", " <<
-            (double)totalRemoveTime / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgRemove << ", " << sizeAfterInsert <<
-            "\n";
+            << avgInsert << ", " << (double)totalRemoveTime / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgRemove 
+            << ", " << sizeAfterInsert << ", " << sizeAfterRemove << "\n";
 
         fout.close();
 
@@ -538,7 +542,7 @@ public: // ============================================= Public ================
         return;
     }
 
-    void runSplayTests(unsigned int randSeed, double stddev, bool is_normal, std::string fileName)
+    void runSplayInsRmvTests(unsigned int randSeed, double stddev, bool is_normal, std::string fileName)
     {
         std::string dataType;
 
@@ -557,7 +561,7 @@ public: // ============================================= Public ================
         foutSplay2 << "Rand seed = " << randSeed << ", " << "Stddev = " << stddev << ", " << "1m random numbers" << ", "
             << dataType << ", " << "Splay Tree with microsecond time" << "\n"
             << "Insert (total, avg)" << ", " << "Delete (total, avg)"
-            << ", " << "Max tree size" << "\n";
+            << ", " << "Max tree size - size after remove" << "\n";
         foutSplay2.close();
 
         for (int i = 0; i < 10; i++)
@@ -568,7 +572,7 @@ public: // ============================================= Public ================
         return;
     }
 
-    void runAVLTests(unsigned int randSeed, double stddev, bool is_normal, std::string fileName)
+    void runAVLInsRmvTests(unsigned int randSeed, double stddev, bool is_normal, std::string fileName)
     {
         std::string dataType;
 
@@ -586,7 +590,7 @@ public: // ============================================= Public ================
         foutAVL2 << "Rand seed = " << randSeed << ", " << "Stddev = " << stddev << ", " << "1m random numbers" << ", "
             << dataType << ", " << "AVL Tree with microsecond time" << "\n"
             << "Insert (total, avg)" << ", " << "Delete (total, avg)"
-            << ", " << "Max tree size" << "\n";
+            << ", " << "Max tree size - size after remove" << "\n";
         foutAVL2.close();
 
         for (int i = 0; i < 10; i++)
@@ -643,11 +647,11 @@ int main()
     fout.close();
       
    */
-   // x.runSplayTests(250, 2.0, false, "SplayTree.csv");
+    x.runSplayInsRmvTests(250, 2.0, false, "SplayTree.csv");
 
-   // x.runAVLTests(250, 2.0, false, "AVLTree.csv");
+    x.runAVLInsRmvTests(250, 2.0, false, "AVLTree.csv");
 
-    x.runSplayFindTest(true, "SplayFind.csv", 15.0);
+   // x.runSplayFindTest(true, "SplayFind.csv", 15.0);
 
     return 0;
 }
