@@ -205,7 +205,7 @@ private:
         AVLFind.open(fileName, std::ios::out | std::ios::app);
 
         AVLFind << avg_time_per_find_avl << ", " <<
-            avgTreeSize << ", " << "\n";
+            avgTreeSize << "\n";
 
         AVLFind.close();
 
@@ -257,7 +257,7 @@ private:
         SplayFind.open(fileName, std::ios::out | std::ios::app);
 
         SplayFind << avg_time_per_find_splay << ", " <<
-            avgTreeSize << ", " << "\n";
+            avgTreeSize << "\n";
 
         SplayFind.close();
 
