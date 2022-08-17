@@ -493,6 +493,10 @@ public: // ============================================= Public ================
     void runSplayFindTest(bool is_normal, std::string fileName, double stddev = 2.0)
     {
         std::string dataType;
+        std::string stdDev;
+        std::stringstream stream;
+        stream << std::fixed << std::setprecision(1) << stddev;
+        stdDev = stream.str();
 
         if (is_normal == true)
         {
@@ -501,12 +505,13 @@ public: // ============================================= Public ================
         else
         {
             dataType = "Uniform Data";
+            stdDev = "inapplicable";
         }
 
         std::fstream foutSplayFind; // output file
         foutSplayFind.open(fileName, std::ios::out | std::ios::app);
 
-        foutSplayFind << "Rand seeds 0-1k " << ", " << "Stddev = " << stddev << ", " << "1m nums per tree" << ", "
+        foutSplayFind << "Rand seeds 0-1k " << ", " << "Stddev = " << stdDev << ", " << "1m nums per tree" << ", "
             << dataType << ", " << "Splay Tree with microsecond time" << "\n"
             << "Find avg - Avg Tree size" << "\n";
         foutSplayFind.close();
@@ -519,6 +524,10 @@ public: // ============================================= Public ================
     void runAVLFindTest(bool is_normal, std::string fileName, double stddev = 2.0)
     {
         std::string dataType;
+        std::string stdDev;
+        std::stringstream stream;
+        stream << std::fixed << std::setprecision(1) << stddev;
+        stdDev = stream.str();
 
         if (is_normal == true)
         {
@@ -527,12 +536,13 @@ public: // ============================================= Public ================
         else
         {
             dataType = "Uniform Data";
+            stdDev = "inapplicable";
         }
 
         std::fstream foutAVLFind; // output file
         foutAVLFind.open(fileName, std::ios::out | std::ios::app);
 
-        foutAVLFind << "Rand seeds 0-1k" << ", " << "Stddev = " << stddev << ", " << "1m nums per tree" << ", "
+        foutAVLFind << "Rand seeds 0-1k" << ", " << "Stddev = " << stdDev << ", " << "1m nums per tree" << ", "
             << dataType << ", " << "AVL Tree with microsecond time" << "\n"
             << "Find avg - Avg Tree size" << "\n";
         foutAVLFind.close();
@@ -545,6 +555,11 @@ public: // ============================================= Public ================
     void runSplayInsRmvTests(unsigned int randSeed, double stddev, bool is_normal, std::string fileName)
     {
         std::string dataType;
+        std::string stdDev;
+        std::stringstream stream;
+        stream << std::fixed << std::setprecision(1) << stddev;
+        stdDev = stream.str();
+
 
         if (is_normal == true)
         {
@@ -553,12 +568,13 @@ public: // ============================================= Public ================
         else
         {
             dataType = "Uniform Data";
+            stdDev = "inapplicable";
         }
 
         std::fstream foutSplay2; // output file
         foutSplay2.open(fileName, std::ios::out | std::ios::app);
 
-        foutSplay2 << "Rand seed = " << randSeed << ", " << "Stddev = " << stddev << ", " << "1m random numbers" << ", "
+        foutSplay2 << "Rand seed = " << randSeed << ", " << "Stddev = " << stdDev << ", " << "1m random numbers" << ", "
             << dataType << ", " << "Splay Tree with microsecond time" << "\n"
             << "Insert (total, avg)" << ", " << "Delete (total, avg)"
             << ", " << "Max tree size - size after remove" << "\n";
@@ -647,11 +663,12 @@ int main()
     fout.close();
       
    */
-    x.runSplayInsRmvTests(250, 2.0, false, "SplayTree.csv");
 
-    x.runAVLInsRmvTests(250, 2.0, false, "AVLTree.csv");
+    //x.runSplayInsRmvTests(250, 2.0, false, "SplayTree.csv");
 
-   // x.runSplayFindTest(true, "SplayFind.csv", 15.0);
+   // x.runAVLInsRmvTests(250, 2.0, false, "AVLTree.csv");
+
+    x.runAVLFindTest(false, "SplayFind.csv", 15.0);
 
     return 0;
 }
