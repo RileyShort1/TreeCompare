@@ -160,7 +160,7 @@ private:
     }
 
     //note: & wanted to get rid of the bool parameter and for us to use a conditional in the function instead
-    void searchTestsAVL(bool is_normal, std::string fileName, double stddev = 2.0)   
+    void searchTestsAVL(bool is_normal, std::string fileName, double stddev)   
     {
         AVL_Tree<int> avl_tree;
  
@@ -212,7 +212,7 @@ private:
         return;
     }
 
-    void searchTestsSplay(bool is_normal, std::string fileName, double stddev = 2.0) // uniform data
+    void searchTestsSplay(bool is_normal, std::string fileName, double stddev) // uniform data
     {
         SplayTree<int> splay_tree;
 
@@ -285,6 +285,7 @@ private:
         return;
     }
 
+    // might need this https://en.wikipedia.org/wiki/Truncated_normal_distribution#Simulating
     void gaussian(std::vector<int>& randNums, unsigned int randSeed, double stddev) 
     {
         // Mersenne Twister random engine
