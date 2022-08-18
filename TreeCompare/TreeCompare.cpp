@@ -628,45 +628,9 @@ int main()
    
     Benchmark x;
  
-    /*
-    std::fstream fout; // output file
-    fout.open("FindTests.csv", std::ios::out | std::ios::app);
+  //x.runSplayInsRmvTests(250, 2.0, false, "SplayTree.csv");
 
-    fout << "Splay vs. AVL Find Tests: N = 1 - Uniform Data - Time in microseconds\n" << "AVL" << ", " << "Splay\n";
-
-    double avlTotal = 0;
-    double splayTotal = 0;
-    double avlData;
-    double splayData;
-
-    for (int i = 0; i < 10; i++)
-    {
-        avlData = x.searchTestsAVL(1, false);
-        splayData = x.searchTestsSplay(1, false);
-        avlTotal += avlData;
-        splayTotal += splayData;
-
-        fout << avlData << ", " << splayData << "\n";
-    }
-
-    fout << "AVL avg = " << avlTotal / 10 << ", " << "Splay avg = " << splayTotal / 10 << "\n";
-
-    if (avlTotal / 10 < splayTotal / 10) // AVL wins
-    {
-        fout << "AVL beats Splay by " << (splayTotal / 10) - (avlTotal / 10) << " microseconds\n";
-    }
-    else // splay wins
-    {
-        fout << "Splay beats AVL by " << (avlTotal / 10) - (splayTotal / 10) << " microseconds\n";
-    }
-
-    fout.close();
-      
-   */
-
-    //x.runSplayInsRmvTests(250, 2.0, false, "SplayTree.csv");
-
-   // x.runAVLInsRmvTests(250, 2.0, false, "AVLTree.csv");
+  //x.runAVLInsRmvTests(250, 2.0, false, "AVLTree.csv");
 
     x.runAVLFindTest(false, "SplayFind.csv", 15.0);
 
