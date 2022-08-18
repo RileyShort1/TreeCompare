@@ -592,6 +592,10 @@ public: // ============================================= Public ================
     void runAVLInsRmvTests(unsigned int randSeed, double stddev, bool is_normal, std::string fileName)
     {
         std::string dataType;
+        std::string stdDev;
+        std::stringstream stream;
+        stream << std::fixed << std::setprecision(1) << stddev;
+        stdDev = stream.str();
 
         if (is_normal == true)
         {
@@ -600,11 +604,12 @@ public: // ============================================= Public ================
         else
         {
             dataType = "Uniform Data";
+            stdDev = "inapplicable";
         }
 
         std::fstream foutAVL2; // output file
         foutAVL2.open(fileName, std::ios::out | std::ios::app);
-        foutAVL2 << "Rand seed = " << randSeed << ", " << "Stddev = " << stddev << ", " << "1m random numbers" << ", "
+        foutAVL2 << "Rand seed = " << randSeed << ", " << "Stddev = " << stdDev << ", " << "1m random numbers" << ", "
             << dataType << ", " << "AVL Tree with microsecond time" << "\n"
             << "Insert (total, avg)" << ", " << "Delete (total, avg)"
             << ", " << "Max tree size - size after remove" << "\n";
