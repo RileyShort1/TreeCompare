@@ -303,7 +303,7 @@ private:
         return;
     }
 
-    void testSplayInsRmv(unsigned int randSeed, double stddev, bool normalDist, std::string fileName)
+    std::vector<double> testSplayInsRmv(unsigned int randSeed, double stddev, bool normalDist, std::string fileName)
     {
         int seconds_to_micro = 1000000; // convert to microseconds
         clock_t timeForRemove;
@@ -387,16 +387,18 @@ private:
         std::fstream fout; // output file
         fout.open(fileName, std::ios::out | std::ios::app);
 
-        fout << std::fixed << std::setprecision(1) << (double)totalInsertTime / CLOCKS_PER_SEC * seconds_to_micro << ", "
+        fout << std::fixed << std::setprecision(4) << (double)totalInsertTime / CLOCKS_PER_SEC * seconds_to_micro << ", "
             << avgInsert << ", " << (double)totalRemoveTime / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgRemove
             << ", " << sizeAfterInsert << ", " << sizeAfterRemove << "\n";
 
         fout.close();
     
-        return;
+        std::vector<double> avgReturns = { avgInsert, avgRemove };
+
+        return avgReturns;
     }
 
-    void testAVLInsRmv(unsigned int randSeed, double stddev, bool normalDist, std::string fileName)
+    std::vector<double> testAVLInsRmv(unsigned int randSeed, double stddev, bool normalDist, std::string fileName)
     {
         int seconds_to_micro = 1000000; // convert to microseconds
         clock_t timeForRemove;
@@ -480,13 +482,15 @@ private:
         std::fstream fout; // output file
         fout.open(fileName, std::ios::out | std::ios::app);
 
-        fout << std::fixed << std::setprecision(1) << (double)totalInsertTime / CLOCKS_PER_SEC * seconds_to_micro << ", " 
+        fout << std::fixed << std::setprecision(4) << (double)totalInsertTime / CLOCKS_PER_SEC * seconds_to_micro << ", " 
             << avgInsert << ", " << (double)totalRemoveTime / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgRemove 
             << ", " << sizeAfterInsert << ", " << sizeAfterRemove << "\n";
 
         fout.close();
 
-        return;
+        std::vector<double> avgReturns = { avgInsert, avgRemove };
+
+        return avgReturns;
     }
 
 public: // ============================================= Public =============================================
@@ -581,10 +585,27 @@ public: // ============================================= Public ================
             << ", " << "Max tree size - size after remove" << "\n";
         foutSplay2.close();
 
+        std::vector<double> avgTimes;
+        double avgInsert = 0;
+        double avgRemove = 0;
+
         for (int i = 0; i < 10; i++)
         {
-            testSplayInsRmv(randSeed, stddev, is_normal, fileName);
+           avgTimes = testSplayInsRmv(randSeed, stddev, is_normal, fileName);
+           avgInsert += avgTimes[0]; 
+           avgRemove += avgTimes[1];
+
+           avgTimes.clear();
         }
+
+        // get avg
+        avgInsert /= 10;
+        avgRemove /= 10;
+
+        // write avg's
+        foutSplay2.open(fileName, std::ios::out | std::ios::app);
+        foutSplay2 << "Avg Insert = " << avgInsert << ", " << "Avg Remove = " << avgRemove << "\n";
+        foutSplay2.close();
 
         return;
     }
@@ -615,10 +636,27 @@ public: // ============================================= Public ================
             << ", " << "Max tree size - size after remove" << "\n";
         foutAVL2.close();
 
+        std::vector<double> avgTimes;
+        double avgInsert = 0;
+        double avgRemove = 0;
+
         for (int i = 0; i < 10; i++)
         {
-            testAVLInsRmv(randSeed, stddev, is_normal, fileName);
+            avgTimes = testAVLInsRmv(randSeed, stddev, is_normal, fileName);
+            avgInsert += avgTimes[0];
+            avgRemove += avgTimes[1];
+
+            avgTimes.clear();
         }
+
+        // get avg
+        avgInsert /= 10;
+        avgRemove /= 10;
+
+        // write avg's
+        foutAVL2.open(fileName, std::ios::out | std::ios::app);
+        foutAVL2 << "Avg Insert = " << avgInsert << ", " << "Avg Remove = " << avgRemove << "\n";
+        foutAVL2.close();
 
         return;
     }
@@ -634,11 +672,11 @@ int main()
    
     Benchmark x;
  
-  //x.runSplayInsRmvTests(250, 2.0, false, "SplayTree.csv");
+    x.runSplayInsRmvTests(250, 2.0, false, "SplayTree.csv");
 
-  //x.runAVLInsRmvTests(250, 2.0, false, "AVLTree.csv");
+    x.runAVLInsRmvTests(250, 2.0, false, "AVLTree.csv");
 
-    x.runAVLFindTest(false, "SplayFind.csv", 15.0);
+    //x.runAVLFindTest(false, "SplayFind.csv", 15.0);
 
     return 0;
 }
