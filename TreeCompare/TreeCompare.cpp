@@ -14,12 +14,7 @@
 using namespace std::chrono;
 
 
-//
-// Link to a data structure visualization tool (https://www.cs.usfca.edu/~galles/visualization/Algorithms.html)
-//
 
-
- 
 /*
 
 class AVLTests {
@@ -109,21 +104,6 @@ public:
     }
 };
 
-*/
-/*
-In your main you should
-srand(XYZ)
-create AVL Tree
-generate 1M rands and stuff into the tree, noting clock value after every 1000
-srand back to xyz
-create Splay Tree
-same as step 3
-Generate 1M rands and look up in AVL, noting clock value after every 1000 - 
-- in this case you're only interested in the final number since the tree sizes are fixed, but sample every 1000 anyway.
-in a loop from 1 to 100,000 remove each number sequentially from the AVL Tree, noting clock per 1000 as before.
-Same for splay trees
-Both trees should be empty after all the removals
-Pull the data into a google spreadsheetand we can generate any necessary plots.
 */
 
 // class for our final benchmarking
@@ -286,6 +266,7 @@ private:
     }
 
     // might need this https://en.wikipedia.org/wiki/Truncated_normal_distribution#Simulating
+    // or this std::binomial_distribution
     void gaussian(std::vector<int>& randNums, unsigned int randSeed, double stddev) 
     {
         // Mersenne Twister random engine
@@ -516,7 +497,7 @@ public: // ============================================= Public ================
         std::fstream foutSplayFind; // output file
         foutSplayFind.open(fileName, std::ios::out | std::ios::app);
 
-        foutSplayFind << "Rand seeds 0-1k " << ", " << "Stddev = " << stdDev << ", " << "1m nums per tree" << ", "
+        foutSplayFind << "Rand seeds 0-1k " << ", " << "Stddev = " << stdDev << ", "
             << dataType << ", " << "Splay Tree with microsecond time" << "\n"
             << "Find avg - Avg Tree size" << "\n";
         foutSplayFind.close();
@@ -547,7 +528,7 @@ public: // ============================================= Public ================
         std::fstream foutAVLFind; // output file
         foutAVLFind.open(fileName, std::ios::out | std::ios::app);
 
-        foutAVLFind << "Rand seeds 0-1k" << ", " << "Stddev = " << stdDev << ", " << "1m nums per tree" << ", "
+        foutAVLFind << "Rand seeds 0-1k" << ", " << "Stddev = " << stdDev << ", "
             << dataType << ", " << "AVL Tree with microsecond time" << "\n"
             << "Find avg - Avg Tree size" << "\n";
         foutAVLFind.close();
@@ -672,11 +653,11 @@ int main()
    
     Benchmark x;
  
-    x.runSplayInsRmvTests(250, 2.0, false, "SplayTree.csv");
+    //x.runSplayInsRmvTests(250, 2.0, false, "SplayTree.csv");
 
-    x.runAVLInsRmvTests(250, 2.0, false, "AVLTree.csv");
+    //x.runAVLInsRmvTests(250, 2.0, false, "AVLTree.csv");
 
-    //x.runAVLFindTest(false, "SplayFind.csv", 15.0);
+    x.runAVLFindTest(false, "SplayFind.csv", 15.0);
 
     return 0;
 }
