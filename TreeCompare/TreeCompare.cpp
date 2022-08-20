@@ -144,7 +144,7 @@ private:
     {
         AVL_Tree<int> avl_tree;
  
-        double Total_Over_1K_Trees = 0;
+        double Total_Over_10K_Trees = 0;
         double avg_time_per_find_avl;
         double time_per_batch = 0;
         size_t avgTreeSize = 0;
@@ -153,7 +153,7 @@ private:
         for (int num_seeds = 0; num_seeds < 100; num_seeds++)
         {
             srand(num_seeds);
-            Total_Over_1K_Trees = 0;
+            //Total_Over_10K_Trees = 0; I dont this is needed* * * * *
 
             programTime++;
             std::cout << programTime << " / 100\n";
@@ -176,11 +176,11 @@ private:
                 }
 
                 time_per_batch /= 100; // avg single find time for tree k (total time / num find operations)
-                Total_Over_1K_Trees += time_per_batch; // adds avg find time of items in tree k 
+                Total_Over_10K_Trees += time_per_batch; // adds avg find time of items in tree k 
             }
         }
 
-        avg_time_per_find_avl = Total_Over_1K_Trees / 10000.0; // divide by # of trees tested to get avg time across all trees
+        avg_time_per_find_avl = Total_Over_10K_Trees / 10000.0; // divide by # of trees tested to get avg time across all trees
         // should be yielding avg time to find a single item across all trees tested 
 
         avgTreeSize /= 10000; // get avg tree size
@@ -200,7 +200,7 @@ private:
     {
         SplayTree<int> splay_tree;
 
-        double Total_Over_1K_Trees = 0;
+        double Total_Over_10K_Trees = 0;
         double avg_time_per_find_splay;
         double time_per_batch = 0;
         size_t avgTreeSize = 0;
@@ -209,7 +209,7 @@ private:
         for (int num_seeds = 0; num_seeds < 100; num_seeds++)
         {
             srand(num_seeds);
-            Total_Over_1K_Trees = 0;
+            //Total_Over_10K_Trees = 0; I dont this is needed* * * * *
 
             programTime++;
             std::cout << programTime << " / 100\n";
@@ -232,11 +232,11 @@ private:
                 }
 
                 time_per_batch /= 100; // avg single find time for tree k (total time / num find operations)
-                Total_Over_1K_Trees += time_per_batch; // adds avg find time of items in tree k 
+                Total_Over_10K_Trees += time_per_batch; // adds avg find time of items in tree k 
             }
         }
 
-        avg_time_per_find_splay = Total_Over_1K_Trees / 10000.0; // divide by # of trees tested to get avg time across all trees
+        avg_time_per_find_splay = Total_Over_10K_Trees / 10000.0; // divide by # of trees tested to get avg time across all trees
         // should be yielding avg time to find a single item across all trees tested 
 
         avgTreeSize /= 10000; // get avg tree size
