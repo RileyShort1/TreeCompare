@@ -4,7 +4,6 @@
 #include "AVL_Tree.h"
 #include <iostream>
 #include <string>
-#include <ctime>
 #include <vector>
 #include <iomanip>
 #include <sstream>
@@ -294,11 +293,7 @@ private:
 
     std::vector<double> testSplayInsRmv(unsigned int randSeed, double stddev, bool normalDist, std::string fileName)
     {
-        int seconds_to_micro = 1000000; // convert to microseconds
-        clock_t timeForRemove;
-        clock_t timeForInsert;
-        clock_t time_per_batch;
-
+        double time_per_batch;
         SplayTree<int> splay_tree;
 
         std::vector<int> rands;
@@ -316,7 +311,7 @@ private:
 
         // ------------------------------- SPLAY INSERT -----------------------------------------------
         // insert data - noting clock every 1000 elements
-        clock_t totalInsertTime = 0;
+        double totalInsertTime = 0;
         double avgInsert;
         int counter = 0;
      
@@ -326,28 +321,25 @@ private:
 
             for (int j = 0; j < 1000; j++)
             {
-                timeForInsert = clock(); // start clock
-                splay_tree.insert(rands[counter]); // insert
-                timeForInsert = clock() - timeForInsert; // stop clock
-                time_per_batch += timeForInsert; // add time
+                auto startInsert = high_resolution_clock::now();
+                splay_tree.insert(rands[counter]);
+                auto stopInsert = high_resolution_clock::now();
+                duration<double, std::micro> single_insert = stopInsert - startInsert;
+
+                time_per_batch += single_insert.count(); // add time
                 counter++;
             }
 
             totalInsertTime += time_per_batch;
         }
 
-        avgInsert = (double)totalInsertTime / CLOCKS_PER_SEC * seconds_to_micro; // convert to ms
-        avgInsert = avgInsert / 1000000; // get avg time per insert
-
+        avgInsert = totalInsertTime / 1000000; // avg time per insert
         size_t sizeAfterInsert = splay_tree.get_size();
 
         // ------------------------------- SPLAY REMOVE ---------------------------------------------------
-        clock_t totalRemoveTime = 0;
+        double totalRemoveTime = 0;
         double avgRemove;
 
-        // remove data - noting clock every 1000 elements
-        // loop 1 - 500000
-       
         counter = 0;
 
         for (int i = 0; i < 1000; i++)
@@ -356,19 +348,19 @@ private:
 
             for (int j = 0; j < 1000; j++)
             {
-                timeForRemove = clock(); // start clock
+                auto startRemove = high_resolution_clock::now();
                 splay_tree.remove(rands[counter]); // remove
-                timeForRemove = clock() - timeForRemove; // stop clock
-                time_per_batch += timeForRemove; // add time
+                auto stopRemove = high_resolution_clock::now();
+                duration<double, std::micro> single_remove = stopRemove - startRemove;
+
+                time_per_batch += single_remove.count(); // add time
                 counter++;
             }
 
             totalRemoveTime += time_per_batch;
         }
 
-        avgRemove = (double)totalRemoveTime / CLOCKS_PER_SEC * seconds_to_micro; // convert to ms
-        avgRemove = avgRemove / 1000000; // get avg time per 1 
-
+        avgRemove = totalRemoveTime / 1000000; // avg time per insert
         size_t sizeAfterRemove = splay_tree.get_size();
 
         // Write results
@@ -376,8 +368,8 @@ private:
         std::fstream fout; // output file
         fout.open(fileName, std::ios::out | std::ios::app);
 
-        fout << std::fixed << std::setprecision(4) << (double)totalInsertTime / CLOCKS_PER_SEC * seconds_to_micro << ", "
-            << avgInsert << ", " << (double)totalRemoveTime / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgRemove
+        fout << std::fixed << std::setprecision(4) << totalInsertTime << ", "
+            << avgInsert << ", " << totalRemoveTime << ", " << avgRemove
             << ", " << sizeAfterInsert << ", " << sizeAfterRemove << "\n";
 
         fout.close();
@@ -389,11 +381,7 @@ private:
 
     std::vector<double> testAVLInsRmv(unsigned int randSeed, double stddev, bool normalDist, std::string fileName)
     {
-        int seconds_to_micro = 1000000; // convert to microseconds
-        clock_t timeForRemove;
-        clock_t timeForInsert;
-        clock_t time_per_batch;
-
+        double time_per_batch;
         AVL_Tree<int> avl_tree;
 
         std::vector<int> rands;
@@ -409,9 +397,9 @@ private:
             uniform(rands, randSeed);
         }
 
-        // ------------------------------- SPLAY INSERT -----------------------------------------------
+        // ------------------------------- AVL INSERT -----------------------------------------------
         // insert data - noting clock every 1000 elements
-        clock_t totalInsertTime = 0;
+        double totalInsertTime = 0;
         double avgInsert;
         int counter = 0;
 
@@ -421,27 +409,24 @@ private:
 
             for (int j = 0; j < 1000; j++)
             {
-                timeForInsert = clock(); // start clock
-                avl_tree.insert(rands[counter]); // insert
-                timeForInsert = clock() - timeForInsert; // stop clock
-                time_per_batch += timeForInsert; // add time
+                auto startInsert = high_resolution_clock::now();
+                avl_tree.insert(rands[counter]);
+                auto stopInsert = high_resolution_clock::now();
+                duration<double, std::micro> single_insert = stopInsert - startInsert;
+
+                time_per_batch += single_insert.count(); // add time
                 counter++;
             }
 
             totalInsertTime += time_per_batch;
         }
 
-        avgInsert = (double)totalInsertTime / CLOCKS_PER_SEC * seconds_to_micro; // convert to ms
-        avgInsert = avgInsert / 1000000; // get avg time per insert
-
+        avgInsert = totalInsertTime / 1000000; // avg time per insert
         size_t sizeAfterInsert = avl_tree.get_size();
 
-        // ------------------------------- SPLAY REMOVE ---------------------------------------------------
-        clock_t totalRemoveTime = 0;
+        // ------------------------------- AVL REMOVE ---------------------------------------------------
+        double totalRemoveTime = 0;
         double avgRemove;
-
-        // remove data - noting clock every 1000 elements
-        // loop 1 - 500000
 
         counter = 0;
 
@@ -451,19 +436,19 @@ private:
 
             for (int j = 0; j < 1000; j++)
             {
-                timeForRemove = clock(); // start clock
+                auto startRemove = high_resolution_clock::now();
                 avl_tree.remove(rands[counter]); // remove
-                timeForRemove = clock() - timeForRemove; // stop clock
-                time_per_batch += timeForRemove; // add time
+                auto stopRemove = high_resolution_clock::now();
+                duration<double, std::micro> single_remove = stopRemove - startRemove;
+
+                time_per_batch += single_remove.count(); // add time
                 counter++;
             }
 
             totalRemoveTime += time_per_batch;
         }
 
-        avgRemove = (double)totalRemoveTime / CLOCKS_PER_SEC * seconds_to_micro; // convert to ms
-        avgRemove = avgRemove / 1000000; // get avg time per remove
-
+        avgRemove = totalRemoveTime / 1000000; // avg time per insert
         size_t sizeAfterRemove = avl_tree.get_size();
 
         // Write results
@@ -471,8 +456,8 @@ private:
         std::fstream fout; // output file
         fout.open(fileName, std::ios::out | std::ios::app);
 
-        fout << std::fixed << std::setprecision(4) << (double)totalInsertTime / CLOCKS_PER_SEC * seconds_to_micro << ", " 
-            << avgInsert << ", " << (double)totalRemoveTime / CLOCKS_PER_SEC * seconds_to_micro << ", " << avgRemove 
+        fout << std::fixed << std::setprecision(4) << totalInsertTime << ", " 
+            << avgInsert << ", " << totalRemoveTime << ", " << avgRemove 
             << ", " << sizeAfterInsert << ", " << sizeAfterRemove << "\n";
 
         fout.close();
