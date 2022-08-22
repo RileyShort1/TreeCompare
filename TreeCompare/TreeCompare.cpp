@@ -164,7 +164,7 @@ private:
                 
                 time_per_batch = 0;
 
-                for (int num_find_calls = 0; num_find_calls < 1000; num_find_calls++) //change to 1000
+                for (int num_find_calls = 0; num_find_calls < 1000; num_find_calls++) 
                 {
                     auto start = high_resolution_clock::now();
                     avl_tree.contains(rand() % 500000);     
@@ -194,7 +194,7 @@ private:
         return;
     }
 
-    void searchTestsSplay(bool is_normal, std::string fileName, double stddev) // uniform data
+    void searchTestsSplay(bool is_normal, std::string fileName, double stddev) 
     {
         SplayTree<int> splay_tree;
 
@@ -219,7 +219,7 @@ private:
 
                 time_per_batch = 0;
 
-                for (int num_find_calls = 0; num_find_calls < 1000; num_find_calls++) //change to 1000
+                for (int num_find_calls = 0; num_find_calls < 1000; num_find_calls++) 
                 {
                     auto start = high_resolution_clock::now();
                     splay_tree.contains(rand() % 500000);
