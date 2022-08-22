@@ -152,7 +152,6 @@ private:
         for (int num_seeds = 0; num_seeds < 100; num_seeds++)
         {
             srand(num_seeds);
-            //Total_Over_10K_Trees = 0; I dont this is needed* * * * *
 
             programTime++;
             std::cout << programTime << " / 100\n";
@@ -208,7 +207,6 @@ private:
         for (int num_seeds = 0; num_seeds < 100; num_seeds++)
         {
             srand(num_seeds);
-            //Total_Over_10K_Trees = 0; I dont this is needed* * * * *
 
             programTime++;
             std::cout << programTime << " / 100\n";
@@ -645,6 +643,7 @@ int main()
     //av.generalTests();
    
     Benchmark x;
+
     //x.runSplayInsRmvTests(250, 2.0, false, "SplayTree.csv");
     //x.runAVLInsRmvTests(250, 2.0, false, "AVLTree.csv");
 
@@ -652,11 +651,11 @@ int main()
 
     // Uniform Data
     x.runAVLFindTest(false, "AVLFindUniform.csv", 350.0);
-    //x.runSplayFindTest(false, "SplayFindUniform.csv", 350.0);
+    x.runSplayFindTest(false, "SplayFindUniform.csv", 350.0);
 
     // Normal Data
-    //x.runAVLFindTest(true, "AVLFindNormal.csv", 350.0);
-    //x.runSplayFindTest(true, "SplayFindNormal.csv", 350.0);
+    x.runAVLFindTest(true, "AVLFindNormal.csv", 350.0);
+    x.runSplayFindTest(true, "SplayFindNormal.csv", 350.0);
 
 
     return 0;
