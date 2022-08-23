@@ -488,7 +488,7 @@ public: // ============================================= Public ================
         std::fstream foutSplayFind; // output file
         foutSplayFind.open(fileName, std::ios::out | std::ios::app);
 
-        foutSplayFind << "Rand seeds 0-1k " << ", " << "Stddev = " << stdDev << ", "
+        foutSplayFind << "Rand seeds 0-100" << ", " << "Stddev = " << stdDev << ", "
             << dataType << ", " << "Splay Tree with microsecond time" << "\n"
             << "Find avg - Avg Tree size" << "\n";
         foutSplayFind.close();
@@ -519,7 +519,7 @@ public: // ============================================= Public ================
         std::fstream foutAVLFind; // output file
         foutAVLFind.open(fileName, std::ios::out | std::ios::app);
 
-        foutAVLFind << "Rand seeds 0-1k" << ", " << "Stddev = " << stdDev << ", "
+        foutAVLFind << "Rand seeds 0-100" << ", " << "Stddev = " << stdDev << ", "
             << dataType << ", " << "AVL Tree with microsecond time" << "\n"
             << "Find avg - Avg Tree size" << "\n";
         foutAVLFind.close();
