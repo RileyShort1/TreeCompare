@@ -118,7 +118,7 @@ private:
          // fill tree
          if (is_normal == true)
          {
-             gaussian(rands, seed, stddev); // grab rands from generator
+             gaussian(rands, seed, stddev, 1000000); // grab rands from generator
 
              for (unsigned int i = 0; i < rands.size(); i++)
              {
@@ -127,7 +127,7 @@ private:
          }
          else
          {
-             uniform(rands, seed); // grab rands from generator
+             uniform(rands, seed, 1000000); // grab rands from generator
 
              for (unsigned int i = 0; i < rands.size(); i++)
              {
@@ -148,18 +148,17 @@ private:
         double time_per_batch = 0;
         size_t avgTreeSize = 0;
         int programTime = 0;
+        std::vector<int> finds;
   
         for (int num_seeds = 0; num_seeds < 100; num_seeds++)
         {
-            srand(num_seeds);
-
             programTime++;
             std::cout << programTime << " / 100\n";
 
             for (int num_trees = 0; num_trees < 10; num_trees++) // this is essentially how many single tests we want per single seed
             {
-                // function call to build tree k
                 build_tree(avl_tree, is_normal, num_seeds, stddev);
+                uniform(finds, num_seeds + 100, 1000); // get nums to find (should the seed be the same??))
                 avgTreeSize += avl_tree.get_size();
                 
                 time_per_batch = 0;
@@ -167,7 +166,7 @@ private:
                 for (int num_find_calls = 0; num_find_calls < 1000; num_find_calls++) 
                 {
                     auto start = high_resolution_clock::now();
-                    avl_tree.contains(rand() % 500000);     
+                    avl_tree.contains(finds[num_find_calls]);     
                     auto stop = high_resolution_clock::now();
                     duration<double, std::micro> single_time = stop - start;
                     time_per_batch += single_time.count(); // add single find time to pool of times for tree k
@@ -203,18 +202,17 @@ private:
         double time_per_batch = 0;
         size_t avgTreeSize = 0;
         int programTime = 0;
+        std::vector<int> finds;
 
         for (int num_seeds = 0; num_seeds < 100; num_seeds++)
         {
-            srand(num_seeds);
-
             programTime++;
             std::cout << programTime << " / 100\n";
 
             for (int num_trees = 0; num_trees < 10; num_trees++)
             {
-                // function call to build tree k
                 build_tree(splay_tree, is_normal, num_seeds, stddev);
+                uniform(finds, num_seeds + 100, 1000); // get nums to find (should the seed be the same??))
                 avgTreeSize += splay_tree.get_size();
 
                 time_per_batch = 0;
@@ -222,7 +220,7 @@ private:
                 for (int num_find_calls = 0; num_find_calls < 1000; num_find_calls++) 
                 {
                     auto start = high_resolution_clock::now();
-                    splay_tree.contains(rand() % 500000);
+                    splay_tree.contains(finds[num_find_calls]);
                     auto stop = high_resolution_clock::now();
                     duration<double, std::micro> single_time = stop - start;
                     time_per_batch += single_time.count(); // add single find time to pool of times for tree k
@@ -253,7 +251,7 @@ private:
     // https://www.gigacalculator.com/calculators/normality-test-calculator.php
     //
 
-    void uniform(std::vector<int>& randNums, unsigned int randSeed) 
+    void uniform(std::vector<int>& randNums, unsigned int randSeed, int numRands) 
     {
         // Mersenne Twister random engine
         std::mt19937 randEngine{ randSeed };
@@ -262,7 +260,7 @@ private:
 
         randNums.clear();
 
-        for (int i = 0; i < 1000000; i++) // 1m rands
+        for (int i = 0; i < numRands; i++)
         {
             randNums.push_back(generator(randEngine));
         }
@@ -272,7 +270,7 @@ private:
 
     // might need this https://en.wikipedia.org/wiki/Truncated_normal_distribution#Simulating
     // or this std::binomial_distribution
-    void gaussian(std::vector<int>& randNums, unsigned int randSeed, double stddev) 
+    void gaussian(std::vector<int>& randNums, unsigned int randSeed, double stddev, int numRands) 
     {
         // Mersenne Twister random engine
         std::mt19937 randEngine{ randSeed };
@@ -281,7 +279,7 @@ private:
 
         randNums.clear();
 
-        for (int i = 0; i < 1000000; i++) // 1m rands
+        for (int i = 0; i < numRands; i++)
         {
             randNums.push_back(double(generator(randEngine)));
         }
@@ -300,11 +298,11 @@ private:
 
         if (normalDist == true)
         {
-            gaussian(rands, randSeed, stddev);
+            gaussian(rands, randSeed, stddev, 1000000);
         }
         else
         {
-            uniform(rands, randSeed);
+            uniform(rands, randSeed, 1000000);
         }
 
         // ------------------------------- SPLAY INSERT -----------------------------------------------
@@ -388,11 +386,11 @@ private:
 
         if (normalDist == true)
         {
-            gaussian(rands, randSeed, stddev);
+            gaussian(rands, randSeed, stddev, 1000000);
         }
         else
         {
-            uniform(rands, randSeed);
+            uniform(rands, randSeed, 1000000);
         }
 
         // ------------------------------- AVL INSERT -----------------------------------------------
