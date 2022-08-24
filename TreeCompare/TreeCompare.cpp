@@ -254,9 +254,9 @@ private:
     void uniform(std::vector<int>& randNums, unsigned int randSeed, int numRands) 
     {
         // Mersenne Twister random engine
-        std::mt19937 randEngine{ randSeed };
+        std::mt19937 randEngine( randSeed );
 
-        std::uniform_int_distribution<int> generator{ 0, 500000 }; // range 0 to 500k
+        std::uniform_int_distribution<int> generator( 0, 500000 ); // range 0 to 500k
 
         randNums.clear();
 
@@ -273,9 +273,9 @@ private:
     void gaussian(std::vector<int>& randNums, unsigned int randSeed, double stddev, int numRands) 
     {
         // Mersenne Twister random engine
-        std::mt19937 randEngine{ randSeed };
+        std::mt19937 randEngine( randSeed );
 
-        std::normal_distribution<double> generator{ 250000.0, stddev }; // (mean, stddev) Note: can't set explicit range, just mean
+        std::normal_distribution<double> generator( 250000.0, stddev ); // (mean, stddev) Note: can't set explicit range, just mean
 
         randNums.clear();
 
