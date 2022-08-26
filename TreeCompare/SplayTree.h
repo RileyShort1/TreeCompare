@@ -16,15 +16,8 @@ private:
 
 	void _splay(Node*& p, const T& x)
 	{
-		if (p == nullptr)
-		{
-			return;
-		}
-
-		Node* left_t = nullptr;
-		Node* right_t = nullptr; 
-		Node* leftMax = nullptr;
-		Node* rightMin = nullptr;
+		Node* left_t = nullptr, *right_t = nullptr, 
+			*leftMax = nullptr, *rightMin = nullptr;
 
 		while (p != nullptr)
 		{
@@ -208,34 +201,19 @@ private:
 
 	const Node* splay_get(const T& x)
 	{
-		if (_root == nullptr)
-		{
-			return nullptr;
-		}
+		_splay(_root, x);
 
-		if (_root->_data == x) // This addition makes splay faster for repeat lookups
+		if (_root != nullptr && _root->_data == x)
 		{
 			return _root;
 		}
 
-		_splay(_root, x);
-
-		if (_root->_data != x) 
-		{
-			return nullptr;
-		}
-
-		return _root;
+		return nullptr;
 	}
 
 	bool splay_contains(const T& x) 
 	{
-		if (splay_get(x) == nullptr)
-		{
-			return false;
-		}
-
-		return true;
+		return splay_get(x) != nullptr;
 	}
 
 	bool _recursive_delete(Node*& p)

@@ -77,13 +77,8 @@ private:
 
 	bool avl_find(const T& data)
 	{
-		if (avl_get(_root, data) == nullptr)
-		{
-			return false;
-		}
-
-		return true;
-	}
+		return avl_get(_root, data) != nullptr;
+ 	}
 
 	int max(int val, int altval) // helpers
 	{
