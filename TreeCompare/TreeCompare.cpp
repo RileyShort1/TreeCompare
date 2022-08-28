@@ -10,6 +10,7 @@
 #include <fstream>
 #include <chrono>
 #include <random>
+#include <algorithm>
 using namespace std::chrono;
 
 
@@ -109,37 +110,31 @@ public:
 class Benchmark {
 private:
 
-    template<typename T> void build_tree(T& theTree, bool is_normal, unsigned int seed, double stddev)
+    // fill tree with numbers 1 - tree size (shuffled order)
+    template<typename T> void build_tree(T& theTree, unsigned int seed, int treeSize)
     {
          theTree.clear(); // delete everything in tree
 
          std::vector<int> rands;
 
-         // fill tree
-         if (is_normal == true)
+         for (int i = 1; i < treeSize + 1; i++)
          {
-             gaussian(rands, seed, stddev, 1000000); // grab rands from generator
-
-             for (unsigned int i = 0; i < rands.size(); i++)
-             {
-                 theTree.insert(rands[i]);
-             }
-         }
-         else
-         {
-             uniform(rands, seed, 1000000); // grab rands from generator
-
-             for (unsigned int i = 0; i < rands.size(); i++)
-             {
-                 theTree.insert(rands[i]);
-             }
+             rands.push_back(i);
          }
 
+         auto rng = std::default_random_engine(seed);
+         std::shuffle(std::begin(rands), std::end(rands), rng);
+
+         for (size_t j = 0; j < rands.size(); j++)
+         {
+             theTree.insert(rands[j]);
+         }
+          
          return;
     }
 
     //note: & wanted to get rid of the bool parameter and for us to use a conditional in the function instead
-    void searchTestsAVL(bool is_normal, std::string fileName, double stddev)   
+    void searchTestsAVL(std::string fileName, double stddev, int treeSize)   
     {
         AVL_Tree<int> avl_tree;
  
@@ -157,13 +152,13 @@ private:
 
             for (int num_trees = 0; num_trees < 10; num_trees++) // this is essentially how many single tests we want per single seed
             {
-                build_tree(avl_tree, is_normal, num_seeds, stddev);
-                uniform(finds, num_seeds + 100, 1000); // get nums to find (should the seed be the same??))
+                build_tree(avl_tree, num_seeds, treeSize);
+                gaussian(finds, num_seeds, stddev, 5000, avl_tree.get_size()); // get nums to find
                 avgTreeSize += avl_tree.get_size();
                 
                 time_per_batch = 0;
 
-                for (int num_find_calls = 0; num_find_calls < 1000; num_find_calls++) 
+                for (int num_find_calls = 0; num_find_calls < 5000; num_find_calls++) 
                 {
                     auto start = high_resolution_clock::now();
                     avl_tree.contains(finds[num_find_calls]);     
@@ -172,7 +167,7 @@ private:
                     time_per_batch += single_time.count(); // add single find time to pool of times for tree k
                 }
 
-                time_per_batch /= 1000; // avg single find time for tree k (total time / num find operations)
+                time_per_batch /= 5000; // avg single find time for tree k (total time / num find operations)
                 Total_Over_1K_Trees += time_per_batch; // adds avg find time of items in tree k 
             }
         }
@@ -186,14 +181,14 @@ private:
         AVLFind.open(fileName, std::ios::out | std::ios::app);
 
         AVLFind << std::fixed << std::setprecision(4) << avg_time_per_find_avl << ", " <<
-            avgTreeSize << "\n";
+            avgTreeSize <<  "\n";
 
         AVLFind.close();
 
         return;
     }
 
-    void searchTestsSplay(bool is_normal, std::string fileName, double stddev) 
+    void searchTestsSplay(std::string fileName, double stddev, int treeSize) 
     {
         SplayTree<int> splay_tree;
 
@@ -211,22 +206,22 @@ private:
 
             for (int num_trees = 0; num_trees < 10; num_trees++)
             {
-                build_tree(splay_tree, is_normal, num_seeds, stddev);
-                uniform(finds, num_seeds + 100, 1000); // get nums to find (should the seed be the same??))
+                build_tree(splay_tree, num_seeds, treeSize);
+                gaussian(finds, num_seeds, stddev, 5000, splay_tree.get_size()); // get nums to find
                 avgTreeSize += splay_tree.get_size();
 
                 time_per_batch = 0;
 
-                for (int num_find_calls = 0; num_find_calls < 1000; num_find_calls++) 
+                for (int num_find_calls = 0; num_find_calls < 5000; num_find_calls++) 
                 {
                     auto start = high_resolution_clock::now();
-                    splay_tree.contains(finds[num_find_calls]);
+                    std::cout << splay_tree.contains(finds[num_find_calls]) << std::endl;;
                     auto stop = high_resolution_clock::now();
                     duration<double, std::micro> single_time = stop - start;
                     time_per_batch += single_time.count(); // add single find time to pool of times for tree k
                 }
 
-                time_per_batch /= 1000; // avg single find time for tree k (total time / num find operations)
+                time_per_batch /= 5000; // avg single find time for tree k (total time / num find operations)
                 Total_Over_1K_Trees += time_per_batch; // adds avg find time of items in tree k 
             }
         }
@@ -256,7 +251,7 @@ private:
         // Mersenne Twister random engine
         std::mt19937 randEngine( randSeed );
 
-        std::uniform_int_distribution<int> generator( 0, 500000 ); // range 0 to 500k
+        std::uniform_int_distribution<int> generator( 0, 1000000 ); // range 0 to 500k
 
         randNums.clear();
 
@@ -268,14 +263,13 @@ private:
         return;
     }
 
-    // might need this https://en.wikipedia.org/wiki/Truncated_normal_distribution#Simulating
-    // or this std::binomial_distribution
-    void gaussian(std::vector<int>& randNums, unsigned int randSeed, double stddev, int numRands) 
+    void gaussian(std::vector<int>& randNums, unsigned int randSeed, double stddev, int numRands, int treeSize) 
     {
         // Mersenne Twister random engine
         std::mt19937 randEngine( randSeed );
+        double mean = treeSize / 2.0;
 
-        std::normal_distribution<double> generator( 250000.0, stddev ); // (mean, stddev) Note: can't set explicit range, just mean
+        std::normal_distribution<double> generator( mean, stddev );
 
         randNums.clear();
 
@@ -286,7 +280,7 @@ private:
 
         return;
     }
-
+    /*
     std::vector<double> testSplayInsRmv(unsigned int randSeed, double stddev, bool normalDist, std::string fileName)
     {
         double time_per_batch;
@@ -462,71 +456,42 @@ private:
 
         return avgReturns;
     }
-
+    */
 public: // ============================================= Public =============================================
 
-    void runSplayFindTest(bool is_normal, std::string fileName, double stddev = 2.0)
+    void runSplayFindTest(std::string fileName, double stddev, int treeSize)
     {
-        std::string dataType;
-        std::string stdDev;
-        std::stringstream stream;
-        stream << std::fixed << std::setprecision(1) << stddev;
-        stdDev = stream.str();
-
-        if (is_normal == true)
-        {
-            dataType = "Normal/Gaussian Data";
-        }
-        else
-        {
-            dataType = "Uniform Data";
-            stdDev = "inapplicable";
-        }
-
         std::fstream foutSplayFind; // output file
         foutSplayFind.open(fileName, std::ios::out | std::ios::app);
 
-        foutSplayFind << "Rand seeds 0-100" << ", " << "Stddev = " << stdDev << ", "
-            << dataType << ", " << "Splay Tree with microsecond time" << "\n"
-            << "Find avg - Avg Tree size" << "\n";
+        foutSplayFind << "Rand seeds 0-100" << ", " << "Stddev = " << stddev << ", "
+            << "Finding 1k normal" << ", " << "Splay Tree with microsecond time containing nums 0 - " << treeSize << "\n"
+            << "mean of searched data is half tree size\n" 
+            << "Find avg - Tree size" << "\n";
         foutSplayFind.close();
 
-        searchTestsSplay(is_normal, fileName, stddev);
+        searchTestsSplay(fileName, stddev, treeSize);
 
         return;
     }
 
-    void runAVLFindTest(bool is_normal, std::string fileName, double stddev = 2.0)
+    void runAVLFindTest(std::string fileName, double stddev, int treeSize)
     {
-        std::string dataType;
-        std::string stdDev;
-        std::stringstream stream;
-        stream << std::fixed << std::setprecision(1) << stddev;
-        stdDev = stream.str();
-
-        if (is_normal == true)
-        {
-            dataType = "Normal/Gaussian Data";
-        }
-        else
-        {
-            dataType = "Uniform Data";
-            stdDev = "inapplicable";
-        }
-
         std::fstream foutAVLFind; // output file
         foutAVLFind.open(fileName, std::ios::out | std::ios::app);
 
-        foutAVLFind << "Rand seeds 0-100" << ", " << "Stddev = " << stdDev << ", "
-            << dataType << ", " << "AVL Tree with microsecond time" << "\n"
-            << "Find avg - Avg Tree size" << "\n";
+        foutAVLFind << "Rand seeds 0-100" << ", " << "Stddev = " << stddev << ", "
+            << "Finding 1k normal" << ", " << "AVL Tree with microsecond time containing nums 0 - " << treeSize << "\n"
+            << "mean of searched data is half tree size\n"
+            << "Find avg - Tree size" << "\n";
         foutAVLFind.close();
 
-        searchTestsAVL(is_normal, fileName, stddev);
+        searchTestsAVL(fileName, stddev, treeSize);
 
         return;
     }
 
+    /*
     void runSplayInsRmvTests(unsigned int randSeed, double stddev, bool is_normal, std::string fileName)
     {
         std::string dataType;
@@ -630,6 +595,8 @@ public: // ============================================= Public ================
 
         return;
     }
+    */
+
 };
 
 int main()
@@ -642,19 +609,20 @@ int main()
    
     Benchmark x;
 
-    //x.runSplayInsRmvTests(250, 2.0, false, "SplayTree.csv");
-    //x.runAVLInsRmvTests(250, 2.0, false, "AVLTree.csv");
-
-
-
-    // Uniform Data
-    x.runAVLFindTest(false, "AVLFindUniform.csv", 350.0);
-    x.runSplayFindTest(false, "SplayFindUniform.csv", 350.0);
-
     // Normal Data
-    x.runAVLFindTest(true, "AVLFindNormal.csv", 350.0);
-    x.runSplayFindTest(true, "SplayFindNormal.csv", 350.0);
+    /*
+    x.runSplayFindTest("SplayFindNormal.csv", 2.0, 1000000);
+    x.runAVLFindTest("AVLFindNormal.csv", 2.0, 1000000);
 
+    x.runSplayFindTest("SplayFindNormal-1.csv", 2.0, 2000000);
+    x.runAVLFindTest("AVLFindNormal-1.csv", 2.0, 2000000);
+
+    x.runSplayFindTest("SplayFindNormal-2.csv", 2.0, 3000000);
+    x.runAVLFindTest("AVLFindNormal-2.csv", 2.0, 3000000);
+
+    x.runSplayFindTest("SplayFindNormal-3.csv", 2.0, 4000000);
+    x.runAVLFindTest("AVLFindNormal-3.csv", 2.0, 4000000);
+    */
 
     return 0;
 }
