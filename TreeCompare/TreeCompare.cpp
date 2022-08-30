@@ -145,10 +145,10 @@ private:
         int programTime = 0;
         std::vector<int> finds;
   
-        for (int num_seeds = 0; num_seeds < 100; num_seeds++)
+        for (int num_seeds = 0; num_seeds < 50; num_seeds++)
         {
             programTime++;
-            std::cout << programTime << " / 100\n";
+            std::cout << programTime << " / 50\n";
 
             for (int num_trees = 0; num_trees < 10; num_trees++) // this is essentially how many single tests we want per single seed
             {
@@ -172,10 +172,10 @@ private:
             }
         }
 
-        avg_time_per_find_avl = Total_Over_1K_Trees / 1000.0; // divide by # of trees tested to get avg time across all trees
+        avg_time_per_find_avl = Total_Over_1K_Trees / 500.0; // divide by # of trees tested to get avg time across all trees
         // should be yielding avg time to find a single item across all trees tested 
 
-        avgTreeSize /= 1000; // get avg tree size
+        avgTreeSize /= 500; // get avg tree size
 
         std::fstream AVLFind; // output file
         AVLFind.open(fileName, std::ios::out | std::ios::app);
@@ -199,10 +199,10 @@ private:
         int programTime = 0;
         std::vector<int> finds;
 
-        for (int num_seeds = 0; num_seeds < 100; num_seeds++)
+        for (int num_seeds = 0; num_seeds < 50; num_seeds++)
         {
             programTime++;
-            std::cout << programTime << " / 100\n";
+            std::cout << programTime << " / 50\n";
 
             for (int num_trees = 0; num_trees < 10; num_trees++)
             {
@@ -215,7 +215,7 @@ private:
                 for (int num_find_calls = 0; num_find_calls < 5000; num_find_calls++) 
                 {
                     auto start = high_resolution_clock::now();
-                    std::cout << splay_tree.contains(finds[num_find_calls]) << std::endl;;
+                    splay_tree.contains(finds[num_find_calls]);
                     auto stop = high_resolution_clock::now();
                     duration<double, std::micro> single_time = stop - start;
                     time_per_batch += single_time.count(); // add single find time to pool of times for tree k
@@ -226,10 +226,10 @@ private:
             }
         }
 
-        avg_time_per_find_splay = Total_Over_1K_Trees / 1000.0; // divide by # of trees tested to get avg time across all trees
+        avg_time_per_find_splay = Total_Over_1K_Trees / 500.0; // divide by # of trees tested to get avg time across all trees
         // should be yielding avg time to find a single item across all trees tested 
 
-        avgTreeSize /= 1000; // get avg tree size
+        avgTreeSize /= 500; // get avg tree size
 
         std::fstream SplayFind; // output file
         SplayFind.open(fileName, std::ios::out | std::ios::app);
@@ -246,6 +246,7 @@ private:
     // https://www.gigacalculator.com/calculators/normality-test-calculator.php
     //
 
+    /*
     void uniform(std::vector<int>& randNums, unsigned int randSeed, int numRands) 
     {
         // Mersenne Twister random engine
@@ -262,6 +263,7 @@ private:
 
         return;
     }
+    */
 
     void gaussian(std::vector<int>& randNums, unsigned int randSeed, double stddev, int numRands, int treeSize) 
     {
@@ -464,8 +466,8 @@ public: // ============================================= Public ================
         std::fstream foutSplayFind; // output file
         foutSplayFind.open(fileName, std::ios::out | std::ios::app);
 
-        foutSplayFind << "Rand seeds 0-100" << ", " << "Stddev = " << stddev << ", "
-            << "Finding 1k normal" << ", " << "Splay Tree with microsecond time containing nums 0 - " << treeSize << "\n"
+        foutSplayFind << "Rand seeds 0-50" << ", " << "Stddev = " << stddev << ", "
+            << "Finding 5k normal" << ", " << "Splay Tree with microsecond time containing nums 0 - " << treeSize << "\n"
             << "mean of searched data is half tree size\n" 
             << "Find avg - Tree size" << "\n";
         foutSplayFind.close();
@@ -480,8 +482,8 @@ public: // ============================================= Public ================
         std::fstream foutAVLFind; // output file
         foutAVLFind.open(fileName, std::ios::out | std::ios::app);
 
-        foutAVLFind << "Rand seeds 0-100" << ", " << "Stddev = " << stddev << ", "
-            << "Finding 1k normal" << ", " << "AVL Tree with microsecond time containing nums 0 - " << treeSize << "\n"
+        foutAVLFind << "Rand seeds 0-50" << ", " << "Stddev = " << stddev << ", "
+            << "Finding 5k normal" << ", " << "AVL Tree with microsecond time containing nums 0 - " << treeSize << "\n"
             << "mean of searched data is half tree size\n"
             << "Find avg - Tree size" << "\n";
         foutAVLFind.close();
@@ -490,6 +492,91 @@ public: // ============================================= Public ================
 
         return;
     }
+
+    void testImpulseSplay(double stddev, std::string filename)
+    {
+        SplayTree<int> tree;
+        std::vector<double> times(100, 0.0);
+        std::vector<int> finds;
+        int programTime = 0;
+        
+        for (size_t seed = 0; seed < 25; seed++)
+        {
+            programTime++;
+            std::cout << programTime << " / 25\n";
+
+            for (int num_tree = 0; num_tree < 5; num_tree++) // 5 trees of identical nature
+            {
+                gaussian(finds, seed, stddev, 100, 1000000);
+                build_tree(tree, seed, 1000000);
+
+                for (size_t i = 0; i < finds.size(); i++)
+                {
+                    auto start = high_resolution_clock::now();
+                    tree.contains(finds[i]);
+                    auto stop = high_resolution_clock::now();
+                    duration<double, std::micro> single_time = stop - start;
+                    times[i] += single_time.count();             
+                }
+            }
+        }
+           
+        std::fstream SplayFind1; // output file
+        SplayFind1.open(filename, std::ios::out | std::ios::app);
+        SplayFind1 << "col_1" << "," << "col_2" << "\n";
+
+        for (size_t j = 0; j < times.size(); j++)
+        {
+            SplayFind1 << j + 1 << "," << (times[j] / 50) << "\n";
+        }
+
+        SplayFind1.close();
+       
+        return;
+    }
+
+    void testImpulseAVL(double stddev, std::string filename)
+    {
+        AVL_Tree<int> tree;
+        std::vector<double> times(100, 0.0);
+        std::vector<int> finds;
+        int programTime = 0;
+
+        for (size_t seed = 0; seed < 25; seed++)
+        {
+            programTime++;
+            std::cout << programTime << " / 25\n";
+
+            for (int num_tree = 0; num_tree < 5; num_tree++) // 5 trees of identical nature
+            {
+                gaussian(finds, seed, stddev, 100, 1000000);
+                build_tree(tree, seed, 1000000);
+
+                for (size_t i = 0; i < finds.size(); i++)
+                {
+                    auto start = high_resolution_clock::now();
+                    tree.contains(finds[i]);
+                    auto stop = high_resolution_clock::now();
+                    duration<double, std::micro> single_time = stop - start;
+                    times[i] += single_time.count();
+                }
+            }   
+        }
+
+        std::fstream SplayFind1; // output file
+        SplayFind1.open(filename, std::ios::out | std::ios::app);
+        SplayFind1 << "col_1" << "," << "col_2" << "\n";
+
+        for (size_t j = 0; j < times.size(); j++)
+        {
+            SplayFind1 << j + 1 << "," << (times[j] / 50) << "\n";
+        }
+
+        SplayFind1.close();
+  
+        return;
+    }
+
 
     /*
     void runSplayInsRmvTests(unsigned int randSeed, double stddev, bool is_normal, std::string fileName)
@@ -611,18 +698,68 @@ int main()
 
     // Normal Data
     /*
-    x.runSplayFindTest("SplayFindNormal.csv", 2.0, 1000000);
-    x.runAVLFindTest("AVLFindNormal.csv", 2.0, 1000000);
+    x.runSplayFindTest("SplayFindNormal.csv", 50.0, 1000000);
+    x.runAVLFindTest("AVLFindNormal.csv", 50.0, 1000000);
 
-    x.runSplayFindTest("SplayFindNormal-1.csv", 2.0, 2000000);
-    x.runAVLFindTest("AVLFindNormal-1.csv", 2.0, 2000000);
+    x.runSplayFindTest("SplayFindNormal-1.csv", 50.0, 2000000);
+    x.runAVLFindTest("AVLFindNormal-1.csv", 50.0, 2000000);
 
-    x.runSplayFindTest("SplayFindNormal-2.csv", 2.0, 3000000);
-    x.runAVLFindTest("AVLFindNormal-2.csv", 2.0, 3000000);
+    x.runSplayFindTest("SplayFindNormal-2.csv", 50.0, 3000000);
+    x.runAVLFindTest("AVLFindNormal-2.csv", 50.0, 3000000);
 
-    x.runSplayFindTest("SplayFindNormal-3.csv", 2.0, 4000000);
-    x.runAVLFindTest("AVLFindNormal-3.csv", 2.0, 4000000);
+    x.runSplayFindTest("SplayFindNormal-3.csv", 50.0, 4000000);
+    x.runAVLFindTest("AVLFindNormal-3.csv", 50.0, 4000000);
+
+    //=============
+
+    x.runSplayFindTest("SplayFindNormalALT.csv", 100.0, 1000000);
+    x.runAVLFindTest("AVLFindNormalALT.csv", 100.0, 1000000);
+
+    x.runSplayFindTest("SplayFindNormal-1ALT.csv", 100.0, 2000000);
+    x.runAVLFindTest("AVLFindNormal-1ALT.csv", 100.0, 2000000);
+
+    x.runSplayFindTest("SplayFindNormal-2ALT.csv", 100.0, 3000000);
+    x.runAVLFindTest("AVLFindNormal-2ALT.csv", 100.0, 3000000);
+
+    x.runSplayFindTest("SplayFindNormal-3ALT.csv", 100.0, 4000000);
+    x.runAVLFindTest("AVLFindNormal-3ALT.csv", 100.0, 4000000);
     */
+
+    x.testImpulseSplay(1.0, "impulseSplay(1.0).csv");
+    x.testImpulseAVL(1.0, "impulseAVL(1.0).csv");
+
+    x.testImpulseSplay(2.0, "impulseSplay(2.0).csv");
+    x.testImpulseAVL(2.0, "impulseAVL(2.0).csv");
+
+    x.testImpulseSplay(10.0, "impulseSplay(10.0).csv");
+    x.testImpulseAVL(10.0, "impulseAVL(10.0).csv");
+
+    x.testImpulseSplay(25.0, "impulseSplay(25.0).csv");
+    x.testImpulseAVL(25.0, "impulseAVL(25.0).csv");
+
+    x.testImpulseSplay(50.0, "impulseSplay(50.0).csv");
+    x.testImpulseAVL(50.0, "impulseAVL(50.0).csv");
+
+    x.testImpulseSplay(100.0, "impulseSplay(100.0).csv");
+    x.testImpulseAVL(100.0, "impulseAVL(100.0).csv");
+
+    x.testImpulseSplay(250.0, "impulseSplay(250.0).csv");
+    x.testImpulseAVL(250.0, "impulseAVL(250.0).csv");
+
+    x.testImpulseSplay(500.0, "impulseSplay(500.0).csv");
+    x.testImpulseAVL(500.0, "impulseAVL(500.0).csv");
+
+    x.testImpulseSplay(1000.0, "impulseSplay(1k).csv");
+    x.testImpulseAVL(1000.0, "impulseAVL(1k).csv");
+
+    x.testImpulseSplay(5000.0, "impulseSplay(5k).csv");
+    x.testImpulseAVL(5000.0, "impulseAVL(5k).csv");
+
+    x.testImpulseSplay(10000.0, "impulseSplay(10k).csv");
+    x.testImpulseAVL(10000.0, "impulseAVL(10k).csv");
+
+    x.testImpulseSplay(25000.0, "impulseSplay(25k).csv");
+    x.testImpulseAVL(25000.0, "impulseAVL(25k).csv");
 
     return 0;
 }
