@@ -527,7 +527,7 @@ public: // ============================================= Public ================
 
         for (size_t j = 0; j < times.size(); j++)
         {
-            SplayFind1 << j + 1 << "," << (times[j] / 50) << "\n";
+            SplayFind1 << j + 1 << "," << (times[j] / 125) << "\n";
         }
 
         SplayFind1.close();
@@ -552,7 +552,7 @@ public: // ============================================= Public ================
                 gaussian(finds, seed, stddev, 100, 1000000);
                 build_tree(tree, seed, 1000000);
 
-                for (size_t i = 0; i < finds.size(); i++)
+                for (size_t i = 0; i < finds.size(); i++) // 100 finds per tree
                 {
                     auto start = high_resolution_clock::now();
                     tree.contains(finds[i]);
@@ -562,14 +562,14 @@ public: // ============================================= Public ================
                 }
             }   
         }
-
+  
         std::fstream SplayFind1; // output file
         SplayFind1.open(filename, std::ios::out | std::ios::app);
         SplayFind1 << "col_1" << "," << "col_2" << "\n";
 
         for (size_t j = 0; j < times.size(); j++)
         {
-            SplayFind1 << j + 1 << "," << (times[j] / 50) << "\n";
+            SplayFind1 << j + 1 << "," << (times[j] / 125) << "\n";
         }
 
         SplayFind1.close();
@@ -698,20 +698,67 @@ int main()
 
     // Normal Data
     /*
-    x.runSplayFindTest("SplayFindNormal.csv", 50.0, 1000000);
-    x.runAVLFindTest("AVLFindNormal.csv", 50.0, 1000000);
+    x.runSplayFindTest("SplayFindNormal-500k.csv", 2.0, 500000);
+    x.runAVLFindTest("AVLFindNormal-500k.csv", 2.0, 500000);
 
-    x.runSplayFindTest("SplayFindNormal-1.csv", 50.0, 2000000);
-    x.runAVLFindTest("AVLFindNormal-1.csv", 50.0, 2000000);
+    x.runSplayFindTest("SplayFindNormal-1.csv", 2.0, 1000000);
+    x.runAVLFindTest("AVLFindNormal-1.csv", 2.0, 1000000);
 
-    x.runSplayFindTest("SplayFindNormal-2.csv", 50.0, 3000000);
-    x.runAVLFindTest("AVLFindNormal-2.csv", 50.0, 3000000);
+    x.runSplayFindTest("SplayFindNormal-1.5.csv", 2.0, 1500000);
+    x.runAVLFindTest("AVLFindNormal-1.5.csv", 2.0, 1500000);
 
-    x.runSplayFindTest("SplayFindNormal-3.csv", 50.0, 4000000);
-    x.runAVLFindTest("AVLFindNormal-3.csv", 50.0, 4000000);
+    x.runSplayFindTest("SplayFindNormal-2.csv", 2.0, 2000000);
+    x.runAVLFindTest("AVLFindNormal-2.csv", 2.0, 2000000);
+    */
 
+    x.runSplayFindTest("SplayFindNormal-1.csv", 1.0, 1000000);
+    x.runAVLFindTest("AVLFindNormal-1.csv", 1.0, 1000000);
+
+    x.runSplayFindTest("SplayFindNormal-2.csv", 2.0, 1000000);
+    x.runAVLFindTest("AVLFindNormal-2.csv", 2.0, 1000000);
+
+    x.runSplayFindTest("SplayFindNormal-5.csv", 5.0, 1000000);
+    x.runAVLFindTest("AVLFindNormal-5.csv", 5.0, 1000000);
+
+    x.runSplayFindTest("SplayFindNormal-10.csv", 10.0, 1000000);
+    x.runAVLFindTest("AVLFindNormal-10.csv", 10.0, 1000000);
+
+    x.runSplayFindTest("SplayFindNormal-15.csv", 15.0, 1000000);
+    x.runAVLFindTest("AVLFindNormal-15.csv", 15.0, 1000000);
+
+    x.runSplayFindTest("SplayFindNormal-20.csv", 20.0, 1000000);
+    x.runAVLFindTest("AVLFindNormal-20.csv", 20.0, 1000000);
+
+    x.runSplayFindTest("SplayFindNormal-25.csv", 25.0, 1000000);
+    x.runAVLFindTest("AVLFindNormal-25.csv", 25.0, 1000000);
+
+
+    x.runSplayFindTest("SplayFindNormal-30.csv", 30.0, 1000000);
+    x.runAVLFindTest("AVLFindNormal-30.csv", 30.0, 1000000);
+
+    x.runSplayFindTest("SplayFindNormal-35.csv", 35.0, 1000000);
+    x.runAVLFindTest("AVLFindNormal-35.csv", 35.0, 1000000);
+
+    x.runSplayFindTest("SplayFindNormal-40.csv", 40.0, 1000000);
+    x.runAVLFindTest("AVLFindNormal-40.csv", 40.0, 1000000);
+
+    x.runSplayFindTest("SplayFindNormal-45.csv", 45.0, 1000000);
+    x.runAVLFindTest("AVLFindNormal-45.csv", 45.0, 1000000);
+
+    x.runSplayFindTest("SplayFindNormal-50.csv", 50.0, 1000000);
+    x.runAVLFindTest("AVLFindNormal-50.csv", 50.0, 1000000);
+
+    x.runSplayFindTest("SplayFindNormal-55.csv", 55.0, 1000000);
+    x.runAVLFindTest("AVLFindNormal-55.csv", 55.0, 1000000);
+
+    x.runSplayFindTest("SplayFindNormal-60.csv", 60.0, 1000000);
+    x.runAVLFindTest("AVLFindNormal-60.csv", 60.0, 1000000);
+
+
+   
+   
     //=============
-
+    /*
     x.runSplayFindTest("SplayFindNormalALT.csv", 100.0, 1000000);
     x.runAVLFindTest("AVLFindNormalALT.csv", 100.0, 1000000);
 
@@ -725,6 +772,8 @@ int main()
     x.runAVLFindTest("AVLFindNormal-3ALT.csv", 100.0, 4000000);
     */
 
+
+    /*
     x.testImpulseSplay(1.0, "impulseSplay(1.0).csv");
     x.testImpulseAVL(1.0, "impulseAVL(1.0).csv");
 
@@ -760,6 +809,7 @@ int main()
 
     x.testImpulseSplay(25000.0, "impulseSplay(25k).csv");
     x.testImpulseAVL(25000.0, "impulseAVL(25k).csv");
+    */
 
     return 0;
 }
