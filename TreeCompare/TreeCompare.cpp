@@ -145,20 +145,20 @@ private:
         int programTime = 0;
         std::vector<int> finds;
   
-        for (int num_seeds = 0; num_seeds < 50; num_seeds++)
+        for (int num_seeds = 0; num_seeds < 25; num_seeds++)
         {
             programTime++;
             std::cout << programTime << " / 50\n";
 
-            for (int num_trees = 0; num_trees < 10; num_trees++) // this is essentially how many single tests we want per single seed
+            for (int num_trees = 0; num_trees < 50; num_trees++) // this is essentially how many single tests we want per single seed
             {
                 build_tree(avl_tree, num_seeds, treeSize);
-                gaussian(finds, num_seeds, stddev, 5000, avl_tree.get_size()); // get nums to find
+                gaussian(finds, num_seeds, stddev, 250000, (int) avl_tree.get_size()); // get nums to find
                 avgTreeSize += avl_tree.get_size();
                 
                 time_per_batch = 0;
 
-                for (int num_find_calls = 0; num_find_calls < 5000; num_find_calls++) 
+                for (int num_find_calls = 0; num_find_calls < 250000; num_find_calls++)
                 {
                     auto start = high_resolution_clock::now();
                     avl_tree.contains(finds[num_find_calls]);     
@@ -167,15 +167,15 @@ private:
                     time_per_batch += single_time.count(); // add single find time to pool of times for tree k
                 }
 
-                time_per_batch /= 5000; // avg single find time for tree k (total time / num find operations)
+                time_per_batch /= 250000; // avg single find time for tree k (total time / num find operations)
                 Total_Over_1K_Trees += time_per_batch; // adds avg find time of items in tree k 
             }
         }
 
-        avg_time_per_find_avl = Total_Over_1K_Trees / 500.0; // divide by # of trees tested to get avg time across all trees
+        avg_time_per_find_avl = Total_Over_1K_Trees / 50.0; // divide by # of trees tested to get avg time across all trees
         // should be yielding avg time to find a single item across all trees tested 
 
-        avgTreeSize /= 500; // get avg tree size
+        avgTreeSize /= 50; // get avg tree size
 
         std::fstream AVLFind; // output file
         AVLFind.open(fileName, std::ios::out | std::ios::app);
@@ -199,20 +199,20 @@ private:
         int programTime = 0;
         std::vector<int> finds;
 
-        for (int num_seeds = 0; num_seeds < 50; num_seeds++)
+        for (int num_seeds = 0; num_seeds < 25; num_seeds++)
         {
             programTime++;
             std::cout << programTime << " / 50\n";
 
-            for (int num_trees = 0; num_trees < 10; num_trees++)
+            for (int num_trees = 0; num_trees < 50; num_trees++)
             {
                 build_tree(splay_tree, num_seeds, treeSize);
-                gaussian(finds, num_seeds, stddev, 5000, splay_tree.get_size()); // get nums to find
+                gaussian(finds, num_seeds, stddev, 250000, (int) splay_tree.get_size()); // get nums to find
                 avgTreeSize += splay_tree.get_size();
 
                 time_per_batch = 0;
 
-                for (int num_find_calls = 0; num_find_calls < 5000; num_find_calls++) 
+                for (int num_find_calls = 0; num_find_calls < 250000; num_find_calls++)
                 {
                     auto start = high_resolution_clock::now();
                     splay_tree.contains(finds[num_find_calls]);
@@ -221,15 +221,15 @@ private:
                     time_per_batch += single_time.count(); // add single find time to pool of times for tree k
                 }
 
-                time_per_batch /= 5000; // avg single find time for tree k (total time / num find operations)
+                time_per_batch /= 250000; // avg single find time for tree k (total time / num find operations)
                 Total_Over_1K_Trees += time_per_batch; // adds avg find time of items in tree k 
             }
         }
 
-        avg_time_per_find_splay = Total_Over_1K_Trees / 500.0; // divide by # of trees tested to get avg time across all trees
+        avg_time_per_find_splay = Total_Over_1K_Trees / 50.0; // divide by # of trees tested to get avg time across all trees
         // should be yielding avg time to find a single item across all trees tested 
 
-        avgTreeSize /= 500; // get avg tree size
+        avgTreeSize /= 50; // get avg tree size
 
         std::fstream SplayFind; // output file
         SplayFind.open(fileName, std::ios::out | std::ios::app);
