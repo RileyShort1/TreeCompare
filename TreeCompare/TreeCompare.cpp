@@ -117,7 +117,7 @@ private:
 
         std::vector<int> rands;
 
-        gaussian(rands, seed, stddev, 1000000); // grab rands from generator
+        get_array_gaussian(rands, seed, stddev, 1000000); // grab rands from generator
 
         for (unsigned int i = 0; i < rands.size(); i++)
         {
@@ -132,7 +132,7 @@ private:
     {
         AVL_Tree<int> avl_tree;
  
-        double Total_Over_1K_Trees = 0;
+        double Total_Over_All_Trees = 0;
         double avg_time_per_find_avl;
         double time_per_batch = 0;
         size_t avgTreeSize = 0;
@@ -147,7 +147,7 @@ private:
             for (int num_trees = 0; num_trees < 50; num_trees++) // this is essentially how many single tests we want per single seed
             {
                 build_tree(avl_tree, num_seeds, stddev);
-                gaussian(finds, num_seeds, stddev, 250000); // get nums to find
+                get_array_gaussian(finds, num_seeds, stddev, 250000); // get nums to find
                 avgTreeSize += avl_tree.get_size();
                 
                 time_per_batch = 0;
@@ -162,11 +162,11 @@ private:
                 }
 
                 time_per_batch /= 250000; // avg single find time for tree k (total time / num find operations)
-                Total_Over_1K_Trees += time_per_batch; // adds avg find time of items in tree k 
+                Total_Over_All_Trees += time_per_batch; // adds avg find time of items in tree k 
             }
         }
 
-        avg_time_per_find_avl = Total_Over_1K_Trees / 1250.0; // divide by # of trees tested to get avg time across all trees
+        avg_time_per_find_avl = Total_Over_All_Trees / 1250.0; // divide by # of trees tested to get avg time across all trees
         // should be yielding avg time to find a single item across all trees tested 
 
         avgTreeSize /= 1250; // get avg tree size
@@ -186,7 +186,7 @@ private:
     {
         SplayTree<int> splay_tree;
 
-        double Total_Over_1K_Trees = 0;
+        double Total_Over_All_Trees = 0;
         double avg_time_per_find_splay;
         double time_per_batch = 0;
         size_t avgTreeSize = 0;
@@ -201,7 +201,7 @@ private:
             for (int num_trees = 0; num_trees < 50; num_trees++)
             {
                 build_tree(splay_tree, num_seeds, stddev);
-                gaussian(finds, num_seeds, stddev, 250000); // get nums to find
+                get_array_gaussian(finds, num_seeds, stddev, 250000); // get nums to find
                 avgTreeSize += splay_tree.get_size();
 
                 time_per_batch = 0;
@@ -216,11 +216,11 @@ private:
                 }
 
                 time_per_batch /= 250000; // avg single find time for tree k (total time / num find operations)
-                Total_Over_1K_Trees += time_per_batch; // adds avg find time of items in tree k 
+                Total_Over_All_Trees += time_per_batch; // adds avg find time of items in tree k 
             }
         }
 
-        avg_time_per_find_splay = Total_Over_1K_Trees / 1250.0; // divide by # of trees tested to get avg time across all trees
+        avg_time_per_find_splay = Total_Over_All_Trees / 1250.0; // divide by # of trees tested to get avg time across all trees
         // should be yielding avg time to find a single item across all trees tested 
 
         avgTreeSize /= 1250; // get avg tree size
@@ -259,7 +259,7 @@ private:
     }
     */
 
-    void gaussian(std::vector<int>& randNums, unsigned int randSeed, double stddev, int numRands)
+    void get_array_gaussian(std::vector<int>& randNums, unsigned int randSeed, double stddev, int numRands)
     {
         // Mersenne Twister random engine
         std::mt19937 randEngine(randSeed);
@@ -283,9 +283,9 @@ public: // ============================================= Public ================
         std::fstream foutSplayFind; // output file
         foutSplayFind.open(fileName, std::ios::out | std::ios::app);
 
-        foutSplayFind << "Rand seeds 0-50" << ", " << "Stddev = " << stddev << ", "
-            << "Finding 5k normal" << ", " << "Splay Tree with microsecond time containing nums 0 - "  << "\n"
-            << "mean of searched data is half tree size\n" 
+        foutSplayFind << "Rand seeds 0-25" << ", " << "Stddev = " << stddev << ", "
+            << "Finding 250k normal" << ", " << "Splay Tree with microsecond time"  << "\n"
+            << "mean of searched data is 50k\n" 
             << "Find avg - Tree size" << "\n";
         foutSplayFind.close();
 
@@ -299,9 +299,9 @@ public: // ============================================= Public ================
         std::fstream foutAVLFind; // output file
         foutAVLFind.open(fileName, std::ios::out | std::ios::app);
 
-        foutAVLFind << "Rand seeds 0-50" << ", " << "Stddev = " << stddev << ", "
-            << "Finding 5k normal" << ", " << "AVL Tree with microsecond time containing nums 0 - " << "\n"
-            << "mean of searched data is half tree size\n"
+        foutAVLFind << "Rand seeds 0-25" << ", " << "Stddev = " << stddev << ", "
+            << "Finding 250k normal" << ", " << "AVL Tree with microsecond time" << "\n"
+            << "mean of searched data is 50k\n"
             << "Find avg - Tree size" << "\n";
         foutAVLFind.close();
 
