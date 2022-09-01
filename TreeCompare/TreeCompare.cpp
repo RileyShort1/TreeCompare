@@ -111,13 +111,13 @@ class Benchmark {
 private:
 
     // fill tree with numbers 1 - tree size (shuffled order)
-    template<typename T> void build_tree(T& theTree, unsigned int seed, double stddev, int num_calls)
+    template<typename T> void build_tree(T& theTree, unsigned int seed, double stddev, int num_rand_calls)
     {
         theTree.clear(); // delete everything in tree
 
         std::vector<int> rands;
 
-        get_array_gaussian(rands, seed, stddev, num_calls); // grab rands from generator
+        get_array_gaussian(rands, seed, stddev, num_rand_calls); // grab rands from generator
 
         for (unsigned int i = 0; i < rands.size(); i++)
         {
