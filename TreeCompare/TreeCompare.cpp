@@ -148,7 +148,7 @@ private:
         for (int num_seeds = 0; num_seeds < 25; num_seeds++)
         {
             programTime++;
-            std::cout << programTime << " / 50\n";
+            std::cout << programTime << " / 25\n";
 
             for (int num_trees = 0; num_trees < 50; num_trees++) // this is essentially how many single tests we want per single seed
             {
@@ -172,10 +172,10 @@ private:
             }
         }
 
-        avg_time_per_find_avl = Total_Over_1K_Trees / 50.0; // divide by # of trees tested to get avg time across all trees
+        avg_time_per_find_avl = Total_Over_1K_Trees / 1250.0; // divide by # of trees tested to get avg time across all trees
         // should be yielding avg time to find a single item across all trees tested 
 
-        avgTreeSize /= 50; // get avg tree size
+        avgTreeSize /= 1250; // get avg tree size
 
         std::fstream AVLFind; // output file
         AVLFind.open(fileName, std::ios::out | std::ios::app);
@@ -202,7 +202,7 @@ private:
         for (int num_seeds = 0; num_seeds < 25; num_seeds++)
         {
             programTime++;
-            std::cout << programTime << " / 50\n";
+            std::cout << programTime << " / 25\n";
 
             for (int num_trees = 0; num_trees < 50; num_trees++)
             {
@@ -226,10 +226,10 @@ private:
             }
         }
 
-        avg_time_per_find_splay = Total_Over_1K_Trees / 50.0; // divide by # of trees tested to get avg time across all trees
+        avg_time_per_find_splay = Total_Over_1K_Trees / 1250.0; // divide by # of trees tested to get avg time across all trees
         // should be yielding avg time to find a single item across all trees tested 
 
-        avgTreeSize /= 50; // get avg tree size
+        avgTreeSize /= 1250; // get avg tree size
 
         std::fstream SplayFind; // output file
         SplayFind.open(fileName, std::ios::out | std::ios::app);
@@ -696,21 +696,6 @@ int main()
    
     Benchmark x;
 
-    // Normal Data
-    /*
-    x.runSplayFindTest("SplayFindNormal-500k.csv", 2.0, 500000);
-    x.runAVLFindTest("AVLFindNormal-500k.csv", 2.0, 500000);
-
-    x.runSplayFindTest("SplayFindNormal-1.csv", 2.0, 1000000);
-    x.runAVLFindTest("AVLFindNormal-1.csv", 2.0, 1000000);
-
-    x.runSplayFindTest("SplayFindNormal-1.5.csv", 2.0, 1500000);
-    x.runAVLFindTest("AVLFindNormal-1.5.csv", 2.0, 1500000);
-
-    x.runSplayFindTest("SplayFindNormal-2.csv", 2.0, 2000000);
-    x.runAVLFindTest("AVLFindNormal-2.csv", 2.0, 2000000);
-    */
-
     x.runSplayFindTest("SplayFindNormal-1.csv", 1.0, 1000000);
     x.runAVLFindTest("AVLFindNormal-1.csv", 1.0, 1000000);
 
@@ -773,44 +758,7 @@ int main()
     */
 
 
-    /*
-    x.testImpulseSplay(1.0, "impulseSplay(1.0).csv");
-    x.testImpulseAVL(1.0, "impulseAVL(1.0).csv");
-
-    x.testImpulseSplay(2.0, "impulseSplay(2.0).csv");
-    x.testImpulseAVL(2.0, "impulseAVL(2.0).csv");
-
-    x.testImpulseSplay(10.0, "impulseSplay(10.0).csv");
-    x.testImpulseAVL(10.0, "impulseAVL(10.0).csv");
-
-    x.testImpulseSplay(25.0, "impulseSplay(25.0).csv");
-    x.testImpulseAVL(25.0, "impulseAVL(25.0).csv");
-
-    x.testImpulseSplay(50.0, "impulseSplay(50.0).csv");
-    x.testImpulseAVL(50.0, "impulseAVL(50.0).csv");
-
-    x.testImpulseSplay(100.0, "impulseSplay(100.0).csv");
-    x.testImpulseAVL(100.0, "impulseAVL(100.0).csv");
-
-    x.testImpulseSplay(250.0, "impulseSplay(250.0).csv");
-    x.testImpulseAVL(250.0, "impulseAVL(250.0).csv");
-
-    x.testImpulseSplay(500.0, "impulseSplay(500.0).csv");
-    x.testImpulseAVL(500.0, "impulseAVL(500.0).csv");
-
-    x.testImpulseSplay(1000.0, "impulseSplay(1k).csv");
-    x.testImpulseAVL(1000.0, "impulseAVL(1k).csv");
-
-    x.testImpulseSplay(5000.0, "impulseSplay(5k).csv");
-    x.testImpulseAVL(5000.0, "impulseAVL(5k).csv");
-
-    x.testImpulseSplay(10000.0, "impulseSplay(10k).csv");
-    x.testImpulseAVL(10000.0, "impulseAVL(10k).csv");
-
-    x.testImpulseSplay(25000.0, "impulseSplay(25k).csv");
-    x.testImpulseAVL(25000.0, "impulseAVL(25k).csv");
-    */
-
+   
     return 0;
 }
 
