@@ -111,13 +111,13 @@ class Benchmark {
 private:
 
     // fill tree with numbers 1 - tree size (shuffled order)
-    template<typename T> void build_tree(T& theTree, unsigned int seed, double stddev)
+    template<typename T> void build_tree(T& theTree, unsigned int seed, double stddev, int num_calls)
     {
         theTree.clear(); // delete everything in tree
 
         std::vector<int> rands;
 
-        get_array_gaussian(rands, seed, stddev, 1000000); // grab rands from generator
+        get_array_gaussian(rands, seed, stddev, num_calls); // grab rands from generator
 
         for (unsigned int i = 0; i < rands.size(); i++)
         {
@@ -154,8 +154,8 @@ private:
             for (int num_trees = 0; num_trees < 50; num_trees++) // this is essentially how many single tests we want per single seed
             {
                 // build both trees
-                build_tree(avl_tree, num_seeds, stddev);
-                build_tree(splay_tree, num_seeds, stddev);
+                build_tree(avl_tree, num_seeds, stddev, 250000);
+                build_tree(splay_tree, num_seeds, stddev, 250000);
 
                 get_array_gaussian(finds, num_seeds, stddev, 250000); // get nums to find
                 avgTreeSize += avl_tree.get_size();
