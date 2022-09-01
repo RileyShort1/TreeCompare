@@ -264,7 +264,7 @@ private:
         // Mersenne Twister random engine
         std::mt19937 randEngine(randSeed);
 
-        std::normal_distribution<double> generator(250000.0, stddev); // (mean, stddev) Note: can't set explicit range, just mean
+        std::normal_distribution<double> generator(50000.0, stddev); // (mean, stddev) Note: can't set explicit range, just mean
 
         randNums.clear();
 
@@ -285,7 +285,7 @@ public: // ============================================= Public ================
 
         foutSplayFind << "Rand seeds 0-25" << ", " << "Stddev = " << stddev << ", "
             << "Finding 250k normal" << ", " << "Splay Tree with microsecond time"  << "\n"
-            << "mean of searched data is 50k\n" 
+            << "mean of data is 50k\n" 
             << "Find avg - Tree size" << "\n";
         foutSplayFind.close();
 
@@ -301,7 +301,7 @@ public: // ============================================= Public ================
 
         foutAVLFind << "Rand seeds 0-25" << ", " << "Stddev = " << stddev << ", "
             << "Finding 250k normal" << ", " << "AVL Tree with microsecond time" << "\n"
-            << "mean of searched data is 50k\n"
+            << "mean of data is 50k\n"
             << "Find avg - Tree size" << "\n";
         foutAVLFind.close();
 
