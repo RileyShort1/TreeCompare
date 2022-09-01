@@ -111,37 +111,24 @@ class Benchmark {
 private:
 
     // fill tree with numbers 1 - tree size (shuffled order)
-    template<typename T> void build_tree(T& theTree, bool is_normal, unsigned int seed, double stddev)
+    template<typename T> void build_tree(T& theTree, unsigned int seed, double stddev)
     {
         theTree.clear(); // delete everything in tree
 
         std::vector<int> rands;
 
-        // fill tree
-        if (is_normal == true)
+        gaussian(rands, seed, stddev, 1000000); // grab rands from generator
+
+        for (unsigned int i = 0; i < rands.size(); i++)
         {
-            gaussian(rands, seed, stddev, 1000000); // grab rands from generator
-
-            for (unsigned int i = 0; i < rands.size(); i++)
-            {
-                theTree.insert(rands[i]);
-            }
+            theTree.insert(rands[i]);
         }
-        else
-        {
-            uniform(rands, seed, 1000000); // grab rands from generator
-
-            for (unsigned int i = 0; i < rands.size(); i++)
-            {
-                theTree.insert(rands[i]);
-            }
-        }
-
+       
         return;
     }
 
     //note: & wanted to get rid of the bool parameter and for us to use a conditional in the function instead
-    void searchTestsAVL(bool is_normal, std::string fileName, double stddev)
+    void searchTestsAVL(std::string fileName, double stddev)
     {
         AVL_Tree<int> avl_tree;
  
@@ -159,7 +146,7 @@ private:
 
             for (int num_trees = 0; num_trees < 50; num_trees++) // this is essentially how many single tests we want per single seed
             {
-                build_tree(avl_tree, is_normal, num_seeds, stddev);
+                build_tree(avl_tree, num_seeds, stddev);
                 gaussian(finds, num_seeds, stddev, 250000); // get nums to find
                 avgTreeSize += avl_tree.get_size();
                 
@@ -195,7 +182,7 @@ private:
         return;
     }
 
-    void searchTestsSplay(bool is_normal, std::string fileName, double stddev)
+    void searchTestsSplay(std::string fileName, double stddev)
     {
         SplayTree<int> splay_tree;
 
@@ -213,7 +200,7 @@ private:
 
             for (int num_trees = 0; num_trees < 50; num_trees++)
             {
-                build_tree(splay_tree, is_normal, num_seeds, stddev);
+                build_tree(splay_tree, num_seeds, stddev);
                 gaussian(finds, num_seeds, stddev, 250000); // get nums to find
                 avgTreeSize += splay_tree.get_size();
 
@@ -467,7 +454,7 @@ private:
     */
 public: // ============================================= Public =============================================
 
-    void runSplayFindTest(bool is_normal, std::string fileName, double stddev)
+    void runSplayFindTest(std::string fileName, double stddev)
     {
         std::fstream foutSplayFind; // output file
         foutSplayFind.open(fileName, std::ios::out | std::ios::app);
@@ -478,12 +465,12 @@ public: // ============================================= Public ================
             << "Find avg - Tree size" << "\n";
         foutSplayFind.close();
 
-        searchTestsSplay(is_normal, fileName, stddev);
+        searchTestsSplay(fileName, stddev);
 
         return;
     }
 
-    void runAVLFindTest(bool is_normal, std::string fileName, double stddev)
+    void runAVLFindTest(std::string fileName, double stddev)
     {
         std::fstream foutAVLFind; // output file
         foutAVLFind.open(fileName, std::ios::out | std::ios::app);
@@ -494,7 +481,7 @@ public: // ============================================= Public ================
             << "Find avg - Tree size" << "\n";
         foutAVLFind.close();
 
-        searchTestsAVL(is_normal, fileName, stddev);
+        searchTestsAVL(fileName, stddev);
 
         return;
     }
