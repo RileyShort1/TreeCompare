@@ -68,7 +68,7 @@ int main(){
                     
                 }
                 //cout << "Sigma: " << sigma + 1 << "\t" << total_splay_find_time << "\t" << total_avl_find_time << endl;
-                result_file << sigma << total_splay_find_time << total_avl_find_time << avl_tree.get_size() << "\n";
+                result_file << sigma << ", " << total_splay_find_time << ", " << total_avl_find_time << ", " << avl_tree.get_size() << "\n";
             } //num trees
         } //sigma
     } //seeds
