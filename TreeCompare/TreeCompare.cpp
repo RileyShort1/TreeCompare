@@ -37,11 +37,10 @@ int main(){
                 
                 AVL_Tree<int> avl_tree;
                 SplayTree<int> splay_tree;
-                
-                int my_random = (int) generator(randEngine);
-                
+                            
                 //Make our full trees
                 for (size_t i = 0; i < num_inserts_per_tree; i++) {
+                    int my_random = (int)generator(randEngine);
                     avl_tree.insert(my_random);
                     splay_tree.insert(my_random);
                 }
