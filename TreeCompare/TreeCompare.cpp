@@ -29,9 +29,9 @@ int main(){
     for (int n = 0; n < num_random_runs; n++) {
         programTime++;
         std::cout << programTime << " / " << num_random_runs << "\n";
-        for (int sigma = 0; sigma < max_std_dev_tested; sigma += std_dev_step) {
+        for (int sigma = 1; sigma <= max_std_dev_tested; sigma += std_dev_step) {
             std::mt19937 randEngine(n); //seed
-            std::normal_distribution<double> generator(expt_mean, double(sigma));
+            std::normal_distribution<double> generator(expt_mean, (double) sigma);
             
             for (int t = 0; t < num_trees_per_run; t++) {
                 
