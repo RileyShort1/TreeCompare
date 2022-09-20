@@ -143,7 +143,7 @@ private:
 
 		if (bf > 1)
 		{
-			if (data < node->_left->_data) 
+			if (data < node->_left->_data)
 			{
 				return _rotate_right(node);
 			}
@@ -167,119 +167,6 @@ private:
 		}
 
 		return node;
-	}
-    
-    //remove helper
-
-	Node* maxNode(Node* node)
-	{
-		Node* max = node;
-
-		while (max->_right != nullptr)
-		{
-			max = max->_right;
-		}
-
-		return max;
-	}
-    
-	Node* avl_remove(Node* root, const T& data)
-	{
-        if (root == nullptr) { //basic null condition
-            return nullptr;
-        }
-        
-        if (data < root->_data) {     //search left tree
-            
-            root->_left = avl_remove(root->_left, data);
-        }
-        
-        else if (data > root->_data) {     //search right tree
-            
-            root->_right = avl_remove(root->_right, data);
-        }
-
-        else {
-
-            _size--;
-            
-            if ((root->_left == nullptr) || (root->_right == nullptr)) { // one or fewer child nodes
-                
-                Node *temp = nullptr;
-                
-                if (root->_left != nullptr) { //if left is only child
-                    temp = root->_left;
-                }
-
-                else if (root->_right != nullptr) { //if right is only child
-                    temp = root->_right;
-                }
-                
-                if (temp == nullptr) {        // no child
-                    
-                    temp = root;
-                    root = nullptr;
-                }
-
-                else {                       //one child
-                    *root = *temp;   
-                }
-
-                if (temp != nullptr)
-                {
-                    delete temp;
-                }   
-            }
-
-            else {
-                
-                Node* temp = maxNode(root->_left);
-                
-                root->_data = temp->_data;
-                
-                root->_left = avl_remove(root->_left, temp->_data);
-            }
-
-        }
-        
-        if (root == nullptr) { //basic null condition
-
-            return nullptr;
-        }
-         
-        // get new height
-        update(root);
-     
-        //balance of root
-        int bal = get_balance(root);
-     
-        // double left
-        if (bal > 1 && get_balance(root->_left) >= 0){
-            
-            return _rotate_right(root);
-        }
-     
-        // left right
-        if (bal > 1 && get_balance(root->_left) < 0){
-            
-            root->_left = _rotate_left(root->_left);
-            return _rotate_right(root);
-        }
-     
-        // double right
-        if (bal < -1 && get_balance(root->_right) <= 0){
-            
-            return _rotate_left(root);
-        }
-     
-        // right left
-        if (bal < -1 && get_balance(root->_right) > 0){
-            
-            root->_right = _rotate_right(root->_right);
-            return _rotate_left(root);
-        }
-     
-        return root;  
 	}
 
 	bool _recursive_delete(Node*& p)
@@ -321,20 +208,6 @@ private:
 			return true;
 		}
 
-		bool remove(const T& elem) 
-		{ 
-			size_t size = _size;
-
-			_root = avl_remove(_root, elem);
-
-			if (size != _size)
-			{
-				_size = size - 1;
-				return true;
-			}
-			
-			return false;
-		}
 
 	//friend class AVLTests;
 	friend class Benchmark;

@@ -35,8 +35,8 @@ int main() {
             for (int t = 0; t < num_trees_per_run; t++) {
                 
                 AVL_Tree<int> avl_tree;
-                //SplayTree<int> splay_tree;
-                BST<int> splay_tree;
+                SplayTree<int> splay_tree;
+                //BST<int> splay_tree;
                 
                 
                             
@@ -44,8 +44,8 @@ int main() {
                 for (size_t i = 0; i < num_inserts_per_tree; i++) {
                     int my_random = (int)generator(randEngine);
                     avl_tree.insert(my_random);
-                    //splay_tree.insert(my_random);
-                    Tx::splay_insert(splay_tree, my_random);
+                    splay_tree.insert(my_random);
+                    //Tx::splay_insert(splay_tree, my_random);
                 }
                 
                 //At this point, both our trees are ready to test and filled with identical randoms
@@ -63,8 +63,8 @@ int main() {
                     
                     //same thing for splay
                     then = std::chrono::high_resolution_clock::now();
-                    //(void) splay_tree.contains(num_to_find);
-                    Tx::splay_contains(splay_tree, num_to_find);
+                    (void) splay_tree.contains(num_to_find);
+                    //Tx::splay_contains(splay_tree, num_to_find);
                     now = std::chrono::high_resolution_clock::now();
                     diff = now - then;
                     total_splay_find_time += diff.count();
@@ -77,6 +77,7 @@ int main() {
                 avg_over_all_trees[3] += splay_tree.get_size();   //changed to splay
                 
                 avl_tree.clear();     //Fix AVL deconstructor and remove this line afterwards
+                splay_tree.clear();   //Fix Splay deconstructor and remove this line afterwards
                 
             } //num trees
             cout << "#Avg: " << avg_over_all_trees[0] / num_trees_per_run

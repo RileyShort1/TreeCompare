@@ -165,39 +165,6 @@ private:
 		return true;	
 	}
 
-	bool splay_remove(const T& x)
-	{
-		if (_root == nullptr)
-		{
-			return false;
-		}
-
-		_splay(_root, x);
-
-		if (_root->_data != x) // item was not in tree
-		{
-			return false;
-		}
-
-		Node* new_root = nullptr;
-
-		if (_root->_left == nullptr)
-		{
-			new_root = _root->_right;
-		}
-		else
-		{
-			new_root = _root->_left;
-			_splay(new_root, x);
-			new_root->_right = _root->_right;
-		}
-
-		delete _root;
-		_root = new_root;
-		_size--;
-
-		return true;
-	}
 
 	const Node* splay_get(const T& x)
 	{
@@ -243,7 +210,6 @@ public:
 	bool clear() { return _recursive_delete(_root); }
 	
 	bool insert(const T& elem) { return splay_insert(elem); }
-	bool remove(const T& elem) { return splay_remove(elem); }
 
 	//friend class SplayTests;
 	friend class Benchmark;
